@@ -2628,7 +2628,7 @@
         document.getElementById("success-screen").classList.add("visible");
         setStep(4);
         document.getElementById("success-msg").textContent =
-          `תודה ${order.name}! ההזמנה שלך התקבלה. אישור יישלח אליך בקרוב בוואטסאפ ובמייל.`;
+          `תודה ${order.name}! ההזמנה שלך התקבלה. אישור יישלח אליך בקרוב במייל.`;
         let html = `<div class="success-summary-title">סיכום הזמנה</div>`;
         order.items.forEach((it) => {
           html += `<div class="success-row"><span>${esc(it.name)} × ${it.qty}</span><span>₪${it.price * it.qty}</span></div>`;
@@ -2946,7 +2946,10 @@
               </div>
               <div style="margin-top:10px;display:flex;justify-content:space-between;align-items:center;font-size:11.5px;color:var(--text-muted)">
                 <span>${esc(o.date)}</span>
-                <button class="order-print-btn" onclick="printSlip(orders.find(x=>x.id==='${esc(o.id)}'))">🖨️ הדפס תלוש</button>
+                <div style="display:flex;gap:6px">
+                  <button class="order-print-btn" style="background:#25D366;border-color:#25D366;color:white" onclick="sendCustomerWhatsApp(orders.find(x=>x.id==='${esc(o.id)}'))">📱 וואטסאפ ללקוח</button>
+                  <button class="order-print-btn" onclick="printSlip(orders.find(x=>x.id==='${esc(o.id)}'))">🖨️ הדפס תלוש</button>
+                </div>
               </div>
             </div>
           </div>`;
@@ -2955,6 +2958,19 @@
       }
 
       function renderOrdersTable() { renderOrdersSummary(); }
+
+      function sendCustomerWhatsApp(order) {
+        if (!order) return;
+        const PM_NAMES_WA = { bit:'Bit', paybox:'PayBox', card:'כרטיס אשראי', bank:'העברה בנקאית' };
+        const lines = order.items.map(i =>
+          `• ${i.name} × ${i.qty} — ₪${i.price * i.qty}`
+        ).join('\n');
+        const text = `✅ אישור הזמנה — שירה וגנר\n\nשלום ${order.name},\nהזמנתך אושרה! 🎉\n\n${lines}\n\n💰 סה״כ: ₪${order.total}\n💳 תשלום: ${PM_NAMES_WA[order.paymentMethod] || order.paymentMethod}${order.note ? '\n📝 הערה: ' + order.note : ''}\n\nתודה רבה! 🙏`;
+        // המרת טלפון ישראלי למספר בינלאומי
+        const digits = order.phone.replace(/\D/g, '');
+        const intl = digits.startsWith('972') ? digits : '972' + digits.replace(/^0/, '');
+        window.open('https://wa.me/' + intl + '?text=' + encodeURIComponent(text), '_blank');
+      }
 
       function clearOrders() {
         if (!confirm("למחוק את כל ההזמנות? פעולה זו אינה הפיכה.")) return;
