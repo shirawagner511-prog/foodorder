@@ -1505,7 +1505,7 @@
                   type="tel"
                   class="form-input"
                   id="f-phone"
-                  placeholder="05X-XXXXXXX"
+                  placeholder="05XXXXXXXX"
                   autocomplete="tel"
                 />
               </div>
@@ -1945,9 +1945,10 @@
         const email = document.getElementById("f-email").value.trim();
         const city = document.getElementById("f-city").value.trim();
         let ok = true;
+        const phoneValid = /^05\d{8}$/.test(phone);
         [
           ["f-name", name],
-          ["f-phone", phone],
+          ["f-phone", phoneValid ? phone : ""],
           ["f-email", email],
           ["f-city", city],
         ].forEach(([id, v]) => {
@@ -1955,7 +1956,7 @@
           if (!v) ok = false;
         });
         if (!ok) {
-          showToast("נא למלא את כל שדות החובה");
+          showToast(phone && !phoneValid ? "מספר טלפון לא תקין — יש להזין 10 ספרות (05XXXXXXXX)" : "נא למלא את כל שדות החובה");
           return;
         }
         if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
