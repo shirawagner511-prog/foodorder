@@ -2518,7 +2518,7 @@
         el.innerHTML = adminCategories.map((cat, i) => `
           <div class="admin-cat-row">
             <input class="admin-input" style="flex:1" value="${esc(cat)}"
-              oninput="adminCategories[${i}]=this.value;renderAdminDishes()">
+              oninput="adminCategories[${i}]=this.value">
             <button onclick="adminCategories.splice(${i},1);renderAdminCategories();renderAdminDishes()"
               style="background:none;border:none;cursor:pointer;color:var(--red);font-size:20px;line-height:1">×</button>
           </div>`).join("");
@@ -2623,6 +2623,14 @@
           document.getElementById("admin-week-title").value.trim() || weekTitle;
         deadline = document.getElementById("admin-deadline").value.trim();
         heroText = document.getElementById("admin-hero-text").value;
+        // Read categories directly from DOM inputs (reliable even without oninput firing)
+        const catInputs = document.querySelectorAll("#admin-categories-list input[type='text'], #admin-categories-list input:not([type])");
+        adminCategories = Array.from(catInputs).map(inp => inp.value);
+        // Read dish name/desc inputs directly from DOM too
+        document.querySelectorAll("[data-dish-name]").forEach(inp => {
+          const idx = Number(inp.dataset.dishIdx);
+          if (!isNaN(idx) && adminDishes[idx]) adminDishes[idx][inp.dataset.dishName] = inp.value;
+        });
         menu = adminDishes.filter((d) => d.name.trim());
         categories = adminCategories.filter((c) => c.trim());
         updateHeroText();
