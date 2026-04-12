@@ -1813,19 +1813,25 @@
       const GH_FILE = "menu.json";
 
       async function loadMenuFromGitHub() {
-        try {
-          const res = await fetch("/menu.json?_=" + Date.now());
-          if (!res.ok) return false;
-          const data = await res.json();
-          if (data && Array.isArray(data.items) && data.items.length) {
-            menu = data.items;
-            if (Array.isArray(data.categories) && data.categories.length) categories = data.categories;
-            if (data.weekTitle) weekTitle = data.weekTitle;
-            if (data.deadline) deadline = data.deadline;
-            if (data.heroText !== undefined) heroText = data.heroText;
-            return true;
-          }
-        } catch (e) {}
+        const urls = [
+          "https://raw.githubusercontent.com/" + GH_REPO + "/main/" + GH_FILE,
+          "/menu.json"
+        ];
+        for (const url of urls) {
+          try {
+            const res = await fetch(url + "?_=" + Date.now());
+            if (!res.ok) continue;
+            const data = await res.json();
+            if (data && Array.isArray(data.items) && data.items.length) {
+              menu = data.items;
+              if (Array.isArray(data.categories) && data.categories.length) categories = data.categories;
+              if (data.weekTitle) weekTitle = data.weekTitle;
+              if (data.deadline) deadline = data.deadline;
+              if (data.heroText !== undefined) heroText = data.heroText;
+              return true;
+            }
+          } catch (e) {}
+        }
         return false;
       }
 
