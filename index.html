@@ -1,0 +1,2443 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>שירה וגנר | תפריט שבועי</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      :root {
+        --cream: #faf8f3;
+        --olive: #5c6b3a;
+        --olive-light: #8a9b5f;
+        --olive-dark: #3d4a27;
+        --olive-hover: #4a5a30;
+        --text-main: #2c2c2a;
+        --text-muted: #7a7a72;
+        --text-placeholder: #bbbbbb;
+        --border: #e8e4dc;
+        --border-strong: #d0c9bc;
+        --accent: #c8763a;
+        --accent-light: #fdf0e4;
+        --red: #d94f4f;
+        --red-bg: #fee2e2;
+        --red-border: #fca5a5;
+        --green: #3b7a4f;
+        --green-bg: #e6f4ea;
+        --green-border: #86c99a;
+        --warning-bg: #fffbe6;
+        --warning-border: #f0d070;
+        --warning-text: #7a6b00;
+        --pending-bg: #fff3cd;
+        --pending-text: #856404;
+        --toast-bg: #2c2c2c;
+        --shadow-sm: 0 1px 4px rgba(0, 0, 0, 0.07);
+        --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.1);
+        --radius: 14px;
+        --focus-ring: 0 0 0 3px rgba(92, 107, 58, 0.35);
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        font-family: "Heebo", "Segoe UI", Arial, sans-serif;
+        background: var(--cream);
+        color: var(--text-main);
+        font-size: 15px;
+        line-height: 1.5;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      /* HEADER */
+      .header {
+        background: linear-gradient(
+          135deg,
+          var(--olive-dark),
+          var(--olive-hover)
+        );
+        color: white;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+      }
+      .header-inner {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 12px 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .brand-wrap {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .brand-logo {
+        width: 38px;
+        height: 38px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        flex-shrink: 0;
+      }
+      .brand {
+        font-size: 20px;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        line-height: 1.2;
+      }
+      .brand-sub {
+        font-size: 11.5px;
+        color: rgba(255, 255, 255, 0.65);
+      }
+      .cart-btn {
+        background: rgba(255, 255, 255, 0.15);
+        border: 1.5px solid rgba(255, 255, 255, 0.3);
+        color: white;
+        padding: 8px 16px 8px 12px;
+        border-radius: 30px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        font-family: inherit;
+        transition: all 0.2s;
+        white-space: nowrap;
+        min-height: 44px;
+      }
+      .cart-btn:hover {
+        background: rgba(255, 255, 255, 0.28);
+      }
+      .cart-btn:focus-visible {
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.6);
+      }
+      .cart-count {
+        background: var(--accent);
+        color: white;
+        border-radius: 50%;
+        min-width: 22px;
+        height: 22px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+        font-weight: 800;
+        padding: 0 4px;
+        transition: transform 0.2s;
+      }
+      .cart-count.bump {
+        animation: bump 0.3s ease;
+      }
+      @keyframes bump {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.4);
+        }
+      }
+
+      /* STEPS */
+      .steps-bar {
+        background: white;
+        border-bottom: 1px solid var(--border);
+        padding: 10px 20px;
+        display: none;
+      }
+      .steps-bar.visible {
+        display: block;
+      }
+      .steps-inner {
+        max-width: 480px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .step {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+        flex: 1;
+        position: relative;
+      }
+      .step::before {
+        content: "";
+        position: absolute;
+        top: 14px;
+        right: 60%;
+        width: 80%;
+        height: 2px;
+        background: var(--border-strong);
+        z-index: 0;
+      }
+      .step:first-child::before {
+        display: none;
+      }
+      .step-circle {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: var(--border-strong);
+        color: var(--text-muted);
+        font-size: 12px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        z-index: 1;
+        transition: all 0.3s;
+      }
+      .step.active .step-circle {
+        background: var(--olive);
+        color: white;
+      }
+      .step.done .step-circle {
+        background: var(--green);
+        color: white;
+      }
+      .step.done::before {
+        background: var(--green);
+      }
+      .step-label {
+        font-size: 10px;
+        color: var(--text-muted);
+        font-weight: 600;
+        white-space: nowrap;
+      }
+      .step.active .step-label {
+        color: var(--olive-dark);
+      }
+
+      /* HERO */
+      .hero {
+        background: linear-gradient(160deg, var(--olive), var(--olive-dark));
+        color: white;
+        padding: 30px 20px 26px;
+        text-align: center;
+      }
+      .hero h1 {
+        font-size: 27px;
+        font-weight: 800;
+        margin-bottom: 6px;
+        letter-spacing: -0.02em;
+        line-height: 1.2;
+      }
+      .hero-date {
+        font-size: 13.5px;
+        color: rgba(255, 255, 255, 0.75);
+        margin-bottom: 16px;
+      }
+      .hero-badges {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        justify-content: center;
+      }
+      .badge {
+        background: rgba(255, 255, 255, 0.15);
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        border-radius: 20px;
+        padding: 5px 14px;
+        font-size: 12.5px;
+        font-weight: 500;
+      }
+
+      /* MAIN */
+      .main {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+      .section-title {
+        font-size: 18px;
+        font-weight: 800;
+        color: var(--olive-dark);
+        margin: 24px 0 14px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid var(--border);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        letter-spacing: -0.01em;
+      }
+      .section-icon {
+        width: 30px;
+        height: 30px;
+        background: var(--olive);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 14px;
+        flex-shrink: 0;
+      }
+
+      /* MENU GRID */
+      .menu-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 16px;
+        margin-bottom: 8px;
+      }
+      .dish-card {
+        background: white;
+        border: 1.5px solid var(--border);
+        border-radius: var(--radius);
+        overflow: hidden;
+        transition: all 0.25s;
+      }
+      .dish-card:hover {
+        box-shadow: var(--shadow-md);
+        transform: translateY(-2px);
+        border-color: var(--olive-light);
+      }
+      .dish-card.has-items {
+        border-color: var(--olive);
+        box-shadow: 0 0 0 2px rgba(92, 107, 58, 0.15);
+      }
+      .dish-img {
+        width: 100%;
+        height: 130px;
+        background: linear-gradient(135deg, #e8ded0, #d4c4a8);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+      }
+      .dish-emoji {
+        font-size: 54px;
+        filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.12));
+      }
+      .dish-qty-badge {
+        position: absolute;
+        top: 8px;
+        inset-inline-start: 8px;
+        background: var(--olive);
+        color: white;
+        border-radius: 20px;
+        padding: 3px 10px;
+        font-size: 12px;
+        font-weight: 700;
+        display: none;
+      }
+      .dish-card.has-items .dish-qty-badge {
+        display: block;
+      }
+      .dish-body {
+        padding: 12px 14px 14px;
+      }
+      .dish-name {
+        font-size: 15px;
+        font-weight: 700;
+        margin-bottom: 4px;
+      }
+      .dish-desc {
+        font-size: 12.5px;
+        color: var(--text-muted);
+        line-height: 1.55;
+        margin-bottom: 10px;
+        min-height: 38px;
+      }
+      .dish-price {
+        font-size: 18px;
+        font-weight: 800;
+        color: var(--olive);
+        margin-bottom: 10px;
+      }
+      .dish-price span {
+        font-size: 12px;
+        font-weight: 500;
+        color: var(--text-muted);
+      }
+      .qty-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 8px;
+      }
+      .qty-btn {
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+        border: 1.5px solid var(--border-strong);
+        background: var(--cream);
+        cursor: pointer;
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--olive-dark);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.15s;
+        font-family: inherit;
+        line-height: 1;
+      }
+      .qty-btn:hover {
+        background: var(--olive);
+        color: white;
+        border-color: var(--olive);
+      }
+      .qty-btn:active {
+        transform: scale(0.92);
+      }
+      .qty-btn:focus-visible {
+        outline: none;
+        box-shadow: var(--focus-ring);
+      }
+      .qty-num {
+        min-width: 30px;
+        text-align: center;
+        font-size: 16px;
+        font-weight: 800;
+      }
+      .qty-label {
+        font-size: 12px;
+        color: var(--text-muted);
+      }
+      .note-input {
+        width: 100%;
+        border: 1.5px solid var(--border);
+        border-radius: 8px;
+        padding: 7px 10px;
+        font-size: 12.5px;
+        color: var(--text-main);
+        background: var(--cream);
+        resize: none;
+        font-family: inherit;
+        outline: none;
+        transition: all 0.2s;
+      }
+      .note-input:focus {
+        border-color: var(--olive-light);
+        background: white;
+        box-shadow: 0 0 0 3px rgba(92, 107, 58, 0.1);
+      }
+
+      /* CART */
+      .cart-panel {
+        background: white;
+        border: 1.5px solid var(--olive-light);
+        border-radius: var(--radius);
+        padding: 20px;
+        margin-bottom: 20px;
+        display: none;
+        animation: slideDown 0.25s ease;
+      }
+      .cart-panel.visible {
+        display: block;
+      }
+      @keyframes slideDown {
+        from {
+          opacity: 0;
+          transform: translateY(-10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .cart-title {
+        font-size: 17px;
+        font-weight: 800;
+        color: var(--olive-dark);
+        margin-bottom: 14px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid var(--border);
+      }
+      .cart-empty {
+        text-align: center;
+        color: var(--text-muted);
+        padding: 20px;
+        font-size: 14px;
+      }
+      .cart-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        padding: 9px 0;
+        border-bottom: 1px solid var(--border);
+        font-size: 14px;
+      }
+      .cart-item:last-of-type {
+        border-bottom: none;
+      }
+      .cart-item-name {
+        font-weight: 700;
+      }
+      .cart-item-detail {
+        font-size: 12px;
+        color: var(--text-muted);
+        margin-top: 2px;
+      }
+      .cart-item-price {
+        font-weight: 800;
+        color: var(--olive);
+        font-size: 15px;
+        white-space: nowrap;
+      }
+      .cart-total-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 13px 0 0;
+        border-top: 2px solid var(--olive);
+        font-size: 17px;
+        font-weight: 800;
+        color: var(--olive-dark);
+        margin-top: 8px;
+      }
+
+      /* ORDER FORM */
+      .order-form {
+        background: white;
+        border: 1.5px solid var(--border);
+        border-radius: var(--radius);
+        padding: 22px;
+        margin-bottom: 30px;
+        box-shadow: var(--shadow-sm);
+      }
+      .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 13px;
+      }
+      .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+      }
+      .form-group.full {
+        grid-column: 1 / -1;
+      }
+      .form-label {
+        font-size: 13px;
+        font-weight: 700;
+      }
+      .required-star {
+        color: var(--red);
+      }
+      .form-input {
+        border: 1.5px solid var(--border-strong);
+        border-radius: 9px;
+        padding: 10px 13px;
+        font-size: 14px;
+        font-family: inherit;
+        color: var(--text-main);
+        background: var(--cream);
+        outline: none;
+        transition: all 0.2s;
+        width: 100%;
+      }
+      .form-input:focus {
+        border-color: var(--olive);
+        background: white;
+        box-shadow: 0 0 0 3px rgba(92, 107, 58, 0.1);
+      }
+      .form-input::placeholder {
+        color: var(--text-placeholder);
+      }
+      .form-input:focus-visible {
+        outline: none;
+        border-color: var(--olive);
+        background: white;
+        box-shadow: var(--focus-ring);
+      }
+      .form-input.error {
+        border-color: var(--red);
+        background: #fff5f5;
+      }
+      .delivery-note {
+        background: var(--accent-light);
+        border: 1px solid rgba(200, 118, 58, 0.3);
+        border-radius: 9px;
+        padding: 11px 15px;
+        font-size: 13px;
+        color: var(--accent);
+        margin-bottom: 16px;
+        font-weight: 500;
+      }
+      .submit-btn {
+        width: 100%;
+        background: linear-gradient(135deg, var(--olive-dark), var(--olive));
+        color: white;
+        border: none;
+        border-radius: 11px;
+        padding: 15px;
+        font-size: 16px;
+        font-weight: 800;
+        cursor: pointer;
+        transition: all 0.2s;
+        margin-top: 16px;
+        font-family: inherit;
+        box-shadow: 0 3px 12px rgba(61, 74, 39, 0.35);
+      }
+      .submit-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 5px 18px rgba(61, 74, 39, 0.4);
+      }
+      .submit-btn:active {
+        transform: scale(0.98);
+      }
+      .submit-btn:focus-visible {
+        outline: none;
+        box-shadow: var(--focus-ring);
+      }
+      .submit-btn:disabled {
+        background: var(--border-strong);
+        box-shadow: none;
+        cursor: not-allowed;
+        transform: none;
+      }
+      .form-note {
+        font-size: 11.5px;
+        color: var(--text-muted);
+        text-align: center;
+        margin-top: 8px;
+      }
+
+      /* PAYMENT SCREEN */
+      .payment-screen {
+        display: none;
+      }
+      .payment-screen.visible {
+        display: block;
+        animation: fadeIn 0.3s ease;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(8px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .payment-header {
+        background: white;
+        border: 1.5px solid var(--border);
+        border-radius: var(--radius);
+        padding: 20px;
+        margin-bottom: 16px;
+        box-shadow: var(--shadow-sm);
+      }
+      .payment-order-summary {
+        background: var(--cream);
+        border-radius: 9px;
+        padding: 14px;
+        margin-top: 12px;
+      }
+      .payment-row {
+        display: flex;
+        justify-content: space-between;
+        font-size: 13.5px;
+        padding: 5px 0;
+        border-bottom: 1px solid var(--border);
+      }
+      .payment-row:last-child {
+        border: none;
+        font-weight: 800;
+        font-size: 16px;
+        color: var(--olive-dark);
+        padding-top: 8px;
+      }
+      .payment-method-card {
+        background: white;
+        border: 2px solid var(--border);
+        border-radius: var(--radius);
+        padding: 16px 20px;
+        margin-bottom: 12px;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
+      .payment-method-card:hover {
+        border-color: var(--olive-light);
+        box-shadow: var(--shadow-sm);
+      }
+      .payment-method-card:focus-visible {
+        outline: none;
+        box-shadow: var(--focus-ring);
+      }
+      .payment-method-card:active {
+        transform: scale(0.99);
+      }
+      .payment-method-card.selected {
+        border-color: var(--olive);
+        background: #f4f7ef;
+      }
+      .payment-method-icon {
+        width: 46px;
+        height: 46px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+        flex-shrink: 0;
+      }
+      .payment-method-info {
+        flex: 1;
+      }
+      .payment-method-name {
+        font-size: 15px;
+        font-weight: 700;
+        margin-bottom: 3px;
+      }
+      .payment-method-desc {
+        font-size: 12.5px;
+        color: var(--text-muted);
+      }
+      .payment-method-check {
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        border: 2px solid var(--border-strong);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s;
+        flex-shrink: 0;
+        font-size: 12px;
+      }
+      .payment-method-card.selected .payment-method-check {
+        background: var(--olive);
+        border-color: var(--olive);
+        color: white;
+      }
+      .payment-detail {
+        background: white;
+        border: 1.5px solid var(--border);
+        border-radius: var(--radius);
+        padding: 20px;
+        margin-bottom: 16px;
+        display: none;
+      }
+      .payment-detail.visible {
+        display: block;
+        animation: fadeIn 0.2s ease;
+      }
+      .payment-detail-title {
+        font-size: 15px;
+        font-weight: 700;
+        margin-bottom: 14px;
+        color: var(--olive-dark);
+      }
+      .bit-display {
+        background: linear-gradient(135deg, #e8f4fb, #d0eaf7);
+        border: 2px solid #a0d4ef;
+        border-radius: 12px;
+        padding: 22px;
+        text-align: center;
+      }
+      .bit-logo {
+        font-size: 30px;
+        font-weight: 900;
+        color: #007dbf;
+        letter-spacing: -1px;
+        margin-bottom: 6px;
+      }
+      .bit-phone {
+        font-size: 28px;
+        font-weight: 800;
+        color: #007dbf;
+        letter-spacing: 3px;
+        margin-bottom: 6px;
+        direction: ltr;
+      }
+      .paybox-display {
+        background: linear-gradient(135deg, #f3e8fb, #e8d4f7);
+        border: 2px solid #c9a0e8;
+        border-radius: 12px;
+        padding: 22px;
+        text-align: center;
+      }
+      .copy-btn {
+        background: var(--olive-dark);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        padding: 9px 20px;
+        font-size: 13px;
+        font-weight: 700;
+        cursor: pointer;
+        font-family: inherit;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        transition: all 0.2s;
+      }
+      .copy-btn:hover {
+        background: var(--olive);
+      }
+      .pay-open-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        border: none;
+        border-radius: 10px;
+        padding: 12px 24px;
+        font-size: 15px;
+        font-weight: 700;
+        cursor: pointer;
+        font-family: inherit;
+        text-decoration: none;
+        transition: all 0.2s;
+      }
+      .pay-open-btn:hover {
+        transform: translateY(-1px);
+      }
+      .pay-open-btn.bit-btn {
+        background: linear-gradient(135deg, #007dbf, #0098e5);
+        color: white;
+        box-shadow: 0 3px 10px rgba(0, 125, 191, 0.3);
+      }
+      .pay-open-btn.paybox-btn {
+        background: linear-gradient(135deg, #7b2d8b, #9c3aad);
+        color: white;
+        box-shadow: 0 3px 10px rgba(123, 45, 139, 0.3);
+      }
+      .pay-open-btn.card-btn {
+        background: linear-gradient(135deg, #2c5f8a, #3a7ab5);
+        color: white;
+        box-shadow: 0 3px 10px rgba(44, 95, 138, 0.3);
+      }
+      .payment-done-btn {
+        width: 100%;
+        background: var(--green);
+        color: white;
+        border: none;
+        border-radius: 11px;
+        padding: 15px;
+        font-size: 16px;
+        font-weight: 800;
+        cursor: pointer;
+        font-family: inherit;
+        margin-top: 16px;
+        transition: all 0.2s;
+        box-shadow: 0 3px 12px rgba(59, 122, 79, 0.3);
+        display: none;
+      }
+      .payment-done-btn:hover {
+        transform: translateY(-1px);
+      }
+      .payment-done-btn:active {
+        transform: scale(0.98);
+      }
+      .payment-done-btn:focus-visible {
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(59, 122, 79, 0.4);
+      }
+      .payment-back-btn {
+        width: 100%;
+        background: white;
+        color: var(--text-muted);
+        border: 1.5px solid var(--border-strong);
+        border-radius: 11px;
+        padding: 12px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        font-family: inherit;
+        margin-top: 8px;
+        transition: all 0.2s;
+        min-height: 44px;
+      }
+      .payment-back-btn:hover {
+        border-color: var(--olive-light);
+        color: var(--olive);
+      }
+      .payment-back-btn:focus-visible {
+        outline: none;
+        box-shadow: var(--focus-ring);
+      }
+
+      /* SUCCESS */
+      .success-screen {
+        display: none;
+        text-align: center;
+        padding: 40px 20px;
+      }
+      .success-screen.visible {
+        display: block;
+        animation: fadeIn 0.4s ease;
+      }
+      .success-icon {
+        width: 74px;
+        height: 74px;
+        background: linear-gradient(135deg, var(--green), #4a9660);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 20px;
+        font-size: 34px;
+        color: white;
+        box-shadow: 0 6px 20px rgba(59, 122, 79, 0.3);
+      }
+      .success-title {
+        font-size: 26px;
+        font-weight: 800;
+        color: var(--olive-dark);
+        margin-bottom: 8px;
+      }
+      .success-msg {
+        font-size: 15px;
+        color: var(--text-muted);
+        line-height: 1.6;
+        margin-bottom: 22px;
+      }
+      .success-summary {
+        background: var(--cream);
+        border-radius: 12px;
+        padding: 18px;
+        text-align: right;
+        margin-bottom: 22px;
+        border: 1px solid var(--border);
+      }
+      .success-summary-title {
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--olive-dark);
+        margin-bottom: 10px;
+      }
+      .success-row {
+        display: flex;
+        justify-content: space-between;
+        font-size: 13.5px;
+        padding: 5px 0;
+        border-bottom: 1px solid var(--border);
+      }
+      .success-row.total {
+        border: none;
+        font-weight: 800;
+        font-size: 15px;
+        color: var(--olive-dark);
+        padding-top: 8px;
+      }
+      .new-order-btn {
+        background: var(--olive);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        padding: 13px 30px;
+        font-size: 15px;
+        font-weight: 700;
+        cursor: pointer;
+        font-family: inherit;
+        transition: all 0.2s;
+        min-height: 44px;
+      }
+      .new-order-btn:hover {
+        background: var(--olive-dark);
+      }
+      .new-order-btn:active {
+        transform: scale(0.98);
+      }
+      .new-order-btn:focus-visible {
+        outline: none;
+        box-shadow: var(--focus-ring);
+      }
+
+      /* ADMIN */
+      .admin-toggle {
+        text-align: center;
+        padding: 10px;
+      }
+      .admin-link {
+        font-size: 12px;
+        color: var(--text-muted);
+        text-decoration: underline;
+        cursor: pointer;
+        background: none;
+        border: none;
+        font-family: inherit;
+        padding: 4px 8px;
+      }
+      .admin-panel {
+        background: white;
+        border: 1.5px solid var(--border-strong);
+        border-radius: var(--radius);
+        padding: 22px;
+        margin: 0 20px 30px;
+        display: none;
+        box-shadow: var(--shadow-md);
+      }
+      .admin-panel.visible {
+        display: block;
+      }
+      .admin-title {
+        font-size: 18px;
+        font-weight: 800;
+        color: var(--olive-dark);
+        margin-bottom: 8px;
+      }
+      .admin-note {
+        font-size: 12.5px;
+        color: var(--warning-text);
+        margin-bottom: 18px;
+        background: var(--warning-bg);
+        border: 1px solid var(--warning-border);
+        border-radius: 8px;
+        padding: 10px 14px;
+      }
+      .admin-section {
+        margin-bottom: 24px;
+        padding-bottom: 24px;
+        border-bottom: 1px solid var(--border);
+      }
+      .admin-section:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+        padding-bottom: 0;
+      }
+      .admin-sub {
+        font-size: 15px;
+        font-weight: 800;
+        color: var(--olive-dark);
+        margin-bottom: 12px;
+      }
+      .admin-date-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 14px;
+        flex-wrap: wrap;
+      }
+      .admin-date-row label {
+        font-size: 13px;
+        font-weight: 600;
+        min-width: 130px;
+      }
+      .admin-input {
+        border: 1.5px solid var(--border-strong);
+        border-radius: 8px;
+        padding: 7px 11px;
+        font-size: 13px;
+        font-family: inherit;
+        color: var(--text-main);
+        background: white;
+        outline: none;
+      }
+      .admin-input:focus {
+        border-color: var(--olive);
+      }
+      .admin-dish-item {
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 14px;
+        margin-bottom: 10px;
+        background: var(--cream);
+      }
+      .admin-item-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr auto;
+        gap: 8px;
+        align-items: center;
+        margin-bottom: 8px;
+      }
+      .admin-item-row2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+      }
+      .admin-input-full {
+        width: 100%;
+        border: 1.5px solid var(--border-strong);
+        border-radius: 8px;
+        padding: 7px 11px;
+        font-size: 13px;
+        font-family: inherit;
+        color: var(--text-main);
+        background: white;
+        outline: none;
+      }
+      .admin-input-full:focus {
+        border-color: var(--olive);
+      }
+      .remove-dish {
+        background: #fee2e2;
+        border: none;
+        border-radius: 8px;
+        padding: 7px 12px;
+        font-size: 12px;
+        color: var(--red);
+        cursor: pointer;
+        font-family: inherit;
+        white-space: nowrap;
+      }
+      .remove-dish:hover {
+        background: #fca5a5;
+      }
+      .add-dish-btn {
+        background: var(--olive-light);
+        color: white;
+        border: none;
+        border-radius: 9px;
+        padding: 9px 20px;
+        font-size: 13px;
+        font-weight: 700;
+        cursor: pointer;
+        font-family: inherit;
+        margin-top: 4px;
+      }
+      .add-dish-btn:hover {
+        background: var(--olive);
+      }
+      .save-menu-btn {
+        background: var(--olive-dark);
+        color: white;
+        border: none;
+        border-radius: 9px;
+        padding: 10px 22px;
+        font-size: 14px;
+        font-weight: 700;
+        cursor: pointer;
+        font-family: inherit;
+        margin-top: 14px;
+      }
+      .save-menu-btn:hover {
+        background: var(--olive);
+      }
+      .admin-orders-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+        margin-top: 10px;
+      }
+      .admin-orders-table th {
+        background: var(--olive-dark);
+        color: white;
+        padding: 9px 10px;
+        text-align: right;
+        font-weight: 700;
+      }
+      .admin-orders-table td {
+        padding: 8px 10px;
+        border-bottom: 1px solid var(--border);
+        vertical-align: top;
+      }
+      .admin-orders-table tr:nth-child(even) td {
+        background: var(--cream);
+      }
+      .admin-btns {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-top: 12px;
+      }
+      .clear-orders-btn {
+        background: var(--red-bg);
+        color: var(--red);
+        border: 1px solid var(--red-border);
+        border-radius: 8px;
+        padding: 8px 16px;
+        font-size: 12.5px;
+        cursor: pointer;
+        font-family: inherit;
+        font-weight: 600;
+        min-height: 44px;
+        transition: all 0.15s;
+      }
+      .clear-orders-btn:hover {
+        background: var(--red-border);
+      }
+      .clear-orders-btn:focus-visible {
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(217, 79, 79, 0.3);
+      }
+      .export-btn {
+        background: var(--green-bg);
+        color: var(--green);
+        border: 1px solid var(--green-border);
+        border-radius: 8px;
+        padding: 8px 16px;
+        font-size: 12.5px;
+        cursor: pointer;
+        font-family: inherit;
+        font-weight: 600;
+        min-height: 44px;
+        transition: all 0.15s;
+      }
+      .export-btn:hover {
+        background: var(--green-border);
+        color: white;
+      }
+      .export-btn:focus-visible {
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(59, 122, 79, 0.3);
+      }
+      .kpi-row {
+        display: flex;
+        gap: 14px;
+        flex-wrap: wrap;
+        margin-bottom: 16px;
+      }
+      .kpi-card {
+        background: var(--cream);
+        border-radius: 10px;
+        padding: 12px 18px;
+        text-align: center;
+        flex: 1;
+        min-width: 90px;
+        border: 1px solid var(--border);
+      }
+      .kpi-val {
+        font-size: 26px;
+        font-weight: 800;
+      }
+      .kpi-label {
+        font-size: 11px;
+        color: var(--text-muted);
+        margin-top: 2px;
+      }
+      .status-badge {
+        display: inline-block;
+        padding: 2px 8px;
+        border-radius: 12px;
+        font-size: 11px;
+        font-weight: 700;
+      }
+      .status-paid {
+        background: var(--green-bg);
+        color: var(--green);
+      }
+      .status-pending {
+        background: var(--pending-bg);
+        color: var(--pending-text);
+      }
+
+      /* FOOTER */
+      .footer {
+        background: var(--olive-dark);
+        color: rgba(255, 255, 255, 0.65);
+        text-align: center;
+        padding: 20px;
+        font-size: 12.5px;
+      }
+
+      /* Toast */
+      #toast {
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: var(--toast-bg);
+        color: white;
+        padding: 10px 22px;
+        border-radius: 22px;
+        font-size: 14px;
+        font-weight: 600;
+        z-index: 9999;
+        opacity: 0;
+        transition: opacity 0.3s;
+        pointer-events: none;
+        white-space: nowrap;
+      }
+
+      /* RESPONSIVE */
+      @media (max-width: 560px) {
+        .form-grid {
+          grid-template-columns: 1fr;
+        }
+        .menu-grid {
+          grid-template-columns: 1fr;
+        }
+        .admin-item-row {
+          grid-template-columns: 1fr;
+        }
+        .hero h1 {
+          font-size: 22px;
+        }
+        .main {
+          padding: 14px;
+        }
+        .step-label {
+          font-size: 9px;
+        }
+        /* Bigger touch targets on mobile */
+        .qty-btn {
+          width: 44px;
+          height: 44px;
+        }
+        .add-dish-btn,
+        .save-menu-btn,
+        .remove-dish {
+          min-height: 44px;
+        }
+      }
+
+      /* Respect reduced motion preference */
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          animation-duration: 0.01ms !important;
+          transition-duration: 0.01ms !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ═══════════════════════════════════════════
+     ⚙️  הגדרות — ערכי כאן בלבד
+     ═══════════════════════════════════════════ -->
+    <script>
+      const CONFIG = {
+        businessName: "שירה וגנר",
+        businessSubtitle: "תפריט שבועי ביתי",
+        ownerWhatsapp: "972546103430", // ← ללא סימן +
+        ownerEmail: "shirawagner511@gmail.com",
+        pickupInfo: "איסוף עצמי בלבד — הפרטים יישלחו לאחר קבלת ההזמנה",
+        footerText: "שירה וגנר © 2026 | הזמנות אוכל ביתי",
+        adminPassword: "shira123", // ← שני את הסיסמה!
+
+        // EmailJS (אופציונלי - להוספת מייל אוטומטי)
+        emailJsServiceId: "YOUR_SERVICE_ID",
+        emailJsTemplateId: "YOUR_TEMPLATE_ID",
+        emailJsPublicKey: "YOUR_PUBLIC_KEY",
+
+        // Google Sheets — ראי הנחיות הגדרה בתחתית הקובץ
+        googleSheetsWebhook:
+          "https://script.google.com/macros/s/AKfycbxRNNuumQ9hVs6ajG2KoUi5f1KwZwYKM3XsmGhq3FpOl0qPyOaR8RVxGHK7tumjVjU/exec", // ← הדביקי כאן את ה-URL אחרי ההגדרה
+
+        // אמצעי תשלום
+        payment: {
+          bit: {
+            enabled: true,
+            phone: "0546103430", // ← הטלפון שלך לקבלת Bit
+            name: "שירה וגנר",
+          },
+          paybox: {
+            enabled: true,
+            phone: "0546103430", // ← הטלפון שלך לקבלת PayBox
+          },
+          creditCard: {
+            enabled: false,
+            link: "", // ← הדביקי לינק מ-Meshulam / Cardcom / iCredit
+            label: "כרטיס אשראי",
+          },
+          bankTransfer: {
+            enabled: false,
+            details: "בנק הפועלים | סניף 123 | חשבון 456789 | ע״ש שירה וגנר",
+          },
+        },
+      };
+
+      const DEFAULT_MENU = [
+        {
+          id: 1,
+          name: "מרק עוף ביתי",
+          desc: "מרק עוף קלאסי עם ירקות ולוקשן",
+          price: 45,
+          emoji: "🍲",
+        },
+        {
+          id: 2,
+          name: "פולנטה קרמית",
+          desc: "פולנטה רכה עם גבינות ועשבי תיבול",
+          price: 52,
+          emoji: "🧀",
+        },
+        {
+          id: 3,
+          name: "סלט ניסואז",
+          desc: "טונה, ביצים, זיתים ועלים טריים",
+          price: 55,
+          emoji: "🥗",
+        },
+        {
+          id: 4,
+          name: "עוגת שוקולד",
+          desc: "עוגה לחה עם ציפוי גנאש עשיר",
+          price: 68,
+          emoji: "🎂",
+        },
+        {
+          id: 5,
+          name: "קישים לוריין",
+          desc: "פאי קרמי עם גבינה ובצל קרמלי",
+          price: 58,
+          emoji: "🥧",
+        },
+        {
+          id: 6,
+          name: "רולדת תרד ריקוטה",
+          desc: "בצק שמרים עם תרד, ריקוטה ופינוליים",
+          price: 62,
+          emoji: "🌿",
+        },
+      ];
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
+    <div id="toast"></div>
+    <div id="app">
+      <!-- HEADER -->
+      <header class="header">
+        <div class="header-inner">
+          <div class="brand-wrap">
+            <div class="brand-logo">🍳</div>
+            <div>
+              <div class="brand" id="brand-name"></div>
+              <div class="brand-sub" id="brand-sub"></div>
+            </div>
+          </div>
+          <button class="cart-btn" onclick="toggleCart()">
+            🛒 סל <span class="cart-count" id="cart-count">0</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- STEPS -->
+      <div class="steps-bar" id="steps-bar">
+        <div class="steps-inner">
+          <div class="step" id="step-1">
+            <div class="step-circle">1</div>
+            <div class="step-label">בחירת מנות</div>
+          </div>
+          <div class="step" id="step-2">
+            <div class="step-circle">2</div>
+            <div class="step-label">פרטים</div>
+          </div>
+          <div class="step" id="step-3">
+            <div class="step-circle">3</div>
+            <div class="step-label">תשלום</div>
+          </div>
+          <div class="step" id="step-4">
+            <div class="step-circle">✓</div>
+            <div class="step-label">אישור</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- HERO -->
+      <div class="hero" id="hero-section">
+        <h1 id="hero-title">תפריט שבועי 🍽️</h1>
+        <div class="hero-date" id="hero-date"></div>
+        <div class="hero-badges">
+          <span class="badge">📦 איסוף עצמי</span>
+          <span class="badge">✨ מבושל עם אהבה</span>
+          <span class="badge">🌿 חומרי גלם טריים</span>
+        </div>
+      </div>
+
+      <div class="main">
+        <!-- SUCCESS -->
+        <div class="success-screen" id="success-screen">
+          <div class="success-icon">✓</div>
+          <div class="success-title">ההזמנה אושרה! 🎉</div>
+          <div class="success-msg" id="success-msg"></div>
+          <div class="success-summary" id="success-summary"></div>
+          <button class="new-order-btn" onclick="resetApp()">הזמנה חדשה</button>
+        </div>
+
+        <!-- MAIN CONTENT -->
+        <div id="main-content">
+          <div class="section-title">
+            <div class="section-icon">🍲</div>
+            מנות השבוע
+          </div>
+          <div class="menu-grid" id="menu-grid"></div>
+
+          <div class="cart-panel" id="cart-panel">
+            <div class="cart-title">🛒 סל הקניות שלך</div>
+            <div id="cart-items-list"></div>
+            <div class="cart-total-row" id="cart-total" style="display: none">
+              <span>סה״כ לתשלום:</span>
+              <span id="cart-total-price"></span>
+            </div>
+          </div>
+
+          <div class="section-title">
+            <div class="section-icon">📋</div>
+            פרטי ההזמנה
+          </div>
+          <div class="order-form">
+            <div class="delivery-note" id="pickup-info-text"></div>
+            <div class="form-grid">
+              <div class="form-group">
+                <label class="form-label"
+                  >שם מלא <span class="required-star">*</span></label
+                >
+                <input
+                  type="text"
+                  class="form-input"
+                  id="f-name"
+                  placeholder="ישראל ישראלי"
+                  autocomplete="name"
+                />
+              </div>
+              <div class="form-group">
+                <label class="form-label"
+                  >טלפון <span class="required-star">*</span></label
+                >
+                <input
+                  type="tel"
+                  class="form-input"
+                  id="f-phone"
+                  placeholder="05X-XXXXXXX"
+                  autocomplete="tel"
+                />
+              </div>
+              <div class="form-group">
+                <label class="form-label"
+                  >אימייל <span class="required-star">*</span></label
+                >
+                <input
+                  type="email"
+                  class="form-input"
+                  id="f-email"
+                  placeholder="your@email.com"
+                  autocomplete="email"
+                />
+              </div>
+              <div class="form-group">
+                <label class="form-label"
+                  >עיר <span class="required-star">*</span></label
+                >
+                <input
+                  type="text"
+                  class="form-input"
+                  id="f-city"
+                  placeholder="תל אביב"
+                />
+              </div>
+              <div class="form-group full">
+                <label class="form-label">הערות (אלרגיות, בקשות מיוחדות)</label>
+                <textarea
+                  class="form-input"
+                  id="f-notes"
+                  rows="2"
+                  placeholder="כתבי כאן..."
+                ></textarea>
+              </div>
+            </div>
+            <button
+              class="submit-btn"
+              id="submit-btn"
+              onclick="proceedToPayment()"
+            >
+              המשך לתשלום ←
+            </button>
+            <div class="form-note">
+              * שדות חובה | הזמנה תאושר לאחר ביצוע התשלום
+            </div>
+          </div>
+        </div>
+        <!-- end main-content -->
+
+        <!-- PAYMENT SCREEN -->
+        <div class="payment-screen" id="payment-screen">
+          <div class="section-title">
+            <div class="section-icon">💳</div>
+            תשלום
+          </div>
+
+          <div class="payment-header">
+            <div
+              style="
+                font-size: 16px;
+                font-weight: 700;
+                color: var(--olive-dark);
+              "
+            >
+              סיכום ההזמנה
+            </div>
+            <div class="payment-order-summary" id="payment-order-summary"></div>
+          </div>
+
+          <div class="section-title" style="margin-top: 0">
+            <div class="section-icon">🏦</div>
+            בחרי אמצעי תשלום
+          </div>
+          <div id="payment-methods-list"></div>
+          <div class="payment-detail" id="payment-detail-area"></div>
+
+          <button
+            class="payment-done-btn"
+            id="payment-done-btn"
+            onclick="confirmPayment()"
+          >
+            ✅ ביצעתי את התשלום — אשרי הזמנה
+          </button>
+          <button class="payment-back-btn" onclick="backToForm()">
+            ← חזרה לפרטי ההזמנה
+          </button>
+        </div>
+      </div>
+      <!-- end main -->
+
+      <!-- ADMIN -->
+      <div class="admin-toggle">
+        <button class="admin-link" onclick="toggleAdmin()">🔧 ניהול</button>
+      </div>
+      <div class="admin-panel" id="admin-panel">
+        <div class="admin-title">⚙️ פאנל ניהול</div>
+        <div class="admin-note">
+          💡 הזמנות שמורות בדפדפן ובגיליון Google Sheets (אם הוגדר). ייצאי CSV
+          לגיבוי.
+        </div>
+
+        <div class="admin-section">
+          <div class="admin-sub">📅 הגדרות שבועיות</div>
+          <div class="admin-date-row">
+            <label>כותרת השבוע:</label>
+            <input
+              type="text"
+              class="admin-input"
+              id="admin-week-title"
+              style="width: 220px"
+              placeholder="תפריט שבועי"
+            />
+          </div>
+          <div class="admin-date-row">
+            <label>הגבלת הזמנות עד:</label>
+            <input
+              type="text"
+              class="admin-input"
+              id="admin-deadline"
+              style="width: 200px"
+              placeholder="יום שני 09:00"
+            />
+          </div>
+          <div id="admin-dishes-list"></div>
+          <button class="add-dish-btn" onclick="addAdminDish()">
+            + הוסף מנה</button
+          ><br />
+          <button class="save-menu-btn" onclick="saveMenu()">
+            💾 שמור ועדכן תפריט
+          </button>
+        </div>
+
+        <div class="admin-section">
+          <div class="admin-sub">📊 סיכום הזמנות</div>
+          <div id="orders-summary">אין הזמנות עדיין</div>
+        </div>
+
+        <div class="admin-section">
+          <div class="admin-sub">📋 כל ההזמנות</div>
+          <div id="orders-table-container" style="overflow-x: auto">
+            אין הזמנות עדיין
+          </div>
+          <div class="admin-btns">
+            <button class="export-btn" onclick="exportCSV()">
+              ⬇️ ייצוא CSV לאקסל
+            </button>
+            <button class="clear-orders-btn" onclick="clearOrders()">
+              🗑️ נקה הזמנות
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <footer class="footer" id="footer-text"></footer>
+    </div>
+
+    <script>
+      // ═══════════════════════════════
+      //  STATE
+      // ═══════════════════════════════
+      let menu =
+        JSON.parse(localStorage.getItem("sw_menu") || "null") || DEFAULT_MENU;
+      let weekTitle = localStorage.getItem("sw_week_title") || "תפריט שבועי";
+      let deadline = localStorage.getItem("sw_deadline") || "";
+      let orders = JSON.parse(localStorage.getItem("sw_orders") || "[]");
+      let quantities = {},
+        dishNotes = {};
+      let cartVisible = false,
+        adminVisible = false;
+      let adminDishes = [],
+        currentOrder = null,
+        selectedPayment = null;
+
+      // ═══════════════════════════════
+      //  UTILS
+      // ═══════════════════════════════
+      function esc(s) {
+        return String(s == null ? "" : s)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#39;");
+      }
+
+      function showToast(msg) {
+        const t = document.getElementById("toast");
+        t.textContent = msg;
+        t.style.opacity = "1";
+        clearTimeout(t._tid);
+        t._tid = setTimeout(() => {
+          t.style.opacity = "0";
+        }, 2500);
+      }
+
+      function copyText(text) {
+        navigator.clipboard
+          .writeText(text)
+          .then(() => showToast("הועתק! ✓"))
+          .catch(() => {
+            /* fallback not needed for modern browsers */
+          });
+      }
+
+      function setStep(n) {
+        document.getElementById("steps-bar").classList.add("visible");
+        [1, 2, 3, 4].forEach((i) => {
+          const el = document.getElementById("step-" + i);
+          el.classList.toggle("active", i === n);
+          el.classList.toggle("done", i < n);
+        });
+      }
+
+      // ═══════════════════════════════
+      //  INIT
+      // ═══════════════════════════════
+      function initApp() {
+        document.getElementById("brand-name").textContent = CONFIG.businessName;
+        document.getElementById("brand-sub").textContent =
+          CONFIG.businessSubtitle;
+        document.getElementById("footer-text").textContent = CONFIG.footerText;
+        document.getElementById("pickup-info-text").textContent =
+          "📦 " + CONFIG.pickupInfo;
+        document.title = CONFIG.businessName + " | תפריט שבועי";
+        if (window.emailjs && CONFIG.emailJsPublicKey !== "YOUR_PUBLIC_KEY")
+          emailjs.init(CONFIG.emailJsPublicKey);
+        updateHeroText();
+        renderMenu();
+        updateCart();
+        setStep(1);
+      }
+
+      function updateHeroText() {
+        document.getElementById("hero-title").textContent = weekTitle + " 🍽️";
+        document.getElementById("hero-date").textContent = deadline
+          ? "⏰ הזמנות עד " + deadline
+          : "";
+      }
+
+      // ═══════════════════════════════
+      //  MENU
+      // ═══════════════════════════════
+      function renderMenu() {
+        const grid = document.getElementById("menu-grid");
+        grid.innerHTML = "";
+        menu.forEach((dish) => {
+          if (!quantities[dish.id]) quantities[dish.id] = 0;
+          if (!dishNotes[dish.id]) dishNotes[dish.id] = "";
+          const card = document.createElement("div");
+          card.className =
+            "dish-card" + (quantities[dish.id] > 0 ? " has-items" : "");
+          card.id = "card-" + dish.id;
+          card.innerHTML = `<div class="dish-img">
+          <span class="dish-emoji">${esc(dish.emoji || "🍽️")}</span>
+          <div class="dish-qty-badge" id="badge-${dish.id}">${quantities[dish.id]} בסל</div>
+        </div>
+        <div class="dish-body">
+          <div class="dish-name">${esc(dish.name)}</div>
+          <div class="dish-desc">${esc(dish.desc)}</div>
+          <div class="dish-price">₪${dish.price} <span>למנה</span></div>
+          <div class="qty-row">
+            <button class="qty-btn" onclick="changeQty(${dish.id},-1)" aria-label="פחות">−</button>
+            <span class="qty-num" id="qty-${dish.id}">${quantities[dish.id]}</span>
+            <button class="qty-btn" onclick="changeQty(${dish.id},1)"  aria-label="יותר">+</button>
+            <span class="qty-label">מנות</span>
+          </div>
+          <textarea class="note-input" id="dnote-${dish.id}" rows="2"
+            placeholder="הערה למנה (אופציונלי)..."
+            oninput="dishNotes[${dish.id}]=this.value">${esc(dishNotes[dish.id])}</textarea>
+        </div>`;
+          grid.appendChild(card);
+        });
+      }
+
+      // ═══════════════════════════════
+      //  CART
+      // ═══════════════════════════════
+      function changeQty(id, delta) {
+        quantities[id] = Math.max(0, (quantities[id] || 0) + delta);
+        const qEl = document.getElementById("qty-" + id);
+        const badge = document.getElementById("badge-" + id);
+        const card = document.getElementById("card-" + id);
+        if (qEl) qEl.textContent = quantities[id];
+        if (badge) badge.textContent = quantities[id] + " בסל";
+        if (card) card.classList.toggle("has-items", quantities[id] > 0);
+        const cnt = document.getElementById("cart-count");
+        cnt.classList.remove("bump");
+        void cnt.offsetWidth;
+        cnt.classList.add("bump");
+        updateCart();
+      }
+
+      function updateCart() {
+        let total = 0,
+          count = 0;
+        const items = [];
+        menu.forEach((dish) => {
+          const q = quantities[dish.id] || 0;
+          if (q > 0) {
+            total += q * dish.price;
+            count += q;
+            items.push({ dish, qty: q, note: dishNotes[dish.id] || "" });
+          }
+        });
+        document.getElementById("cart-count").textContent = count;
+        const list = document.getElementById("cart-items-list");
+        list.innerHTML = "";
+        if (!items.length) {
+          list.innerHTML =
+            '<div class="cart-empty">העגלה ריקה — הוסיפי מנות מהתפריט 🍽️</div>';
+          document.getElementById("cart-total").style.display = "none";
+        } else {
+          items.forEach(({ dish, qty, note }) => {
+            const row = document.createElement("div");
+            row.className = "cart-item";
+            const left = document.createElement("div");
+            const n = document.createElement("div");
+            n.className = "cart-item-name";
+            n.textContent = dish.name + " × " + qty;
+            left.appendChild(n);
+            if (note) {
+              const nd = document.createElement("div");
+              nd.className = "cart-item-detail";
+              nd.textContent = "הערה: " + note;
+              left.appendChild(nd);
+            }
+            const p = document.createElement("div");
+            p.className = "cart-item-price";
+            p.textContent = "₪" + dish.price * qty;
+            row.appendChild(left);
+            row.appendChild(p);
+            list.appendChild(row);
+          });
+          document.getElementById("cart-total").style.display = "flex";
+          document.getElementById("cart-total-price").textContent = "₪" + total;
+        }
+      }
+
+      function toggleCart() {
+        cartVisible = !cartVisible;
+        const panel = document.getElementById("cart-panel");
+        panel.classList.toggle("visible", cartVisible);
+        if (cartVisible)
+          panel.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      }
+
+      // ═══════════════════════════════
+      //  ORDER FLOW
+      // ═══════════════════════════════
+      function proceedToPayment() {
+        const name = document.getElementById("f-name").value.trim();
+        const phone = document.getElementById("f-phone").value.trim();
+        const email = document.getElementById("f-email").value.trim();
+        const city = document.getElementById("f-city").value.trim();
+        let ok = true;
+        [
+          ["f-name", name],
+          ["f-phone", phone],
+          ["f-email", email],
+          ["f-city", city],
+        ].forEach(([id, v]) => {
+          document.getElementById(id).classList.toggle("error", !v);
+          if (!v) ok = false;
+        });
+        if (!ok) {
+          showToast("נא למלא את כל שדות החובה");
+          return;
+        }
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+          document.getElementById("f-email").classList.add("error");
+          showToast("אימייל לא תקין");
+          return;
+        }
+
+        const items = [];
+        let total = 0;
+        menu.forEach((dish) => {
+          const q = quantities[dish.id] || 0;
+          if (q > 0) {
+            total += q * dish.price;
+            items.push({
+              name: dish.name,
+              qty: q,
+              price: dish.price,
+              note: dishNotes[dish.id] || "",
+            });
+          }
+        });
+        if (!items.length) {
+          showToast("הסל ריק! הוסיפי מנות לפני ההמשך");
+          return;
+        }
+
+        currentOrder = {
+          id: Date.now(),
+          name,
+          phone,
+          email,
+          city,
+          note: document.getElementById("f-notes").value.trim(),
+          items,
+          total,
+          date: new Date().toLocaleString("he-IL"),
+          week: weekTitle,
+          paymentMethod: null,
+          paid: false,
+        };
+        showPaymentScreen();
+      }
+
+      function showPaymentScreen() {
+        document.getElementById("main-content").style.display = "none";
+        document.getElementById("hero-section").style.display = "none";
+        document.getElementById("payment-screen").classList.add("visible");
+        selectedPayment = null;
+        document.getElementById("payment-done-btn").style.display = "none";
+        document
+          .getElementById("payment-detail-area")
+          .classList.remove("visible");
+        setStep(3);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+
+        // Build summary
+        let html = "";
+        currentOrder.items.forEach((it) => {
+          html += `<div class="payment-row"><span>${esc(it.name)} × ${it.qty}</span><span>₪${it.price * it.qty}</span></div>`;
+        });
+        html += `<div class="payment-row"><span>סה״כ לתשלום</span><span>₪${currentOrder.total}</span></div>`;
+        document.getElementById("payment-order-summary").innerHTML = html;
+
+        renderPaymentMethods();
+      }
+
+      function renderPaymentMethods() {
+        const c = document.getElementById("payment-methods-list");
+        c.innerHTML = "";
+        const defs = [
+          {
+            id: "bit",
+            icon: "💙",
+            bg: "#dff0fb",
+            name: "Bit",
+            desc: "תשלום מהיר דרך אפליקציית Bit",
+            enabled: CONFIG.payment.bit.enabled,
+          },
+          {
+            id: "paybox",
+            icon: "💜",
+            bg: "#eedff5",
+            name: "PayBox",
+            desc: "תשלום דרך אפליקציית PayBox",
+            enabled: CONFIG.payment.paybox.enabled,
+          },
+          {
+            id: "card",
+            icon: "💳",
+            bg: "#dde8f5",
+            name: CONFIG.payment.creditCard.label,
+            desc: "תשלום מאובטח בכרטיס אשראי",
+            enabled:
+              CONFIG.payment.creditCard.enabled &&
+              !!CONFIG.payment.creditCard.link,
+          },
+          {
+            id: "bank",
+            icon: "🏦",
+            bg: "#e8f0de",
+            name: "העברה בנקאית",
+            desc: "העברה ישירה לחשבון הבנק",
+            enabled: CONFIG.payment.bankTransfer.enabled,
+          },
+        ];
+        defs
+          .filter((d) => d.enabled)
+          .forEach((m) => {
+            const card = document.createElement("div");
+            card.className = "payment-method-card";
+            card.id = "pm-" + m.id;
+            card.setAttribute("tabindex", "0");
+            card.setAttribute("role", "radio");
+            card.setAttribute("aria-label", m.name);
+            card.onclick = () => selectPayment(m.id);
+            card.onkeydown = (e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                selectPayment(m.id);
+              }
+            };
+            card.innerHTML = `<div class="payment-method-icon" style="background:${m.bg}">${m.icon}</div>
+        <div class="payment-method-info">
+          <div class="payment-method-name">${esc(m.name)}</div>
+          <div class="payment-method-desc">${esc(m.desc)}</div>
+        </div>
+        <div class="payment-method-check" id="chk-${m.id}"></div>`;
+            c.appendChild(card);
+          });
+      }
+
+      function selectPayment(id) {
+        selectedPayment = id;
+        document.querySelectorAll(".payment-method-card").forEach((c) => {
+          c.classList.remove("selected");
+          c.setAttribute("aria-checked", "false");
+        });
+        document
+          .querySelectorAll(".payment-method-check")
+          .forEach((c) => (c.textContent = ""));
+        const pm = document.getElementById("pm-" + id);
+        if (pm) {
+          pm.classList.add("selected");
+          pm.setAttribute("aria-checked", "true");
+          document.getElementById("chk-" + id).textContent = "✓";
+        }
+        buildPaymentDetail(id);
+        document.getElementById("payment-done-btn").style.display = "block";
+        setTimeout(
+          () =>
+            document
+              .getElementById("payment-done-btn")
+              .scrollIntoView({ behavior: "smooth", block: "nearest" }),
+          200,
+        );
+      }
+
+      function buildPaymentDetail(id) {
+        const area = document.getElementById("payment-detail-area");
+        area.classList.add("visible");
+        const total = currentOrder.total;
+
+        if (id === "bit") {
+          const phone = CONFIG.payment.bit.phone;
+          const bitLink = `https://bitpay.co.il/app/bit/pay?phonenumber=${encodeURIComponent(phone)}&amount=${total}&name=${encodeURIComponent(CONFIG.payment.bit.name)}`;
+          area.innerHTML = `<div class="payment-detail-title">💙 תשלום דרך Bit</div>
+        <div class="bit-display">
+          <div class="bit-logo">bit</div>
+          <div style="font-size:13px;color:#555;margin-bottom:6px">שלחי תשלום למספר:</div>
+          <div class="bit-phone">${esc(phone)}</div>
+          <div style="font-size:14px;color:#555;margin-bottom:18px">סכום: <strong style="font-size:22px;color:#007dbf">₪${total}</strong></div>
+          <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+            <button class="copy-btn" onclick="copyText(${JSON.stringify(phone)})">📋 העתק מספר</button>
+            <a href="${esc(bitLink)}" target="_blank" class="pay-open-btn bit-btn">פתח Bit →</a>
+          </div>
+          <div style="margin-top:14px;font-size:12px;color:#888">לאחר ביצוע התשלום לחצי על הכפתור הירוק למטה</div>
+        </div>`;
+        } else if (id === "paybox") {
+          const phone = CONFIG.payment.paybox.phone.replace(/\D/g, "");
+          const payboxLink = `https://payboxapp.page.link/?link=https%3A%2F%2Fweb.payboxapp.com%2Ftransfer%2F${phone}%2F${total}`;
+          area.innerHTML = `<div class="payment-detail-title">💜 תשלום דרך PayBox</div>
+        <div class="paybox-display">
+          <div style="font-size:26px;font-weight:900;color:#7b2d8b;margin-bottom:8px">PayBox</div>
+          <div style="font-size:14px;color:#555;margin-bottom:18px">סכום: <strong style="font-size:22px;color:#7b2d8b">₪${total}</strong></div>
+          <a href="${esc(payboxLink)}" target="_blank" class="pay-open-btn paybox-btn">פתח PayBox לתשלום →</a>
+          <div style="margin-top:14px;font-size:12px;color:#888">לאחר ביצוע התשלום לחצי על הכפתור הירוק למטה</div>
+        </div>`;
+        } else if (id === "card") {
+          area.innerHTML = `<div class="payment-detail-title">💳 תשלום בכרטיס אשראי</div>
+        <div style="text-align:center;padding:22px 16px">
+          <div style="font-size:14px;color:var(--text-muted);margin-bottom:16px">סכום לתשלום: <strong style="font-size:24px;color:var(--text-main)">₪${total}</strong></div>
+          <a href="${esc(CONFIG.payment.creditCard.link)}" target="_blank" class="pay-open-btn card-btn">💳 עבור לעמוד תשלום →</a>
+          <div style="margin-top:14px;font-size:12px;color:#888">לאחר ביצוע התשלום, חזרי לכאן ולחצי על הכפתור הירוק למטה</div>
+        </div>`;
+        } else if (id === "bank") {
+          area.innerHTML = `<div class="payment-detail-title">🏦 העברה בנקאית</div>
+        <div style="background:var(--cream);border-radius:10px;padding:18px">
+          <div style="font-size:14px;line-height:2;color:var(--text-main)">${esc(CONFIG.payment.bankTransfer.details)}</div>
+          <div style="margin-top:10px;font-size:15px">סכום להעברה: <strong>₪${total}</strong></div>
+          <button class="copy-btn" style="margin-top:12px" onclick="copyText(${JSON.stringify(CONFIG.payment.bankTransfer.details + " | סכום: ₪" + total)})">📋 העתק פרטים</button>
+        </div>
+        <div style="margin-top:10px;font-size:12px;color:#888">לאחר ביצוע ההעברה לחצי על הכפתור הירוק למטה</div>`;
+        }
+      }
+
+      function backToForm() {
+        document.getElementById("payment-screen").classList.remove("visible");
+        document.getElementById("main-content").style.display = "block";
+        document.getElementById("hero-section").style.display = "";
+        setStep(2);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      function confirmPayment() {
+        if (!selectedPayment) {
+          showToast("נא לבחור אמצעי תשלום");
+          return;
+        }
+        currentOrder.paymentMethod = selectedPayment;
+        currentOrder.paid = true;
+        orders.push(currentOrder);
+        localStorage.setItem("sw_orders", JSON.stringify(orders));
+        sendToGoogleSheets(currentOrder);
+        sendWhatsApp(currentOrder);
+        sendEmail(currentOrder);
+        showSuccess(currentOrder);
+      }
+
+      // ═══════════════════════════════
+      //  NOTIFICATIONS
+      // ═══════════════════════════════
+      const PM_NAMES = {
+        bit: "Bit",
+        paybox: "PayBox",
+        card: "כרטיס אשראי",
+        bank: "העברה בנקאית",
+      };
+
+      function sendWhatsApp(order) {
+        const lines = order.items
+          .map(
+            (i) =>
+              `• ${i.name} × ${i.qty} — ₪${i.price * i.qty}${i.note ? " (" + i.note + ")" : ""}`,
+          )
+          .join("\n");
+        const text = `✅ הזמנה חדשה!\n\n👤 ${order.name}\n📞 ${order.phone}\n📧 ${order.email}\n🏙️ ${order.city}\n\n${lines}\n\n💰 סה״כ: ₪${order.total}\n💳 שולם ב: ${PM_NAMES[order.paymentMethod] || order.paymentMethod}\n📅 ${order.date}`;
+        window.open(
+          "https://wa.me/" +
+            CONFIG.ownerWhatsapp +
+            "?text=" +
+            encodeURIComponent(text),
+          "_blank",
+        );
+      }
+
+      function sendEmail(order) {
+        if (!window.emailjs || CONFIG.emailJsServiceId === "YOUR_SERVICE_ID")
+          return;
+        emailjs.send(CONFIG.emailJsServiceId, CONFIG.emailJsTemplateId, {
+          customer_name: order.name,
+          customer_phone: order.phone,
+          customer_email: order.email,
+          customer_city: order.city,
+          items_list: order.items
+            .map((i) => `${i.name}×${i.qty} — ₪${i.price * i.qty}`)
+            .join("\n"),
+          total_price: "₪" + order.total,
+          order_note: order.note || "ללא הערות",
+          order_date: order.date,
+          week_title: order.week,
+          payment_method: PM_NAMES[order.paymentMethod] || order.paymentMethod,
+          to_email: CONFIG.ownerEmail,
+        });
+      }
+
+      function sendToGoogleSheets(order) {
+        if (!CONFIG.googleSheetsWebhook) return;
+        fetch(CONFIG.googleSheetsWebhook, {
+          method: "POST",
+          headers: { "Content-Type": "text/plain" },
+          body: JSON.stringify(order),
+        }).catch(() => {});
+      }
+
+      // ═══════════════════════════════
+      //  SUCCESS
+      // ═══════════════════════════════
+      function showSuccess(order) {
+        document.getElementById("payment-screen").classList.remove("visible");
+        document.getElementById("success-screen").classList.add("visible");
+        setStep(4);
+        document.getElementById("success-msg").textContent =
+          `תודה ${order.name}! ההזמנה שלך התקבלה ואישור נשלח לך בוואטסאפ.`;
+        let html = `<div class="success-summary-title">סיכום הזמנה</div>`;
+        order.items.forEach((it) => {
+          html += `<div class="success-row"><span>${esc(it.name)} × ${it.qty}</span><span>₪${it.price * it.qty}</span></div>`;
+        });
+        html += `<div class="success-row total"><span>סה״כ</span><span>₪${order.total}</span></div>`;
+        html += `<div style="font-size:12.5px;color:var(--text-muted);margin-top:10px">שולם דרך: ${esc(PM_NAMES[order.paymentMethod] || order.paymentMethod)}</div>`;
+        if (order.note)
+          html += `<div style="font-size:12px;color:var(--text-muted);margin-top:4px">הערה: ${esc(order.note)}</div>`;
+        document.getElementById("success-summary").innerHTML = html;
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      function resetApp() {
+        quantities = {};
+        dishNotes = {};
+        currentOrder = null;
+        selectedPayment = null;
+        ["f-name", "f-phone", "f-email", "f-city", "f-notes"].forEach((id) => {
+          const el = document.getElementById(id);
+          if (el) {
+            el.value = "";
+            el.classList.remove("error");
+          }
+        });
+        document.getElementById("success-screen").classList.remove("visible");
+        document.getElementById("payment-screen").classList.remove("visible");
+        document.getElementById("main-content").style.display = "block";
+        document.getElementById("hero-section").style.display = "";
+        document.getElementById("cart-panel").classList.remove("visible");
+        document
+          .getElementById("payment-detail-area")
+          .classList.remove("visible");
+        document.getElementById("payment-done-btn").style.display = "none";
+        cartVisible = false;
+        renderMenu();
+        updateCart();
+        setStep(1);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      // ═══════════════════════════════
+      //  ADMIN
+      // ═══════════════════════════════
+      function toggleAdmin() {
+        if (!adminVisible) {
+          const pwd = prompt("🔐 סיסמת ניהול:");
+          if (pwd !== CONFIG.adminPassword) {
+            if (pwd !== null) showToast("סיסמה שגויה");
+            return;
+          }
+        }
+        adminVisible = !adminVisible;
+        const panel = document.getElementById("admin-panel");
+        panel.classList.toggle("visible", adminVisible);
+        if (adminVisible) {
+          renderAdminPanel();
+          panel.scrollIntoView({ behavior: "smooth" });
+        }
+      }
+
+      function renderAdminPanel() {
+        adminDishes = menu.map((d) => ({ ...d }));
+        document.getElementById("admin-week-title").value = weekTitle;
+        document.getElementById("admin-deadline").value = deadline;
+        renderAdminDishes();
+        renderOrdersSummary();
+        renderOrdersTable();
+      }
+
+      function renderAdminDishes() {
+        const list = document.getElementById("admin-dishes-list");
+        list.innerHTML = "";
+        adminDishes.forEach((dish, idx) => {
+          const w = document.createElement("div");
+          w.className = "admin-dish-item";
+          w.innerHTML = `<div class="admin-item-row">
+          <input class="admin-input-full" placeholder="שם המנה" value="${esc(dish.name)}" onchange="adminDishes[${idx}].name=this.value" />
+          <input class="admin-input-full" placeholder="תיאור" value="${esc(dish.desc)}" onchange="adminDishes[${idx}].desc=this.value" />
+          <button class="remove-dish" onclick="adminDishes.splice(${idx},1);renderAdminDishes()">הסר</button>
+        </div>
+        <div class="admin-item-row2">
+          <input class="admin-input-full" type="number" placeholder="מחיר ₪" value="${dish.price}" onchange="adminDishes[${idx}].price=Number(this.value)" />
+          <input class="admin-input-full" placeholder="אימוג׳י 🍽️" value="${esc(dish.emoji || "")}" onchange="adminDishes[${idx}].emoji=this.value" />
+        </div>`;
+          list.appendChild(w);
+        });
+      }
+
+      function addAdminDish() {
+        adminDishes.push({
+          id: Date.now(),
+          name: "",
+          desc: "",
+          price: 0,
+          emoji: "🍽️",
+        });
+        renderAdminDishes();
+      }
+
+      function saveMenu() {
+        weekTitle =
+          document.getElementById("admin-week-title").value.trim() || weekTitle;
+        deadline = document.getElementById("admin-deadline").value.trim();
+        menu = adminDishes.filter((d) => d.name.trim());
+        localStorage.setItem("sw_menu", JSON.stringify(menu));
+        localStorage.setItem("sw_week_title", weekTitle);
+        localStorage.setItem("sw_deadline", deadline);
+        updateHeroText();
+        quantities = {};
+        dishNotes = {};
+        renderMenu();
+        updateCart();
+        showToast("✅ התפריט עודכן!");
+      }
+
+      function renderOrdersSummary() {
+        const el = document.getElementById("orders-summary");
+        if (!orders.length) {
+          el.textContent = "אין הזמנות עדיין";
+          return;
+        }
+        const counts = {};
+        let grand = 0;
+        orders.forEach((o) => {
+          grand += o.total;
+          o.items.forEach((it) => {
+            counts[it.name] = (counts[it.name] || 0) + it.qty;
+          });
+        });
+        let html = `<div class="kpi-row">
+      <div class="kpi-card"><div class="kpi-val" style="color:var(--olive-dark)">${orders.length}</div><div class="kpi-label">הזמנות</div></div>
+      <div class="kpi-card"><div class="kpi-val" style="color:var(--green)">₪${grand}</div><div class="kpi-label">סה״כ הכנסות</div></div>
+      <div class="kpi-card"><div class="kpi-val" style="color:var(--accent)">${Object.values(counts).reduce((a, b) => a + b, 0)}</div><div class="kpi-label">מנות שהוזמנו</div></div>
+    </div>`;
+        html +=
+          '<table class="admin-orders-table"><tr><th>מנה</th><th>כמות</th></tr>';
+        Object.entries(counts)
+          .sort((a, b) => b[1] - a[1])
+          .forEach(([name, qty]) => {
+            html += `<tr><td>${esc(name)}</td><td>${qty}</td></tr>`;
+          });
+        html += "</table>";
+        el.innerHTML = html;
+      }
+
+      function renderOrdersTable() {
+        const el = document.getElementById("orders-table-container");
+        if (!orders.length) {
+          el.textContent = "אין הזמנות עדיין";
+          return;
+        }
+        let html =
+          '<table class="admin-orders-table"><tr><th>שם</th><th>טלפון</th><th>עיר</th><th>מנות</th><th>סה״כ</th><th>תשלום</th><th>תאריך</th></tr>';
+        orders
+          .slice()
+          .reverse()
+          .forEach((o) => {
+            html += `<tr>
+        <td>${esc(o.name)}</td>
+        <td><a href="tel:${esc(o.phone)}" style="color:var(--olive-dark);text-decoration:none">${esc(o.phone)}</a></td>
+        <td>${esc(o.city)}</td>
+        <td style="font-size:12px">${o.items.map((i) => esc(i.name) + "×" + i.qty).join(", ")}</td>
+        <td>₪${o.total}</td>
+        <td><span class="status-badge ${o.paid ? "status-paid" : "status-pending"}">${esc(PM_NAMES[o.paymentMethod] || (o.paid ? "שולם" : "ממתין"))}</span></td>
+        <td style="font-size:11.5px;white-space:nowrap">${esc(o.date)}</td>
+      </tr>`;
+          });
+        html += "</table>";
+        el.innerHTML = html;
+      }
+
+      function clearOrders() {
+        if (!confirm("למחוק את כל ההזמנות? פעולה זו אינה הפיכה.")) return;
+        orders = [];
+        localStorage.setItem("sw_orders", "[]");
+        renderOrdersSummary();
+        renderOrdersTable();
+      }
+
+      function exportCSV() {
+        if (!orders.length) {
+          showToast("אין הזמנות לייצוא");
+          return;
+        }
+        const rows = [
+          [
+            "תאריך",
+            "שם",
+            "טלפון",
+            "אימייל",
+            "עיר",
+            "מנות",
+            "סה״כ",
+            "תשלום",
+            "הערה",
+            "שבוע",
+          ],
+        ];
+        orders.forEach((o) =>
+          rows.push([
+            o.date,
+            o.name,
+            o.phone,
+            o.email,
+            o.city,
+            o.items.map((i) => `${i.name}×${i.qty}`).join("; "),
+            o.total,
+            PM_NAMES[o.paymentMethod] || o.paymentMethod || "",
+            o.note || "",
+            o.week || "",
+          ]),
+        );
+        const bom = "\uFEFF";
+        const csv =
+          bom +
+          rows
+            .map((r) =>
+              r.map((c) => `"${String(c).replace(/"/g, '""')}"`).join(","),
+            )
+            .join("\n");
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(
+          new Blob([csv], { type: "text/csv;charset=utf-8" }),
+        );
+        a.download = `הזמנות_${new Date().toLocaleDateString("he-IL").replace(/\//g, "-")}.csv`;
+        a.click();
+      }
+
+      // ═══════════════════════════════
+      //  START
+      // ═══════════════════════════════
+      initApp();
+    </script>
+
+    <!--
+╔══════════════════════════════════════════════════════════════╗
+║  📊 הגדרת Google Sheets — קוד ל-Apps Script                ║
+║  עקבי אחרי ההוראות כדי לקבל את ההזמנות בגיליון אוטומטית   ║
+╚══════════════════════════════════════════════════════════════╝
+
+שלב 1: פיתחי גיליון Google Sheets חדש
+שלב 2: לחצי על "כלים" → "עורך סקריפטים"
+שלב 3: מחקי הכל והדביקי את הקוד הבא:
+
+─────────────────────────────────────────
+function doPost(e) {
+  try {
+    const data = JSON.parse(e.postData.contents);
+    const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+
+    if (sheet.getLastRow() === 0) {
+      sheet.appendRow(['תאריך','מזהה','שם','טלפון','אימייל','עיר','מנות','סה"כ','תשלום','הערה','שבוע']);
+      sheet.getRange(1, 1, 1, 11).setFontWeight('bold').setBackground('#3D4A27').setFontColor('white');
+    }
+
+    const items = data.items.map(i => i.name + '×' + i.qty + ' (₪' + (i.price * i.qty) + ')').join(', ');
+    sheet.appendRow([
+      data.date, data.id, data.name, data.phone, data.email,
+      data.city, items, data.total,
+      data.paymentMethod || '', data.note || '', data.week || ''
+    ]);
+
+    return ContentService
+      .createTextOutput(JSON.stringify({ success: true }))
+      .setMimeType(ContentService.MimeType.JSON);
+  } catch(err) {
+    return ContentService
+      .createTextOutput(JSON.stringify({ success: false, error: err.toString() }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}
+─────────────────────────────────────────
+
+שלב 4: לחצי על "פרוס" → "פרסום חדש כאפליקציית אינטרנט"
+שלב 5: הגדרי: "מי יכול לגשת" → "כולם"
+שלב 6: לחצי "פרוס" ואשרי הרשאות
+שלב 7: העתיקי את ה-URL שמופיע ל: CONFIG.googleSheetsWebhook למעלה
+-->
+  </body>
+</html>
