@@ -1507,7 +1507,6 @@
       <!-- HERO -->
       <div class="hero" id="hero-section">
         <h1 id="hero-title">תפריט שבועי</h1>
-        <div class="hero-date" id="hero-date"></div>
       </div>
       <div class="hero-info-panel" id="hero-info-panel"></div>
 
@@ -1743,7 +1742,10 @@
         </div>
       </div>
 
-      <footer class="footer" id="footer-text"></footer>
+      <footer class="footer">
+        <div id="footer-deadline" style="font-size:14px;color:rgba(255,255,255,0.9);margin-bottom:6px;font-weight:500"></div>
+        <div id="footer-text"></div>
+      </footer>
     </div>
 
     <script>
@@ -1938,9 +1940,8 @@
 
       function updateHeroText() {
         document.getElementById("hero-title").textContent = weekTitle;
-        document.getElementById("hero-date").textContent = deadline
-          ? "הזמנות עד " + deadline
-          : "";
+        const deadlineEl = document.getElementById("footer-deadline");
+        if (deadlineEl) deadlineEl.textContent = deadline ? "⏰ הזמנות עד " + deadline : "";
         const panel = document.getElementById("hero-info-panel");
         if (heroText && heroText.trim()) {
           const lines = heroText.split("\n").filter((l) => l.trim());
