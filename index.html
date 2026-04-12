@@ -5,9 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>שירה וגנר | תפריט שבועי</title>
     <link
-      href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@300;400;500;700;900&family=Heebo:wght@300;400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,600&family=Heebo:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
     />
+    <link rel="icon" href="Logo.jpeg">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cropperjs@1.6.2/dist/cropper.min.css">
     <style>
       * {
@@ -104,7 +105,7 @@
         font-weight: 700;
         letter-spacing: 0.02em;
         line-height: 1.2;
-        font-family: "Frank Ruhl Libre", serif;
+        font-family: "Cormorant Garamond", serif;
       }
       .brand-sub {
         font-size: 11.5px;
@@ -241,12 +242,12 @@
         text-align: center;
       }
       .hero h1 {
-        font-size: 30px;
-        font-weight: 700;
+        font-size: 36px;
+        font-weight: 600;
         margin-bottom: 0;
-        letter-spacing: 0.01em;
+        letter-spacing: 0.02em;
         line-height: 1.2;
-        font-family: "Frank Ruhl Libre", serif;
+        font-family: "Cormorant Garamond", serif;
       }
       .hero-date {
         font-size: 13px;
@@ -318,7 +319,7 @@
         padding: 10px 0 8px;
         margin-bottom: 12px;
         border-bottom: 2px solid var(--olive-light);
-        font-family: "Frank Ruhl Libre", serif;
+        font-family: "Cormorant Garamond", serif;
         letter-spacing: 0.01em;
       }
       .menu-sub-grid {
@@ -436,7 +437,7 @@
         font-weight: 500;
         margin-bottom: 3px;
         line-height: 1.3;
-        font-family: "Frank Ruhl Libre", serif;
+        font-family: "Cormorant Garamond", serif;
         display: -webkit-box;
         -webkit-line-clamp: 2;
         line-clamp: 2;
@@ -1032,6 +1033,44 @@
         color: var(--olive-dark);
         padding-top: 8px;
       }
+      .print-btn {
+        background: white;
+        color: var(--olive);
+        border: 2px solid var(--olive);
+        border-radius: 10px;
+        padding: 11px 26px;
+        font-size: 14px;
+        font-weight: 700;
+        cursor: pointer;
+        font-family: inherit;
+        transition: all 0.2s;
+        margin-bottom: 12px;
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+      }
+      .print-btn:hover { background: var(--olive); color: white; }
+      @media print {
+        body > *:not(#print-slip) { display: none !important; }
+        #print-slip {
+          display: block !important;
+          position: fixed; top: 0; left: 0; width: 100%; padding: 30px;
+          font-family: Arial, sans-serif; direction: rtl;
+        }
+        #print-slip .slip-header {
+          text-align: center; border-bottom: 2px solid #1d3461; padding-bottom: 14px; margin-bottom: 16px;
+        }
+        #print-slip .slip-logo { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; margin-bottom: 8px; }
+        #print-slip .slip-biz { font-size: 20px; font-weight: 700; color: #1d3461; }
+        #print-slip .slip-week { font-size: 13px; color: #555; margin-top: 4px; }
+        #print-slip .slip-customer { font-size: 14px; margin-bottom: 12px; line-height: 1.8; }
+        #print-slip table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        #print-slip th { background: #1d3461; color: white; padding: 8px 10px; text-align: right; }
+        #print-slip td { padding: 7px 10px; border-bottom: 1px solid #ddd; }
+        #print-slip .slip-total { font-weight: 700; font-size: 15px; text-align: left; padding-top: 10px; }
+        #print-slip .slip-footer { margin-top: 20px; border-top: 1px dashed #ccc; padding-top: 12px; font-size: 12px; color: #888; text-align: center; }
+      }
+      #print-slip { display: none; }
       .new-order-btn {
         background: var(--olive);
         color: white;
@@ -1521,8 +1560,11 @@
           <div class="success-title">ההזמנה אושרה! 🎉</div>
           <div class="success-msg" id="success-msg"></div>
           <div class="success-summary" id="success-summary"></div>
+          <button class="print-btn" onclick="printSlip()">🖨️ הדפסת תלוש</button><br>
           <button class="new-order-btn" onclick="resetApp()">הזמנה חדשה</button>
         </div>
+        <!-- תלוש הדפסה (נראה רק בהדפסה) -->
+        <div id="print-slip"></div>
 
         <!-- MAIN CONTENT -->
         <div id="main-content">
@@ -2391,6 +2433,7 @@
         sendEmail(currentOrder);
         notifyOwnerWhatsApp(currentOrder);
         showSuccess(currentOrder);
+        window._lastOrder = currentOrder;
       }
 
       // ═══════════════════════════════
@@ -2466,6 +2509,36 @@
           html += `<div style="font-size:12px;color:var(--text-muted);margin-top:4px">הערה: ${esc(order.note)}</div>`;
         document.getElementById("success-summary").innerHTML = html;
         window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      function printSlip() {
+        const order = window._lastOrder;
+        if (!order) return;
+        const PM_NAMES_P = { bit: 'Bit', paybox: 'PayBox', card: 'כרטיס אשראי', bank: 'העברה בנקאית' };
+        const rows = order.items.map(it =>
+          `<tr><td>${esc(it.name)}</td><td style="text-align:center">${it.qty}</td><td style="text-align:left">₪${it.price * it.qty}</td></tr>`
+        ).join('');
+        document.getElementById('print-slip').innerHTML = `
+          <div class="slip-header">
+            <img src="Logo.jpeg" class="slip-logo" alt="לוגו">
+            <div class="slip-biz">${esc(CONFIG.businessName || 'שירה וגנר')}</div>
+            <div class="slip-week">${esc(order.week || '')}</div>
+          </div>
+          <div class="slip-customer">
+            <strong>שם:</strong> ${esc(order.name)}<br>
+            <strong>טלפון:</strong> ${esc(order.phone)}<br>
+            ${order.city ? `<strong>עיר:</strong> ${esc(order.city)}<br>` : ''}
+            ${order.note ? `<strong>הערה:</strong> ${esc(order.note)}<br>` : ''}
+            <strong>תשלום:</strong> ${esc(PM_NAMES_P[order.paymentMethod] || order.paymentMethod || '')}
+          </div>
+          <table>
+            <thead><tr><th>מנה</th><th>כמות</th><th>מחיר</th></tr></thead>
+            <tbody>${rows}</tbody>
+          </table>
+          <div class="slip-total">סה"כ: ₪${order.total}</div>
+          <div class="slip-footer">מזהה הזמנה: ${esc(order.id)} | ${esc(order.date)}</div>
+        `;
+        window.print();
       }
 
       function resetApp() {
@@ -2767,30 +2840,46 @@
     <!--
 ╔══════════════════════════════════════════════════════════════╗
 ║  📊 הגדרת Google Sheets — קוד ל-Apps Script                ║
-║  עקבי אחרי ההוראות כדי לקבל את ההזמנות בגיליון אוטומטית   ║
+║  ⚠️ עדכון נדרש! החליפי את הקוד הישן בקוד החדש למטה        ║
 ╚══════════════════════════════════════════════════════════════╝
 
-שלב 1: פיתחי גיליון Google Sheets חדש
+שלב 1: פיתחי את הגיליון הקיים
 שלב 2: לחצי על "כלים" → "עורך סקריפטים"
-שלב 3: מחקי הכל והדביקי את הקוד הבא:
+שלב 3: מחקי הכל והדביקי את הקוד החדש:
 
 ─────────────────────────────────────────
+const OWNER_EMAIL = 'shirawagner511@gmail.com';
+
 function doPost(e) {
   try {
     const data = JSON.parse(e.postData.contents);
-    const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+    const ss = SpreadsheetApp.getActiveSpreadsheet();
 
-    if (sheet.getLastRow() === 0) {
-      sheet.appendRow(['תאריך','מזהה','שם','טלפון','אימייל','עיר','מנות','סה"כ','תשלום','הערה','שבוע']);
-      sheet.getRange(1, 1, 1, 11).setFontWeight('bold').setBackground('#3D4A27').setFontColor('white');
+    // === גיליון 1: הזמנות ===
+    let ordersSheet = ss.getSheetByName('הזמנות');
+    if (!ordersSheet) ordersSheet = ss.insertSheet('הזמנות');
+
+    if (ordersSheet.getLastRow() === 0) {
+      ordersSheet.appendRow(['תאריך','מזהה','שם','טלפון','אימייל','עיר','שבוע','מנות מפורטות','סה"כ','תשלום','הערה']);
+      ordersSheet.getRange(1,1,1,11).setFontWeight('bold').setBackground('#1d3461').setFontColor('white');
+      ordersSheet.setFrozenRows(1);
     }
 
-    const items = data.items.map(i => i.name + '×' + i.qty + ' (₪' + (i.price * i.qty) + ')').join(', ');
-    sheet.appendRow([
-      data.date, data.id, data.name, data.phone, data.email,
-      data.city, items, data.total,
-      data.paymentMethod || '', data.note || '', data.week || ''
+    const itemsText = data.items.map(i =>
+      i.name + ' × ' + i.qty + ' יח\' = ₪' + (i.price * i.qty)
+    ).join('\n');
+
+    ordersSheet.appendRow([
+      data.date, data.id, data.name, data.phone, data.email || '',
+      data.city || '', data.week || '', itemsText,
+      '₪' + data.total, data.paymentMethod || '', data.note || ''
     ]);
+
+    // === גיליון 2: סיכום מנות (כמויות כוללות) ===
+    rebuildSummary(ss, ordersSheet);
+
+    // === מייל אישור ללקוח ===
+    if (data.email) sendConfirmationEmail(data);
 
     return ContentService
       .createTextOutput(JSON.stringify({ success: true }))
@@ -2801,12 +2890,96 @@ function doPost(e) {
       .setMimeType(ContentService.MimeType.JSON);
   }
 }
+
+function rebuildSummary(ss, ordersSheet) {
+  let summarySheet = ss.getSheetByName('סיכום מנות');
+  if (!summarySheet) summarySheet = ss.insertSheet('סיכום מנות');
+  summarySheet.clearContents();
+
+  const rows = ordersSheet.getDataRange().getValues();
+  const counts = {};
+  for (let i = 1; i < rows.length; i++) {
+    const itemsText = rows[i][7];
+    if (!itemsText) continue;
+    String(itemsText).split('\n').forEach(line => {
+      const m = line.match(/^(.+) × (\d+) יח'/);
+      if (m) {
+        const name = m[1].trim();
+        counts[name] = (counts[name] || 0) + parseInt(m[2]);
+      }
+    });
+  }
+
+  summarySheet.appendRow(['מנה', 'כמות כוללת (יחידות)']);
+  summarySheet.getRange(1,1,1,2).setFontWeight('bold').setBackground('#1d3461').setFontColor('white');
+  Object.entries(counts)
+    .sort((a,b) => b[1]-a[1])
+    .forEach(([name, qty]) => summarySheet.appendRow([name, qty]));
+}
+
+function sendConfirmationEmail(data) {
+  const pmNames = { bit:'Bit', paybox:'PayBox', card:'כרטיס אשראי', bank:'העברה בנקאית' };
+  const payMethod = pmNames[data.paymentMethod] || data.paymentMethod || '';
+
+  const itemsHtml = data.items.map(i => `
+    <tr>
+      <td style="padding:8px 12px;border-bottom:1px solid #eee;text-align:right">${i.name}</td>
+      <td style="padding:8px 12px;border-bottom:1px solid #eee;text-align:center">${i.qty}</td>
+      <td style="padding:8px 12px;border-bottom:1px solid #eee;text-align:left">₪${i.price * i.qty}</td>
+    </tr>`).join('');
+
+  const html = `
+    <div dir="rtl" style="font-family:Arial,sans-serif;max-width:580px;margin:0 auto;background:#f7f8fa;padding:20px">
+      <div style="background:#1d3461;color:white;padding:28px;border-radius:12px 12px 0 0;text-align:center">
+        <h2 style="margin:0;font-size:22px">תודה על הזמנתך! 🎉</h2>
+        <p style="margin:6px 0 0;opacity:.85;font-size:14px">שירה וגנר | Meal Prep</p>
+      </div>
+      <div style="background:white;padding:28px;border-radius:0 0 12px 12px;box-shadow:0 2px 12px rgba(0,0,0,.08)">
+        <p style="font-size:16px;color:#1a1f2e">שלום <strong>${data.name}</strong>,</p>
+        <p style="color:#555;margin-bottom:20px">קיבלנו את הזמנתך ל<strong>${data.week || 'השבוע'}</strong>. הנה סיכום:</p>
+
+        <table style="width:100%;border-collapse:collapse;margin-bottom:16px">
+          <thead>
+            <tr style="background:#f0f3f8">
+              <th style="padding:9px 12px;text-align:right;color:#1d3461">מנה</th>
+              <th style="padding:9px 12px;text-align:center;color:#1d3461">כמות</th>
+              <th style="padding:9px 12px;text-align:left;color:#1d3461">מחיר</th>
+            </tr>
+          </thead>
+          <tbody>${itemsHtml}</tbody>
+          <tfoot>
+            <tr style="background:#1d3461;color:white">
+              <td colspan="2" style="padding:11px 12px;font-weight:bold">סה"כ לתשלום</td>
+              <td style="padding:11px 12px;font-weight:bold;text-align:left">₪${data.total}</td>
+            </tr>
+          </tfoot>
+        </table>
+
+        <div style="background:#f0f3f8;border-radius:8px;padding:13px;font-size:13.5px;color:#555;margin-bottom:16px">
+          <strong style="color:#1d3461">אמצעי תשלום:</strong> ${payMethod}<br>
+          ${data.city ? `<strong style="color:#1d3461">עיר:</strong> ${data.city}<br>` : ''}
+          ${data.note ? `<strong style="color:#1d3461">הערה:</strong> ${data.note}` : ''}
+        </div>
+
+        <p style="font-size:13px;color:#888;margin-top:18px;padding-top:14px;border-top:1px solid #eee;text-align:center">
+          לשאלות ניתן לפנות בוואטסאפ 📱<br>
+          <span style="font-size:11px;color:#aaa">מזהה הזמנה: ${data.id}</span>
+        </p>
+      </div>
+    </div>`;
+
+  MailApp.sendEmail({
+    to: data.email,
+    subject: '✅ אישור הזמנה — ' + (data.week || 'תפריט השבוע') + ' | שירה וגנר',
+    htmlBody: html
+  });
+}
 ─────────────────────────────────────────
 
-שלב 4: לחצי על "פרוס" → "פרסום חדש כאפליקציית אינטרנט"
-שלב 5: הגדרי: "מי יכול לגשת" → "כולם"
-שלב 6: לחצי "פרוס" ואשרי הרשאות
-שלב 7: העתיקי את ה-URL שמופיע ל: CONFIG.googleSheetsWebhook למעלה
+שלב 4: לחצי "פרוס" → "פרסום חדש כאפליקציית אינטרנט"
+שלב 5: הגדרי "מי יכול לגשת" → "כולם"
+שלב 6: לחצי "פרוס" ואשרי הרשאות (כולל הרשאת Gmail לשליחת מיילים)
+שלב 7: העתיקי את ה-URL ל-CONFIG.googleSheetsWebhook
 -->
   </body>
 </html>
