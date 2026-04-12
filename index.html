@@ -233,34 +233,38 @@
       .hero {
         background: linear-gradient(160deg, var(--olive), var(--olive-dark));
         color: white;
-        padding: 30px 20px 26px;
+        padding: 28px 20px 22px;
         text-align: center;
       }
       .hero h1 {
         font-size: 27px;
         font-weight: 800;
-        margin-bottom: 6px;
+        margin-bottom: 0;
         letter-spacing: -0.02em;
         line-height: 1.2;
       }
       .hero-date {
-        font-size: 13.5px;
+        font-size: 13px;
         color: rgba(255, 255, 255, 0.75);
-        margin-bottom: 16px;
+        margin-top: 6px;
       }
-      .hero-badges {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-        justify-content: center;
+      .hero-info-panel {
+        background: white;
+        color: var(--text-main);
+        max-width: 680px;
+        margin: 0 auto;
+        padding: 22px 28px;
+        border-bottom: 1px solid var(--border);
       }
-      .badge {
-        background: rgba(255, 255, 255, 0.15);
-        border: 1px solid rgba(255, 255, 255, 0.25);
-        border-radius: 20px;
-        padding: 5px 14px;
-        font-size: 12.5px;
-        font-weight: 500;
+      .hero-info-panel ul {
+        list-style: disc;
+        padding-right: 20px;
+        margin: 0;
+      }
+      .hero-info-panel li {
+        font-size: 15px;
+        line-height: 1.75;
+        color: var(--text-main);
       }
 
       /* MAIN */
@@ -1487,14 +1491,10 @@
 
       <!-- HERO -->
       <div class="hero" id="hero-section">
-        <h1 id="hero-title">תפריט שבועי 🍽️</h1>
+        <h1 id="hero-title">תפריט שבועי</h1>
         <div class="hero-date" id="hero-date"></div>
-        <div class="hero-badges">
-          <span class="badge">📦 איסוף עצמי</span>
-          <span class="badge">✨ מבושל עם אהבה</span>
-          <span class="badge">🌿 חומרי גלם טריים</span>
-        </div>
       </div>
+      <div class="hero-info-panel" id="hero-info-panel"></div>
 
       <div class="main">
         <!-- SUCCESS -->
@@ -1675,6 +1675,10 @@
               placeholder="יום שני 09:00"
             />
           </div>
+          <div class="admin-sub" style="margin-top:16px">📝 טקסט מידע (מתחת לכותרת)</div>
+          <div style="font-size:13px;color:var(--text-muted);margin-bottom:6px">כל שורה תוצג כנקודת רשימה. שורה ריקה = מחיקה.</div>
+          <textarea id="admin-hero-text" rows="7" style="width:100%;border:1.5px solid var(--border);border-radius:10px;padding:10px 12px;font-family:inherit;font-size:14px;resize:vertical;direction:rtl" placeholder="תפריט ליום שלישי 14.4&#10;הזמנות יתקבלו עד יום שני ב-9:00&#10;משלוחים נעשים ביום שלישי בין השעות 15:00-19:00"></textarea>
+
           <div class="admin-sub" style="margin-top:16px">🗂️ קטגוריות</div>
           <div id="admin-categories-list"></div>
           <button class="add-dish-btn" onclick="addCategory()" style="margin-bottom:16px">+ הוסף קטגוריה</button>
@@ -1739,6 +1743,7 @@
       let categories = DEFAULT_CATEGORIES.slice();
       let weekTitle = "תפריט שבועי";
       let deadline = "";
+      let heroText = "";
       let orders = JSON.parse(localStorage.getItem("sw_orders") || "[]");
       let quantities = {},
         dishNotes = {};
@@ -1806,6 +1811,7 @@
             if (Array.isArray(data.categories) && data.categories.length) categories = data.categories;
             if (data.weekTitle) weekTitle = data.weekTitle;
             if (data.deadline) deadline = data.deadline;
+            if (data.heroText !== undefined) heroText = data.heroText;
             return true;
           }
         } catch (e) {}
@@ -1825,7 +1831,7 @@
             { headers: { Authorization: "Bearer " + token, Accept: "application/vnd.github+json" } }
           );
           const existing = getRes.ok ? await getRes.json() : {};
-          const payload = { items: menu, categories, weekTitle, deadline };
+          const payload = { items: menu, categories, weekTitle, deadline, heroText };
           const content = btoa(unescape(encodeURIComponent(JSON.stringify(payload, null, 2))));
           const body = { message: "update menu", content };
           if (existing.sha) body.sha = existing.sha;
@@ -1914,10 +1920,18 @@
       }
 
       function updateHeroText() {
-        document.getElementById("hero-title").textContent = weekTitle + " 🍽️";
+        document.getElementById("hero-title").textContent = weekTitle;
         document.getElementById("hero-date").textContent = deadline
-          ? "⏰ הזמנות עד " + deadline
+          ? "הזמנות עד " + deadline
           : "";
+        const panel = document.getElementById("hero-info-panel");
+        if (heroText && heroText.trim()) {
+          const lines = heroText.split("\n").filter((l) => l.trim());
+          panel.innerHTML = "<ul>" + lines.map((l) => `<li>${esc(l.trim())}</li>`).join("") + "</ul>";
+          panel.style.display = "";
+        } else {
+          panel.style.display = "none";
+        }
       }
 
       // ═══════════════════════════════
@@ -2470,6 +2484,7 @@
         adminCategories = [...categories];
         document.getElementById("admin-week-title").value = weekTitle;
         document.getElementById("admin-deadline").value = deadline;
+        document.getElementById("admin-hero-text").value = heroText;
         renderAdminCategories();
         renderAdminDishes();
         renderOrdersSummary();
@@ -2554,6 +2569,7 @@
         weekTitle =
           document.getElementById("admin-week-title").value.trim() || weekTitle;
         deadline = document.getElementById("admin-deadline").value.trim();
+        heroText = document.getElementById("admin-hero-text").value;
         menu = adminDishes.filter((d) => d.name.trim());
         categories = adminCategories.filter((c) => c.trim());
         updateHeroText();
