@@ -2503,13 +2503,15 @@
         </div>`;
         } else if (id === "paybox") {
           const phone = CONFIG.payment.paybox.phone.replace(/\D/g, "");
-          const payboxLink = `https://payboxapp.page.link/?link=https%3A%2F%2Fweb.payboxapp.com%2Ftransfer%2F${phone}%2F${total}&apn=com.payboxapp.android&isi=1161442659&ibi=com.payboxapp.ios.PayBox`;
+          const payboxWebLink = `https://web.payboxapp.com/transfer/${phone}/${total}`;
+          const payboxAppLink = `payboxapp://transfer?phone=${phone}&amount=${total}`;
           area.innerHTML = `<div class="payment-detail-title">💜 תשלום דרך PayBox</div>
         <div class="paybox-display">
           <div style="font-size:26px;font-weight:900;color:#7b2d8b;margin-bottom:8px">PayBox</div>
           <div style="font-size:14px;color:#555;margin-bottom:18px">סכום: <strong style="font-size:22px;color:#7b2d8b">₪${total}</strong></div>
-          <a href="${esc(payboxLink)}" target="_blank" class="pay-open-btn paybox-btn" onclick="markPaymentOpened()">פתח PayBox לתשלום →</a>
-          <div style="margin-top:14px;font-size:12px;color:#888">לאחר ביצוע התשלום לחצי על הכפתור הירוק שיופיע למטה</div>
+          <a href="${payboxWebLink}" target="_blank" class="pay-open-btn paybox-btn" onclick="markPaymentOpened()">פתח PayBox לתשלום →</a>
+          <div style="margin-top:10px;font-size:12px;color:#888">📱 מהנייד? <a href="${payboxAppLink}" style="color:#7b2d8b;font-weight:600">לחצי כאן לפתיחה באפליקציה</a></div>
+          <div style="margin-top:8px;font-size:12px;color:#888">לאחר ביצוע התשלום לחצי על הכפתור הירוק שיופיע למטה</div>
         </div>`;
         } else if (id === "card") {
           area.innerHTML = `<div class="payment-detail-title">💳 תשלום בכרטיס אשראי</div>
@@ -2946,8 +2948,8 @@
               <div style="margin-top:10px;display:flex;justify-content:space-between;align-items:center;font-size:11.5px;color:var(--text-muted)">
                 <span>${esc(o.date)}</span>
                 <div style="display:flex;gap:6px">
-                  <button class="order-print-btn" style="background:#25D366;border-color:#25D366;color:white" onclick="sendCustomerWhatsApp(orders.find(x=>x.id==='${esc(o.id)}'))">📱 וואטסאפ ללקוח</button>
-                  <button class="order-print-btn" onclick="printSlip(orders.find(x=>x.id==='${esc(o.id)}'))">🖨️ הדפס סיכום הזמנה</button>
+                  <button class="order-print-btn" style="background:#25D366;border-color:#25D366;color:white" onclick="sendCustomerWhatsApp(orders.find(x=>String(x.id)==='${esc(o.id)}'))">📱 וואטסאפ ללקוח</button>
+                  <button class="order-print-btn" onclick="printSlip(orders.find(x=>String(x.id)==='${esc(o.id)}'))">🖨️ הדפס סיכום הזמנה</button>
                 </div>
               </div>
             </div>
