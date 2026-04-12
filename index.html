@@ -1658,6 +1658,19 @@
             </button>
           </div>
         </div>
+
+        <div class="admin-section">
+          <div class="admin-sub">🔗 עדכון תפריט לכל המשתמשים</div>
+          <div style="font-size:13px;color:var(--text-muted);margin-bottom:10px;line-height:1.6">
+            כדי שהתפריט יתעדכן לכולם, נדרש GitHub Personal Access Token עם הרשאות <b>repo</b>.<br>
+            <a href="https://github.com/settings/tokens/new?scopes=repo&description=shabbat-menu" target="_blank" style="color:var(--olive)">לחץ כאן ליצירת Token →</a>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center">
+            <input type="password" id="gh-token-input" class="admin-input" style="flex:1;min-width:0" placeholder="ghp_xxxxxxxxxxxxxx">
+            <button onclick="saveGhToken()" class="export-btn" style="white-space:nowrap">שמור Token</button>
+          </div>
+          <div id="gh-token-status" style="font-size:12px;color:var(--green);margin-top:6px"></div>
+        </div>
       </div>
 
       <footer class="footer" id="footer-text"></footer>
@@ -1667,10 +1680,9 @@
       // ═══════════════════════════════
       //  STATE
       // ═══════════════════════════════
-      let menu =
-        JSON.parse(localStorage.getItem("sw_menu") || "null") || DEFAULT_MENU;
-      let weekTitle = localStorage.getItem("sw_week_title") || "תפריט שבועי";
-      let deadline = localStorage.getItem("sw_deadline") || "";
+      let menu = DEFAULT_MENU;
+      let weekTitle = "תפריט שבועי";
+      let deadline = "";
       let orders = JSON.parse(localStorage.getItem("sw_orders") || "[]");
       let quantities = {},
         dishNotes = {};
@@ -1722,9 +1734,79 @@
       }
 
       // ═══════════════════════════════
+      //  GITHUB MENU SYNC
+      // ═══════════════════════════════
+      const GH_REPO = "shirawagner511-prog/foodorder";
+      const GH_FILE = "menu.json";
+
+      async function loadMenuFromGitHub() {
+        try {
+          const res = await fetch("/menu.json?_=" + Date.now());
+          if (!res.ok) return false;
+          const data = await res.json();
+          if (data && Array.isArray(data.items) && data.items.length) {
+            menu = data.items;
+            if (data.weekTitle) weekTitle = data.weekTitle;
+            if (data.deadline) deadline = data.deadline;
+            return true;
+          }
+        } catch (e) {}
+        return false;
+      }
+
+      async function pushMenuToGitHub() {
+        const token = localStorage.getItem("gh_token");
+        if (!token) {
+          showToast("⚠️ אין GitHub Token — עדכן בהגדרות האדמין");
+          return false;
+        }
+        try {
+          showToast("⏳ מעדכן לכל המשתמשים...");
+          const getRes = await fetch(
+            "https://api.github.com/repos/" + GH_REPO + "/contents/" + GH_FILE,
+            { headers: { Authorization: "Bearer " + token, Accept: "application/vnd.github+json" } }
+          );
+          const existing = getRes.ok ? await getRes.json() : {};
+          const payload = { items: menu, weekTitle, deadline };
+          const content = btoa(unescape(encodeURIComponent(JSON.stringify(payload, null, 2))));
+          const body = { message: "update menu", content };
+          if (existing.sha) body.sha = existing.sha;
+          const putRes = await fetch(
+            "https://api.github.com/repos/" + GH_REPO + "/contents/" + GH_FILE,
+            {
+              method: "PUT",
+              headers: { Authorization: "Bearer " + token, Accept: "application/vnd.github+json", "Content-Type": "application/json" },
+              body: JSON.stringify(body)
+            }
+          );
+          if (putRes.ok) {
+            showToast("✅ התפריט עודכן לכל המשתמשים!");
+            return true;
+          } else {
+            const err = await putRes.json();
+            showToast("❌ שגיאה: " + (err.message || putRes.status));
+            return false;
+          }
+        } catch (e) {
+          showToast("❌ שגיאה: " + e.message);
+          return false;
+        }
+      }
+
+      function saveGhToken() {
+        const t = document.getElementById("gh-token-input").value.trim();
+        if (!t) return;
+        localStorage.setItem("gh_token", t);
+        document.getElementById("gh-token-input").value = "";
+        document.getElementById("gh-token-status").textContent = "✓ Token נשמר";
+        showToast("✅ Token נשמר בהצלחה");
+      }
+
+      // ═══════════════════════════════
       //  INIT
       // ═══════════════════════════════
-      function initApp() {
+      async function initApp() {
+        await loadMenuFromGitHub();
         document.getElementById("brand-name").textContent = CONFIG.businessName;
         document.getElementById("brand-sub").textContent =
           CONFIG.businessSubtitle;
@@ -2240,6 +2322,15 @@
         }
       }
 
+      function saveGhToken() {
+        const t = document.getElementById("gh-token-input").value.trim();
+        if (!t) return;
+        localStorage.setItem("gh_token", t);
+        document.getElementById("gh-token-input").value = "";
+        document.getElementById("gh-token-status").textContent = "✓ Token נשמר";
+        showToast("✅ Token נשמר");
+      }
+
       function renderAdminPanel() {
         adminDishes = menu.map((d) => ({ ...d }));
         document.getElementById("admin-week-title").value = weekTitle;
@@ -2247,6 +2338,8 @@
         renderAdminDishes();
         renderOrdersSummary();
         renderOrdersTable();
+        const statusEl = document.getElementById("gh-token-status");
+        if (statusEl) statusEl.textContent = localStorage.getItem("gh_token") ? "✓ Token מוגדר" : "";
       }
 
       function compressImage(file, cb) {
@@ -2304,20 +2397,17 @@
         renderAdminDishes();
       }
 
-      function saveMenu() {
+      async function saveMenu() {
         weekTitle =
           document.getElementById("admin-week-title").value.trim() || weekTitle;
         deadline = document.getElementById("admin-deadline").value.trim();
         menu = adminDishes.filter((d) => d.name.trim());
-        localStorage.setItem("sw_menu", JSON.stringify(menu));
-        localStorage.setItem("sw_week_title", weekTitle);
-        localStorage.setItem("sw_deadline", deadline);
         updateHeroText();
         quantities = {};
         dishNotes = {};
         renderMenu();
         updateCart();
-        showToast("✅ התפריט עודכן!");
+        await pushMenuToGitHub();
       }
 
       function renderOrdersSummary() {
@@ -2436,7 +2526,7 @@
       // ═══════════════════════════════
       //  START
       // ═══════════════════════════════
-      initApp();
+      initApp().catch(console.error);
     </script>
 
     <!--
