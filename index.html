@@ -1672,7 +1672,8 @@
         adminVisible = false;
       let adminDishes = [],
         currentOrder = null,
-        selectedPayment = null;
+        selectedPayment = null,
+        paymentLinkOpened = false;
 
       // ═══════════════════════════════
       //  UTILS
@@ -2014,15 +2015,9 @@
           pm.setAttribute("aria-checked", "true");
           document.getElementById("chk-" + id).textContent = "✓";
         }
+        paymentLinkOpened = false;
+        document.getElementById("payment-done-btn").style.display = "none";
         buildPaymentDetail(id);
-        document.getElementById("payment-done-btn").style.display = "block";
-        setTimeout(
-          () =>
-            document
-              .getElementById("payment-done-btn")
-              .scrollIntoView({ behavior: "smooth", block: "nearest" }),
-          200,
-        );
       }
 
       function buildPaymentDetail(id) {
@@ -2031,36 +2026,44 @@
         const total = currentOrder.total;
 
         if (id === "bit") {
-          const phone = CONFIG.payment.bit.phone;
-          const bitLink = `https://bitpay.co.il/app/bit/pay?phonenumber=${encodeURIComponent(phone)}&amount=${total}&name=${encodeURIComponent(CONFIG.payment.bit.name)}`;
+          const phone = CONFIG.payment.bit.phone.replace(/\D/g, "");
+          const bitLink = `https://bitpay.co.il/app/bit/pay?phone=${encodeURIComponent(phone)}&amount=${total}&name=${encodeURIComponent(CONFIG.payment.bit.name)}`;
+          const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+          const bitAction = isMobile
+            ? `<a href="${esc(bitLink)}" target="_blank" class="pay-open-btn bit-btn" onclick="markPaymentOpened()">פתח Bit לתשלום →</a>`
+            : `<div style="background:#e8f4fd;border-radius:10px;padding:14px 18px;margin-bottom:14px;font-size:13.5px;color:#1a5f8a;line-height:1.7">
+                 📱 Bit עובד דרך הנייד בלבד.<br>
+                 פתחי את אפליקציית Bit בטלפון שלך ושלחי <strong>₪${total}</strong> למספר <strong>${esc(phone)}</strong>
+               </div>
+               <button class="pay-open-btn bit-btn" onclick="markPaymentOpened()" style="cursor:pointer;border:none">✓ ביצעתי את התשלום</button>`;
           area.innerHTML = `<div class="payment-detail-title">💙 תשלום דרך Bit</div>
         <div class="bit-display">
           <div class="bit-logo">bit</div>
           <div style="font-size:13px;color:#555;margin-bottom:6px">שלחי תשלום למספר:</div>
           <div class="bit-phone">${esc(phone)}</div>
           <div style="font-size:14px;color:#555;margin-bottom:18px">סכום: <strong style="font-size:22px;color:#007dbf">₪${total}</strong></div>
-          <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+          <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;align-items:center">
             <button class="copy-btn" onclick="copyText(${JSON.stringify(phone)})">📋 העתק מספר</button>
-            <a href="${esc(bitLink)}" target="_blank" class="pay-open-btn bit-btn">פתח Bit →</a>
+            ${bitAction}
           </div>
-          <div style="margin-top:14px;font-size:12px;color:#888">לאחר ביצוע התשלום לחצי על הכפתור הירוק למטה</div>
+          ${isMobile ? '<div style="margin-top:14px;font-size:12px;color:#888">לאחר ביצוע התשלום לחצי על הכפתור הירוק שיופיע למטה</div>' : ''}
         </div>`;
         } else if (id === "paybox") {
           const phone = CONFIG.payment.paybox.phone.replace(/\D/g, "");
-          const payboxLink = `https://payboxapp.page.link/?link=https%3A%2F%2Fweb.payboxapp.com%2Ftransfer%2F${phone}%2F${total}`;
+          const payboxLink = `https://payboxapp.page.link/?link=https%3A%2F%2Fweb.payboxapp.com%2Ftransfer%2F${phone}%2F${total}&apn=com.payboxapp.android&isi=1161442659&ibi=com.payboxapp.ios.PayBox`;
           area.innerHTML = `<div class="payment-detail-title">💜 תשלום דרך PayBox</div>
         <div class="paybox-display">
           <div style="font-size:26px;font-weight:900;color:#7b2d8b;margin-bottom:8px">PayBox</div>
           <div style="font-size:14px;color:#555;margin-bottom:18px">סכום: <strong style="font-size:22px;color:#7b2d8b">₪${total}</strong></div>
-          <a href="${esc(payboxLink)}" target="_blank" class="pay-open-btn paybox-btn">פתח PayBox לתשלום →</a>
-          <div style="margin-top:14px;font-size:12px;color:#888">לאחר ביצוע התשלום לחצי על הכפתור הירוק למטה</div>
+          <a href="${esc(payboxLink)}" target="_blank" class="pay-open-btn paybox-btn" onclick="markPaymentOpened()">פתח PayBox לתשלום →</a>
+          <div style="margin-top:14px;font-size:12px;color:#888">לאחר ביצוע התשלום לחצי על הכפתור הירוק שיופיע למטה</div>
         </div>`;
         } else if (id === "card") {
           area.innerHTML = `<div class="payment-detail-title">💳 תשלום בכרטיס אשראי</div>
         <div style="text-align:center;padding:22px 16px">
           <div style="font-size:14px;color:var(--text-muted);margin-bottom:16px">סכום לתשלום: <strong style="font-size:24px;color:var(--text-main)">₪${total}</strong></div>
-          <a href="${esc(CONFIG.payment.creditCard.link)}" target="_blank" class="pay-open-btn card-btn">💳 עבור לעמוד תשלום →</a>
-          <div style="margin-top:14px;font-size:12px;color:#888">לאחר ביצוע התשלום, חזרי לכאן ולחצי על הכפתור הירוק למטה</div>
+          <a href="${esc(CONFIG.payment.creditCard.link)}" target="_blank" class="pay-open-btn card-btn" onclick="markPaymentOpened()">💳 עבור לעמוד תשלום →</a>
+          <div style="margin-top:14px;font-size:12px;color:#888">לאחר ביצוע התשלום, חזרי לכאן ולחצי על הכפתור הירוק שיופיע למטה</div>
         </div>`;
         } else if (id === "bank") {
           area.innerHTML = `<div class="payment-detail-title">🏦 העברה בנקאית</div>
@@ -2070,7 +2073,15 @@
           <button class="copy-btn" style="margin-top:12px" onclick="copyText(${JSON.stringify(CONFIG.payment.bankTransfer.details + " | סכום: ₪" + total)})">📋 העתק פרטים</button>
         </div>
         <div style="margin-top:10px;font-size:12px;color:#888">לאחר ביצוע ההעברה לחצי על הכפתור הירוק למטה</div>`;
+          markPaymentOpened();
         }
+      }
+
+      function markPaymentOpened() {
+        paymentLinkOpened = true;
+        const btn = document.getElementById("payment-done-btn");
+        btn.style.display = "block";
+        setTimeout(() => btn.scrollIntoView({ behavior: "smooth", block: "nearest" }), 200);
       }
 
       function backToForm() {
@@ -2086,13 +2097,17 @@
           showToast("נא לבחור אמצעי תשלום");
           return;
         }
+        if (!paymentLinkOpened) {
+          showToast("נא לבצע את התשלום תחילה");
+          return;
+        }
         currentOrder.paymentMethod = selectedPayment;
         currentOrder.paid = true;
         orders.push(currentOrder);
         localStorage.setItem("sw_orders", JSON.stringify(orders));
         sendToGoogleSheets(currentOrder);
-        sendWhatsApp(currentOrder);
         sendEmail(currentOrder);
+        notifyOwnerWhatsApp(currentOrder);
         showSuccess(currentOrder);
       }
 
@@ -2106,19 +2121,16 @@
         bank: "העברה בנקאית",
       };
 
-      function sendWhatsApp(order) {
+      function notifyOwnerWhatsApp(order) {
         const lines = order.items
           .map(
             (i) =>
               `• ${i.name} × ${i.qty} — ₪${i.price * i.qty}${i.note ? " (" + i.note + ")" : ""}`,
           )
           .join("\n");
-        const text = `✅ הזמנה חדשה!\n\n👤 ${order.name}\n📞 ${order.phone}\n📧 ${order.email}\n🏙️ ${order.city}\n\n${lines}\n\n💰 סה״כ: ₪${order.total}\n💳 שולם ב: ${PM_NAMES[order.paymentMethod] || order.paymentMethod}\n📅 ${order.date}`;
+        const text = `✅ הזמנה חדשה!\n\n👤 ${order.name}\n📞 ${order.phone}\n📧 ${order.email}\n🏙️ ${order.city}\n\n${lines}\n\n💰 סה״כ: ₪${order.total}\n💳 שולם ב: ${PM_NAMES[order.paymentMethod] || order.paymentMethod}\n📅 ${order.date}${order.note ? "\n📝 הערה: " + order.note : ""}`;
         window.open(
-          "https://wa.me/" +
-            CONFIG.ownerWhatsapp +
-            "?text=" +
-            encodeURIComponent(text),
+          "https://wa.me/" + CONFIG.ownerWhatsapp + "?text=" + encodeURIComponent(text),
           "_blank",
         );
       }
@@ -2147,6 +2159,7 @@
         if (!CONFIG.googleSheetsWebhook) return;
         fetch(CONFIG.googleSheetsWebhook, {
           method: "POST",
+          mode: "no-cors",
           headers: { "Content-Type": "text/plain" },
           body: JSON.stringify(order),
         }).catch(() => {});
@@ -2160,7 +2173,7 @@
         document.getElementById("success-screen").classList.add("visible");
         setStep(4);
         document.getElementById("success-msg").textContent =
-          `תודה ${order.name}! ההזמנה שלך התקבלה ואישור נשלח לך בוואטסאפ.`;
+          `תודה ${order.name}! ההזמנה שלך התקבלה. אישור יישלח אליך בקרוב בוואטסאפ ובמייל.`;
         let html = `<div class="success-summary-title">סיכום הזמנה</div>`;
         order.items.forEach((it) => {
           html += `<div class="success-row"><span>${esc(it.name)} × ${it.qty}</span><span>₪${it.price * it.qty}</span></div>`;
