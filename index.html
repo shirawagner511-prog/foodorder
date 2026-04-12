@@ -1691,11 +1691,10 @@
           <div class="success-title">ההזמנה אושרה! 🎉</div>
           <div class="success-msg" id="success-msg"></div>
           <div class="success-summary" id="success-summary"></div>
-          <button class="print-btn" onclick="printSlip()">🖨️ הדפסת תלוש</button><br>
+          <button class="print-btn" onclick="printSlip()">🖨️ הדפסת סיכום הזמנה</button><br>
           <button class="new-order-btn" onclick="resetApp()">הזמנה חדשה</button>
         </div>
-        <!-- תלוש הדפסה (נראה רק בהדפסה) -->
-        <div id="print-slip"></div>
+        <!-- תלוש הדפסה מוסר מה-main ומועבר לתחתית body -->
 
         <!-- MAIN CONTENT -->
         <div id="main-content">
@@ -2948,7 +2947,7 @@
                 <span>${esc(o.date)}</span>
                 <div style="display:flex;gap:6px">
                   <button class="order-print-btn" style="background:#25D366;border-color:#25D366;color:white" onclick="sendCustomerWhatsApp(orders.find(x=>x.id==='${esc(o.id)}'))">📱 וואטסאפ ללקוח</button>
-                  <button class="order-print-btn" onclick="printSlip(orders.find(x=>x.id==='${esc(o.id)}'))">🖨️ הדפס תלוש</button>
+                  <button class="order-print-btn" onclick="printSlip(orders.find(x=>x.id==='${esc(o.id)}'))">🖨️ הדפס סיכום הזמנה</button>
                 </div>
               </div>
             </div>
@@ -3179,5 +3178,7 @@ function sendConfirmationEmail(data) {
 שלב 6: לחצי "פרוס" ואשרי הרשאות (כולל הרשאת Gmail לשליחת מיילים)
 שלב 7: העתיקי את ה-URL ל-CONFIG.googleSheetsWebhook
 -->
+  <!-- תלוש הדפסה — חייב להיות ישירות תחת body כדי שיופיע בהדפסה -->
+  <div id="print-slip"></div>
   </body>
 </html>
