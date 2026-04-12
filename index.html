@@ -8,6 +8,7 @@
       href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap"
       rel="stylesheet"
     />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cropperjs@1.6.2/dist/cropper.min.css">
     <style>
       * {
         box-sizing: border-box;
@@ -295,10 +296,75 @@
 
       /* MENU GRID */
       .menu-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+        margin-bottom: 8px;
+      }
+      .category-group { margin-bottom: 28px; }
+      .category-header {
+        font-size: 17px;
+        font-weight: 800;
+        color: var(--olive-dark);
+        padding: 10px 0 8px;
+        margin-bottom: 12px;
+        border-bottom: 2px solid var(--olive-light);
+        letter-spacing: -0.01em;
+      }
+      .menu-sub-grid {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
         gap: 16px;
-        margin-bottom: 8px;
+      }
+      /* CROP MODAL */
+      .crop-modal {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.75);
+        z-index: 2000;
+        align-items: center;
+        justify-content: center;
+      }
+      .crop-modal.open { display: flex; }
+      .crop-box {
+        background: white;
+        border-radius: 16px;
+        padding: 20px;
+        max-width: min(92vw, 520px);
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+      }
+      .crop-box img { max-height: 55vh; display: block; }
+      .crop-actions { display: flex; gap: 10px; justify-content: flex-end; }
+      .crop-btn-confirm {
+        background: var(--olive);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        padding: 10px 22px;
+        font-size: 15px;
+        cursor: pointer;
+        font-family: inherit;
+      }
+      .crop-btn-cancel {
+        background: var(--border);
+        color: var(--text-main);
+        border: none;
+        border-radius: 10px;
+        padding: 10px 18px;
+        font-size: 15px;
+        cursor: pointer;
+        font-family: inherit;
+      }
+      /* ADMIN CATEGORIES */
+      .admin-cat-row {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        margin-bottom: 6px;
       }
       .dish-card {
         background: white;
@@ -1352,55 +1418,34 @@
         },
       };
 
+      const DEFAULT_CATEGORIES = ["עיקריות", "סלטים", "מאפים", "ממרחים", "תוספות"];
       const DEFAULT_MENU = [
-        {
-          id: 1,
-          name: "מרק עוף ביתי",
-          desc: "מרק עוף קלאסי עם ירקות ולוקשן",
-          price: 45,
-          emoji: "🍲",
-        },
-        {
-          id: 2,
-          name: "פולנטה קרמית",
-          desc: "פולנטה רכה עם גבינות ועשבי תיבול",
-          price: 52,
-          emoji: "🧀",
-        },
-        {
-          id: 3,
-          name: "סלט ניסואז",
-          desc: "טונה, ביצים, זיתים ועלים טריים",
-          price: 55,
-          emoji: "🥗",
-        },
-        {
-          id: 4,
-          name: "עוגת שוקולד",
-          desc: "עוגה לחה עם ציפוי גנאש עשיר",
-          price: 68,
-          emoji: "🎂",
-        },
-        {
-          id: 5,
-          name: "קישים לוריין",
-          desc: "פאי קרמי עם גבינה ובצל קרמלי",
-          price: 58,
-          emoji: "🥧",
-        },
-        {
-          id: 6,
-          name: "רולדת תרד ריקוטה",
-          desc: "בצק שמרים עם תרד, ריקוטה ופינוליים",
-          price: 62,
-          emoji: "🌿",
-        },
+        { id: 1, name: "מרק עוף ביתי", desc: "מרק עוף קלאסי עם ירקות ולוקשן", price: 45, emoji: "🍲", img: "", category: "עיקריות" },
+        { id: 2, name: "פולנטה קרמית", desc: "פולנטה רכה עם גבינות ועשבי תיבול", price: 52, emoji: "🧀", img: "", category: "עיקריות" },
+        { id: 3, name: "סלט ניסואז", desc: "טונה, ביצים, זיתים ועלים טריים", price: 55, emoji: "🥗", img: "", category: "סלטים" },
+        { id: 4, name: "עוגת שוקולד", desc: "עוגה לחה עם ציפוי גנאש עשיר", price: 68, emoji: "🎂", img: "", category: "מאפים" },
+        { id: 5, name: "קישים לוריין", desc: "פאי קרמי עם גבינה ובצל קרמלי", price: 58, emoji: "🥧", img: "", category: "מאפים" },
+        { id: 6, name: "רולדת תרד ריקוטה", desc: "בצק שמרים עם תרד, ריקוטה ופינוליים", price: 62, emoji: "🌿", img: "", category: "עיקריות" },
       ];
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/cropperjs@1.6.2/dist/cropper.min.js"></script>
 
     <div id="toast"></div>
+
+    <!-- CROP MODAL -->
+    <div class="crop-modal" id="crop-modal">
+      <div class="crop-box">
+        <div style="font-size:16px;font-weight:700">✂️ חיתוך תמונה</div>
+        <div style="overflow:hidden;max-height:55vh"><img id="crop-img" src="" alt="crop"></div>
+        <div class="crop-actions">
+          <button class="crop-btn-cancel" onclick="cancelCrop()">ביטול</button>
+          <button class="crop-btn-confirm" onclick="confirmCrop()">חתוך ושמור ✓</button>
+        </div>
+      </div>
+    </div>
+
     <div id="app">
       <!-- HEADER -->
       <header class="header">
@@ -1630,6 +1675,11 @@
               placeholder="יום שני 09:00"
             />
           </div>
+          <div class="admin-sub" style="margin-top:16px">🗂️ קטגוריות</div>
+          <div id="admin-categories-list"></div>
+          <button class="add-dish-btn" onclick="addCategory()" style="margin-bottom:16px">+ הוסף קטגוריה</button>
+
+          <div class="admin-sub">🍽️ מנות</div>
           <div id="admin-dishes-list"></div>
           <button class="add-dish-btn" onclick="addAdminDish()">
             + הוסף מנה</button
@@ -1681,6 +1731,7 @@
       //  STATE
       // ═══════════════════════════════
       let menu = DEFAULT_MENU;
+      let categories = DEFAULT_CATEGORIES.slice();
       let weekTitle = "תפריט שבועי";
       let deadline = "";
       let orders = JSON.parse(localStorage.getItem("sw_orders") || "[]");
@@ -1689,6 +1740,7 @@
       let cartVisible = false,
         adminVisible = false;
       let adminDishes = [],
+        adminCategories = [],
         currentOrder = null,
         selectedPayment = null,
         paymentLinkOpened = false;
@@ -1746,6 +1798,7 @@
           const data = await res.json();
           if (data && Array.isArray(data.items) && data.items.length) {
             menu = data.items;
+            if (Array.isArray(data.categories) && data.categories.length) categories = data.categories;
             if (data.weekTitle) weekTitle = data.weekTitle;
             if (data.deadline) deadline = data.deadline;
             return true;
@@ -1767,7 +1820,7 @@
             { headers: { Authorization: "Bearer " + token, Accept: "application/vnd.github+json" } }
           );
           const existing = getRes.ok ? await getRes.json() : {};
-          const payload = { items: menu, weekTitle, deadline };
+          const payload = { items: menu, categories, weekTitle, deadline };
           const content = btoa(unescape(encodeURIComponent(JSON.stringify(payload, null, 2))));
           const body = { message: "update menu", content };
           if (existing.sha) body.sha = existing.sha;
@@ -1832,17 +1885,13 @@
       // ═══════════════════════════════
       //  MENU
       // ═══════════════════════════════
-      function renderMenu() {
-        const grid = document.getElementById("menu-grid");
-        grid.innerHTML = "";
-        menu.forEach((dish) => {
-          if (!quantities[dish.id]) quantities[dish.id] = 0;
-          if (!dishNotes[dish.id]) dishNotes[dish.id] = "";
-          const card = document.createElement("div");
-          card.className =
-            "dish-card" + (quantities[dish.id] > 0 ? " has-items" : "");
-          card.id = "card-" + dish.id;
-          card.innerHTML = `<div class="dish-img">
+      function makeDishCard(dish) {
+        if (!quantities[dish.id]) quantities[dish.id] = 0;
+        if (!dishNotes[dish.id]) dishNotes[dish.id] = "";
+        const card = document.createElement("div");
+        card.className = "dish-card" + (quantities[dish.id] > 0 ? " has-items" : "");
+        card.id = "card-" + dish.id;
+        card.innerHTML = `<div class="dish-img">
           ${dish.img ? `<img src="${dish.img}" alt="${esc(dish.name)}" loading="lazy">` : `<span class="dish-emoji">${esc(dish.emoji || "🍽️")}</span>`}
           <div class="dish-qty-badge" id="badge-${dish.id}">${quantities[dish.id]} בסל</div>
         </div>
@@ -1860,7 +1909,44 @@
             placeholder="הערה למנה (אופציונלי)..."
             oninput="dishNotes[${dish.id}]=this.value">${esc(dishNotes[dish.id])}</textarea>
         </div>`;
-          grid.appendChild(card);
+        return card;
+      }
+
+      function renderMenu() {
+        const grid = document.getElementById("menu-grid");
+        grid.innerHTML = "";
+
+        // Group dishes by category
+        const grouped = {};
+        const uncategorized = [];
+        menu.forEach((dish) => {
+          if (dish.category && categories.includes(dish.category)) {
+            if (!grouped[dish.category]) grouped[dish.category] = [];
+            grouped[dish.category].push(dish);
+          } else {
+            uncategorized.push(dish);
+          }
+        });
+
+        const orderedCats = categories.filter((c) => grouped[c]);
+        if (uncategorized.length) orderedCats.push(null);
+
+        orderedCats.forEach((cat) => {
+          const dishes = cat ? grouped[cat] : uncategorized;
+          if (!dishes || !dishes.length) return;
+          const group = document.createElement("div");
+          group.className = "category-group";
+          if (cat) {
+            const header = document.createElement("div");
+            header.className = "category-header";
+            header.textContent = cat;
+            group.appendChild(header);
+          }
+          const subGrid = document.createElement("div");
+          subGrid.className = "menu-sub-grid";
+          dishes.forEach((dish) => subGrid.appendChild(makeDishCard(dish)));
+          group.appendChild(subGrid);
+          grid.appendChild(group);
         });
       }
 
@@ -2332,10 +2418,30 @@
         showToast("✅ Token נשמר");
       }
 
+      function renderAdminCategories() {
+        const el = document.getElementById("admin-categories-list");
+        if (!el) return;
+        el.innerHTML = adminCategories.map((cat, i) => `
+          <div class="admin-cat-row">
+            <input class="admin-input" style="flex:1" value="${esc(cat)}"
+              oninput="adminCategories[${i}]=this.value;renderAdminDishes()">
+            <button onclick="adminCategories.splice(${i},1);renderAdminCategories();renderAdminDishes()"
+              style="background:none;border:none;cursor:pointer;color:var(--red);font-size:20px;line-height:1">×</button>
+          </div>`).join("");
+      }
+
+      function addCategory() {
+        adminCategories.push("קטגוריה חדשה");
+        renderAdminCategories();
+        renderAdminDishes();
+      }
+
       function renderAdminPanel() {
         adminDishes = menu.map((d) => ({ ...d }));
+        adminCategories = [...categories];
         document.getElementById("admin-week-title").value = weekTitle;
         document.getElementById("admin-deadline").value = deadline;
+        renderAdminCategories();
         renderAdminDishes();
         renderOrdersSummary();
         renderOrdersTable();
@@ -2343,23 +2449,35 @@
         if (statusEl) statusEl.textContent = localStorage.getItem("gh_token") ? "✓ Token מוגדר" : "";
       }
 
-      function compressImage(file, cb) {
+      let _cropperInstance = null;
+      let _cropCallback = null;
+
+      function openCropper(file, cb) {
+        if (!file) return;
+        _cropCallback = cb;
         const reader = new FileReader();
         reader.onload = (e) => {
-          const img = new Image();
-          img.onload = () => {
-            const MAX = 600;
-            let w = img.width, h = img.height;
-            if (w > h && w > MAX) { h = h * MAX / w; w = MAX; }
-            else if (h > MAX) { w = w * MAX / h; h = MAX; }
-            const canvas = document.createElement("canvas");
-            canvas.width = w; canvas.height = h;
-            canvas.getContext("2d").drawImage(img, 0, 0, w, h);
-            cb(canvas.toDataURL("image/jpeg", 0.82));
-          };
-          img.src = e.target.result;
+          const imgEl = document.getElementById("crop-img");
+          imgEl.src = e.target.result;
+          document.getElementById("crop-modal").classList.add("open");
+          if (_cropperInstance) { _cropperInstance.destroy(); _cropperInstance = null; }
+          _cropperInstance = new Cropper(imgEl, { aspectRatio: 1, viewMode: 1 });
         };
         reader.readAsDataURL(file);
+      }
+
+      function confirmCrop() {
+        if (!_cropperInstance) return;
+        const canvas = _cropperInstance.getCroppedCanvas({ width: 600, height: 600 });
+        const dataUrl = canvas.toDataURL("image/jpeg", 0.82);
+        if (_cropCallback) _cropCallback(dataUrl);
+        cancelCrop();
+      }
+
+      function cancelCrop() {
+        if (_cropperInstance) { _cropperInstance.destroy(); _cropperInstance = null; }
+        document.getElementById("crop-modal").classList.remove("open");
+        _cropCallback = null;
       }
 
       function renderAdminDishes() {
@@ -2378,9 +2496,13 @@
           <label style="display:flex;align-items:center;gap:8px;cursor:pointer;flex:1">
             ${dish.img ? `<img src="${dish.img}" style="width:44px;height:44px;object-fit:cover;border-radius:8px;border:1px solid var(--border)">` : `<span style="font-size:28px">${dish.emoji || "🍽️"}</span>`}
             <span style="color:var(--olive);font-size:13px;text-decoration:underline">העלה תמונה</span>
-            <input type="file" accept="image/*" style="display:none" onchange="(function(f,i){compressImage(f,function(d){adminDishes[i].img=d;renderAdminDishes();})})(this.files[0],${idx})">
+            <input type="file" accept="image/*" style="display:none" onchange="(function(f,i){openCropper(f,function(d){adminDishes[i].img=d;renderAdminDishes();})})(this.files[0],${idx})">
           </label>
-          ${dish.img ? `<button style="font-size:12px;color:var(--red);background:none;border:none;cursor:pointer;padding:4px" onclick="adminDishes[${idx}].img='';renderAdminDishes()">הסר תמונה</button>` : ''}
+          ${dish.img ? `<button style="font-size:12px;color:var(--red);background:none;border:none;cursor:pointer;padding:4px" onclick="adminDishes[${idx}].img='';renderAdminDishes()">הסר</button>` : ''}
+          <select style="font-size:13px;border:1px solid var(--border);border-radius:8px;padding:4px 8px;font-family:inherit;background:white" onchange="adminDishes[${idx}].category=this.value">
+            <option value="">ללא קטגוריה</option>
+            ${adminCategories.map(c => `<option value="${esc(c)}" ${dish.category===c?"selected":""}>${esc(c)}</option>`).join("")}
+          </select>
         </div>`;
           list.appendChild(w);
         });
@@ -2394,6 +2516,7 @@
           price: 0,
           emoji: "🍽️",
           img: "",
+          category: adminCategories[0] || "",
         });
         renderAdminDishes();
       }
@@ -2403,6 +2526,7 @@
           document.getElementById("admin-week-title").value.trim() || weekTitle;
         deadline = document.getElementById("admin-deadline").value.trim();
         menu = adminDishes.filter((d) => d.name.trim());
+        categories = adminCategories.filter((c) => c.trim());
         updateHeroText();
         quantities = {};
         dishNotes = {};
