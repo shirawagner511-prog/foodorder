@@ -1984,7 +1984,7 @@
         <div class="dish-body">
           <div class="dish-name">${esc(dish.name)}</div>
           <div class="dish-desc">${esc(dish.desc)}</div>
-          ${dish.minQty && dish.minQty > 1 ? `<div style="font-size:11.5px;color:var(--accent);font-weight:600;margin-bottom:5px">מינימום ${dish.minQty} יח׳${dish.stepQty && dish.stepQty > 1 ? ` · קפיצות של ${dish.stepQty}` : ""}</div>` : ""}
+          ${dish.minQty && dish.minQty > 1 ? `<div style="font-size:11.5px;color:var(--accent);font-weight:600;margin-bottom:5px">מינימום ${dish.minQty} יח׳</div>` : ""}
           <div class="dish-price-row">
             <div class="dish-price">₪${dish.price}</div>
             <div id="dish-action-${dish.id}">${dishActionHTML(dish.id)}</div>
