@@ -1276,6 +1276,137 @@
       .admin-orders-table tr:nth-child(even) td {
         background: var(--cream);
       }
+      .orders-tabs {
+        display: flex;
+        gap: 0;
+        margin-bottom: 16px;
+        border-bottom: 2px solid var(--border);
+      }
+      .orders-tab {
+        padding: 9px 18px;
+        font-size: 13.5px;
+        font-weight: 600;
+        color: var(--text-muted);
+        cursor: pointer;
+        border: none;
+        background: none;
+        font-family: inherit;
+        border-bottom: 2px solid transparent;
+        margin-bottom: -2px;
+        transition: all 0.15s;
+      }
+      .orders-tab.active {
+        color: var(--olive);
+        border-bottom-color: var(--olive);
+      }
+      .orders-tab-panel { display: none; }
+      .orders-tab-panel.active { display: block; }
+      .order-card {
+        background: white;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        margin-bottom: 14px;
+        overflow: hidden;
+        box-shadow: var(--shadow-sm);
+      }
+      .order-card-header {
+        background: var(--olive-dark);
+        color: white;
+        padding: 12px 16px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+      .order-card-name {
+        font-size: 15px;
+        font-weight: 700;
+      }
+      .order-card-meta {
+        font-size: 12px;
+        opacity: 0.82;
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+      .order-card-body {
+        padding: 14px 16px;
+      }
+      .order-card-info {
+        display: flex;
+        gap: 16px;
+        flex-wrap: wrap;
+        font-size: 13px;
+        color: var(--text-muted);
+        margin-bottom: 12px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid var(--border);
+      }
+      .order-card-info span { display: flex; align-items: center; gap: 4px; }
+      .order-items-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+        margin-bottom: 10px;
+      }
+      .order-items-table th {
+        background: #f0f3f8;
+        color: var(--olive-dark);
+        padding: 7px 10px;
+        text-align: right;
+        font-weight: 600;
+        font-size: 12px;
+      }
+      .order-items-table td {
+        padding: 7px 10px;
+        border-bottom: 1px solid var(--border);
+      }
+      .order-items-table tr:last-child td { border-bottom: none; }
+      .order-card-total {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: 10px;
+        border-top: 2px solid var(--olive-dark);
+        font-weight: 700;
+        font-size: 14px;
+        color: var(--olive-dark);
+      }
+      .order-note-badge {
+        background: var(--warning-bg);
+        border: 1px solid var(--warning-border);
+        color: var(--warning-text);
+        border-radius: 6px;
+        padding: 5px 10px;
+        font-size: 12px;
+        margin-bottom: 10px;
+      }
+      .order-print-btn {
+        background: none;
+        border: 1px solid var(--border-strong);
+        border-radius: 7px;
+        padding: 5px 12px;
+        font-size: 12px;
+        cursor: pointer;
+        font-family: inherit;
+        color: var(--text-muted);
+        transition: all 0.15s;
+      }
+      .order-print-btn:hover { background: var(--cream); color: var(--olive); border-color: var(--olive); }
+      .dish-summary-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 10px; }
+      .dish-summary-table th { background: var(--olive-dark); color: white; padding: 9px 12px; text-align: right; }
+      .dish-summary-table td { padding: 8px 12px; border-bottom: 1px solid var(--border); }
+      .dish-summary-table tr:nth-child(even) td { background: var(--cream); }
+      .dish-qty-bar {
+        display: inline-block;
+        height: 10px;
+        background: var(--olive-light);
+        border-radius: 5px;
+        margin-right: 8px;
+        vertical-align: middle;
+        opacity: 0.5;
+      }
       .admin-btns {
         display: flex;
         gap: 10px;
@@ -1750,22 +1881,21 @@
         </div>
 
         <div class="admin-section">
-          <div class="admin-sub">📊 סיכום הזמנות</div>
-          <div id="orders-summary">אין הזמנות עדיין</div>
-        </div>
-
-        <div class="admin-section">
-          <div class="admin-sub">📋 כל ההזמנות</div>
-          <div id="orders-table-container" style="overflow-x: auto">
-            אין הזמנות עדיין
+          <div class="admin-sub">📊 ניהול הזמנות</div>
+          <div id="orders-kpi-row"></div>
+          <div class="orders-tabs">
+            <button class="orders-tab active" onclick="switchOrdersTab('dishes',this)">🍽️ סיכום מנות</button>
+            <button class="orders-tab" onclick="switchOrdersTab('customers',this)">👤 פירוט לקוחות</button>
           </div>
-          <div class="admin-btns">
-            <button class="export-btn" onclick="exportCSV()">
-              ⬇️ ייצוא CSV לאקסל
-            </button>
-            <button class="clear-orders-btn" onclick="clearOrders()">
-              🗑️ נקה הזמנות
-            </button>
+          <div class="orders-tab-panel active" id="orders-tab-dishes">
+            <div id="orders-summary">אין הזמנות עדיין</div>
+          </div>
+          <div class="orders-tab-panel" id="orders-tab-customers">
+            <div id="orders-table-container">אין הזמנות עדיין</div>
+          </div>
+          <div class="admin-btns" style="margin-top:16px">
+            <button class="export-btn" onclick="exportCSV()">⬇️ ייצוא CSV לאקסל</button>
+            <button class="clear-orders-btn" onclick="clearOrders()">🗑️ נקה הזמנות</button>
           </div>
         </div>
 
@@ -2511,8 +2641,8 @@
         window.scrollTo({ top: 0, behavior: "smooth" });
       }
 
-      function printSlip() {
-        const order = window._lastOrder;
+      function printSlip(orderArg) {
+        const order = orderArg || window._lastOrder;
         if (!order) return;
         const PM_NAMES_P = { bit: 'Bit', paybox: 'PayBox', card: 'כרטיס אשראי', bank: 'העברה בנקאית' };
         const rows = order.items.map(it =>
@@ -2718,61 +2848,113 @@
         await pushMenuToGitHub();
       }
 
+      function switchOrdersTab(tab, btn) {
+        document.querySelectorAll('.orders-tab').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.orders-tab-panel').forEach(p => p.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById('orders-tab-' + tab).classList.add('active');
+      }
+
       function renderOrdersSummary() {
-        const el = document.getElementById("orders-summary");
+        // KPI row
+        const kpiEl = document.getElementById("orders-kpi-row");
+        const dishEl = document.getElementById("orders-summary");
+        const custEl = document.getElementById("orders-table-container");
+
         if (!orders.length) {
-          el.textContent = "אין הזמנות עדיין";
+          if (kpiEl) kpiEl.innerHTML = '';
+          dishEl.innerHTML = '<p style="color:var(--text-muted);font-size:13px">אין הזמנות עדיין</p>';
+          custEl.innerHTML = '<p style="color:var(--text-muted);font-size:13px">אין הזמנות עדיין</p>';
           return;
         }
-        const counts = {};
-        let grand = 0;
+
+        // ── מספרים כלליים ──
+        const counts = {}; // dish name → {qty, revenue}
+        let grand = 0, totalItems = 0;
         orders.forEach((o) => {
           grand += o.total;
           o.items.forEach((it) => {
-            counts[it.name] = (counts[it.name] || 0) + it.qty;
+            if (!counts[it.name]) counts[it.name] = { qty: 0, rev: 0 };
+            counts[it.name].qty += it.qty;
+            counts[it.name].rev += it.price * it.qty;
+            totalItems += it.qty;
           });
         });
-        let html = `<div class="kpi-row">
-      <div class="kpi-card"><div class="kpi-val" style="color:var(--olive-dark)">${orders.length}</div><div class="kpi-label">הזמנות</div></div>
-      <div class="kpi-card"><div class="kpi-val" style="color:var(--green)">₪${grand}</div><div class="kpi-label">סה״כ הכנסות</div></div>
-      <div class="kpi-card"><div class="kpi-val" style="color:var(--accent)">${Object.values(counts).reduce((a, b) => a + b, 0)}</div><div class="kpi-label">מנות שהוזמנו</div></div>
-    </div>`;
-        html +=
-          '<table class="admin-orders-table"><tr><th>מנה</th><th>כמות</th></tr>';
+
+        // KPI row
+        if (kpiEl) kpiEl.innerHTML = `<div class="kpi-row">
+          <div class="kpi-card"><div class="kpi-val" style="color:var(--olive-dark)">${orders.length}</div><div class="kpi-label">הזמנות</div></div>
+          <div class="kpi-card"><div class="kpi-val" style="color:var(--green)">₪${grand}</div><div class="kpi-label">סה״כ הכנסות</div></div>
+          <div class="kpi-card"><div class="kpi-val" style="color:var(--accent)">${totalItems}</div><div class="kpi-label">יחידות שהוזמנו</div></div>
+        </div>`;
+
+        // ── טבלת מנות ──
+        const maxQty = Math.max(...Object.values(counts).map(v => v.qty));
+        let dishHtml = '<table class="dish-summary-table">';
+        dishHtml += '<tr><th>מנה</th><th style="text-align:center">יחידות</th><th style="text-align:left">שווי כולל</th></tr>';
         Object.entries(counts)
-          .sort((a, b) => b[1] - a[1])
-          .forEach(([name, qty]) => {
-            html += `<tr><td>${esc(name)}</td><td>${qty}</td></tr>`;
+          .sort((a, b) => b[1].qty - a[1].qty)
+          .forEach(([name, v]) => {
+            const barW = Math.round((v.qty / maxQty) * 80);
+            dishHtml += `<tr>
+              <td>${esc(name)}</td>
+              <td style="text-align:center">
+                <span class="dish-qty-bar" style="width:${barW}px"></span>
+                <strong>${v.qty}</strong>
+              </td>
+              <td style="text-align:left;color:var(--green);font-weight:600">₪${v.rev}</td>
+            </tr>`;
           });
-        html += "</table>";
-        el.innerHTML = html;
+        dishHtml += '</table>';
+        dishEl.innerHTML = dishHtml;
+
+        // ── כרטיסי לקוח ──
+        let custHtml = '';
+        orders.slice().reverse().forEach((o) => {
+          const payLabel = PM_NAMES[o.paymentMethod] || o.paymentMethod || '';
+          let itemsRows = o.items.map(it => `
+            <tr>
+              <td>${esc(it.name)}</td>
+              <td style="text-align:center">${it.qty}</td>
+              <td style="text-align:left;color:var(--green)">₪${it.price * it.qty}</td>
+            </tr>`).join('');
+
+          custHtml += `<div class="order-card">
+            <div class="order-card-header">
+              <div>
+                <div class="order-card-name">${esc(o.name)}</div>
+                <div class="order-card-meta">
+                  <span>📞 <a href="tel:${esc(o.phone)}" style="color:white">${esc(o.phone)}</a></span>
+                  ${o.email ? `<span>✉️ ${esc(o.email)}</span>` : ''}
+                  ${o.city ? `<span>📍 ${esc(o.city)}</span>` : ''}
+                </div>
+              </div>
+              <div style="text-align:left">
+                <div style="font-size:18px;font-weight:800">₪${o.total}</div>
+                <div style="font-size:11px;opacity:.8">${esc(payLabel)}</div>
+              </div>
+            </div>
+            <div class="order-card-body">
+              ${o.note ? `<div class="order-note-badge">📝 הערה: ${esc(o.note)}</div>` : ''}
+              <table class="order-items-table">
+                <thead><tr><th>מנה</th><th style="text-align:center">כמות</th><th style="text-align:left">מחיר</th></tr></thead>
+                <tbody>${itemsRows}</tbody>
+              </table>
+              <div class="order-card-total">
+                <span>סה״כ לתשלום</span>
+                <span>₪${o.total}</span>
+              </div>
+              <div style="margin-top:10px;display:flex;justify-content:space-between;align-items:center;font-size:11.5px;color:var(--text-muted)">
+                <span>${esc(o.date)}</span>
+                <button class="order-print-btn" onclick="printSlip(orders.find(x=>x.id==='${esc(o.id)}'))">🖨️ הדפס תלוש</button>
+              </div>
+            </div>
+          </div>`;
+        });
+        custEl.innerHTML = custHtml;
       }
 
-      function renderOrdersTable() {
-        const el = document.getElementById("orders-table-container");
-        if (!orders.length) {
-          el.textContent = "אין הזמנות עדיין";
-          return;
-        }
-        let html =
-          '<table class="admin-orders-table"><tr><th>שם</th><th>טלפון</th><th>עיר</th><th>מנות</th><th>סה״כ</th><th>תשלום</th><th>תאריך</th></tr>';
-        orders
-          .slice()
-          .reverse()
-          .forEach((o) => {
-            html += `<tr>
-        <td>${esc(o.name)}</td>
-        <td><a href="tel:${esc(o.phone)}" style="color:var(--olive-dark);text-decoration:none">${esc(o.phone)}</a></td>
-        <td>${esc(o.city)}</td>
-        <td style="font-size:12px">${o.items.map((i) => esc(i.name) + "×" + i.qty).join(", ")}</td>
-        <td>₪${o.total}</td>
-        <td><span class="status-badge ${o.paid ? "status-paid" : "status-pending"}">${esc(PM_NAMES[o.paymentMethod] || (o.paid ? "שולם" : "ממתין"))}</span></td>
-        <td style="font-size:11.5px;white-space:nowrap">${esc(o.date)}</td>
-      </tr>`;
-          });
-        html += "</table>";
-        el.innerHTML = html;
-      }
+      function renderOrdersTable() { renderOrdersSummary(); }
 
       function clearOrders() {
         if (!confirm("למחוק את כל ההזמנות? פעולה זו אינה הפיכה.")) return;
