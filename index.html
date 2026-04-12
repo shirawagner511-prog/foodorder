@@ -2771,8 +2771,8 @@
 
       function confirmCrop() {
         if (!_cropperInstance) return;
-        const canvas = _cropperInstance.getCroppedCanvas({ width: 600, height: 600 });
-        const dataUrl = canvas.toDataURL("image/jpeg", 0.82);
+        const canvas = _cropperInstance.getCroppedCanvas({ width: 1000, height: 1000 });
+        const dataUrl = canvas.toDataURL("image/jpeg", 0.92);
         if (_cropCallback) _cropCallback(dataUrl);
         cancelCrop();
       }
@@ -2790,14 +2790,14 @@
           const w = document.createElement("div");
           w.className = "admin-dish-item";
           w.innerHTML = `<div class="admin-item-row">
-          <input class="admin-input-full" placeholder="שם המנה" value="${esc(dish.name)}" onchange="adminDishes[${idx}].name=this.value" />
-          <input class="admin-input-full" placeholder="תיאור" value="${esc(dish.desc)}" onchange="adminDishes[${idx}].desc=this.value" />
+          <input class="admin-input-full" placeholder="שם המנה" value="${esc(dish.name)}" oninput="adminDishes[${idx}].name=this.value" />
+          <input class="admin-input-full" placeholder="תיאור" value="${esc(dish.desc)}" oninput="adminDishes[${idx}].desc=this.value" />
           <button class="remove-dish" onclick="adminDishes.splice(${idx},1);renderAdminDishes()">הסר</button>
         </div>
         <div class="admin-item-row2">
-          <input class="admin-input-full" type="number" placeholder="מחיר ₪" value="${dish.price}" onchange="adminDishes[${idx}].price=Number(this.value)" />
-          <input class="admin-input-full" type="number" placeholder="מינ׳ כמות (ריק=1)" min="1" value="${dish.minQty || ""}" onchange="adminDishes[${idx}].minQty=this.value?Number(this.value):undefined" style="width:130px" />
-          <input class="admin-input-full" type="number" placeholder="קפיצה (ריק=1)" min="1" value="${dish.stepQty || ""}" onchange="adminDishes[${idx}].stepQty=this.value?Number(this.value):undefined" style="width:120px" />
+          <input class="admin-input-full" type="number" placeholder="מחיר ₪" value="${dish.price}" oninput="adminDishes[${idx}].price=Number(this.value)" />
+          <input class="admin-input-full" type="number" placeholder="מינ׳ כמות (ריק=1)" min="1" value="${dish.minQty || ""}" oninput="adminDishes[${idx}].minQty=this.value?Number(this.value):undefined" style="width:130px" />
+          <input class="admin-input-full" type="number" placeholder="קפיצה (ריק=1)" min="1" value="${dish.stepQty || ""}" oninput="adminDishes[${idx}].stepQty=this.value?Number(this.value):undefined" style="width:120px" />
           <label style="display:flex;align-items:center;gap:8px;cursor:pointer;flex:1">
             ${dish.img ? `<img src="${dish.img}" style="width:44px;height:44px;object-fit:cover;border-radius:8px;border:1px solid var(--border)">` : `<span style="font-size:28px">${dish.emoji || "🍽️"}</span>`}
             <span style="color:var(--olive);font-size:13px;text-decoration:underline">העלה תמונה</span>
