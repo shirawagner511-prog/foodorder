@@ -1720,6 +1720,11 @@
             <button onclick="saveGhToken()" class="export-btn" style="white-space:nowrap">שמור Token</button>
           </div>
           <div id="gh-token-status" style="font-size:12px;color:var(--green);margin-top:6px"></div>
+          <div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border)">
+            <div style="font-size:13px;color:var(--text-muted);margin-bottom:8px">📦 יש לך תמונות שהועלו בדפדפן הזה? שמרי אותן לגיטהאב פעם אחת:</div>
+            <button onclick="migrateLocalToGitHub()" class="export-btn" style="background:var(--olive);color:white">⬆️ העלה תמונות שמורות לגיטהאב</button>
+            <div id="migrate-status" style="font-size:12px;color:var(--green);margin-top:6px"></div>
+          </div>
         </div>
       </div>
 
@@ -1853,6 +1858,39 @@
         document.getElementById("gh-token-input").value = "";
         document.getElementById("gh-token-status").textContent = "✓ Token נשמר";
         showToast("✅ Token נשמר בהצלחה");
+      }
+
+      async function migrateLocalToGitHub() {
+        const statusEl = document.getElementById("migrate-status");
+        const localMenu = JSON.parse(localStorage.getItem("sw_menu") || "null");
+        if (!localMenu || !localMenu.length) {
+          statusEl.textContent = "לא נמצאו תמונות שמורות בדפדפן זה";
+          statusEl.style.color = "var(--text-muted)";
+          return;
+        }
+        const hasImages = localMenu.some((d) => d.img);
+        if (!hasImages) {
+          statusEl.textContent = "אין תמונות שמורות בדפדפן זה";
+          statusEl.style.color = "var(--text-muted)";
+          return;
+        }
+        // Merge images from localStorage into current menu
+        const merged = menu.map((dish) => {
+          const local = localMenu.find((d) => d.id === dish.id);
+          return local && local.img ? { ...dish, img: local.img } : dish;
+        });
+        menu = merged;
+        statusEl.textContent = "⏳ מעלה...";
+        statusEl.style.color = "var(--text-muted)";
+        const ok = await pushMenuToGitHub();
+        if (ok) {
+          statusEl.textContent = "✅ התמונות הועלו לגיטהאב בהצלחה!";
+          statusEl.style.color = "var(--green)";
+          renderMenu();
+        } else {
+          statusEl.textContent = "❌ שגיאה — ודאי שה-Token מוגדר";
+          statusEl.style.color = "var(--red)";
+        }
       }
 
       // ═══════════════════════════════
@@ -2407,15 +2445,6 @@
           renderAdminPanel();
           panel.scrollIntoView({ behavior: "smooth" });
         }
-      }
-
-      function saveGhToken() {
-        const t = document.getElementById("gh-token-input").value.trim();
-        if (!t) return;
-        localStorage.setItem("gh_token", t);
-        document.getElementById("gh-token-input").value = "";
-        document.getElementById("gh-token-status").textContent = "✓ Token נשמר";
-        showToast("✅ Token נשמר");
       }
 
       function renderAdminCategories() {
