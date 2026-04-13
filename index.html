@@ -1666,6 +1666,7 @@
           </div>
           <div style="display:flex;align-items:center;gap:10px">
             <div id="google_translate_element"></div>
+            <div id="lang-switcher-wrap"></div>
             <button class="cart-btn" onclick="toggleCart()">
               🛒 סל <span class="cart-count" id="cart-count">0</span>
             </button>
@@ -3303,32 +3304,139 @@ function sendConfirmationEmail(data) {
 -->
   <!-- תלוש הדפסה — חייב להיות ישירות תחת body כדי שיופיע בהדפסה -->
   <div id="print-slip"></div>
+  <style>
+    #google_translate_element { display: none; }
+    .goog-te-banner-frame { display: none !important; }
+    body { top: 0 !important; }
+
+    .lang-switcher {
+      position: relative;
+    }
+    .lang-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.35);
+      border-radius: 20px;
+      padding: 6px 14px;
+      color: white;
+      font-family: "Heebo", sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s;
+      white-space: nowrap;
+    }
+    .lang-btn:hover {
+      background: rgba(255,255,255,0.25);
+    }
+    .lang-btn svg {
+      width: 16px;
+      height: 16px;
+      opacity: 0.9;
+    }
+    .lang-dropdown {
+      display: none;
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 0;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+      overflow: hidden;
+      min-width: 150px;
+      z-index: 999;
+    }
+    .lang-dropdown.open { display: block; }
+    .lang-option {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 16px;
+      font-family: "Heebo", sans-serif;
+      font-size: 14px;
+      color: #1a1f2e;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .lang-option:hover { background: #f0f3f8; }
+    .lang-option.active { background: #e8edf5; font-weight: 600; color: #1d3461; }
+    .lang-flag { font-size: 18px; }
+  </style>
+
   <script type="text/javascript">
     function googleTranslateElementInit() {
       new google.translate.TranslateElement({
         pageLanguage: 'he',
-        includedLanguages: 'en,ar,ru,fr,es,de',
-        layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+        includedLanguages: 'he,en,ar,ru',
         autoDisplay: false
       }, 'google_translate_element');
     }
+
+    const LANGS = [
+      { code: 'he', label: 'עברית',  flag: '🇮🇱' },
+      { code: 'en', label: 'English', flag: '🇺🇸' },
+      { code: 'ar', label: 'عربية',  flag: '🇸🇦' },
+      { code: 'ru', label: 'Русский', flag: '🇷🇺' },
+    ];
+
+    let currentLang = 'he';
+
+    function toggleLangDropdown() {
+      document.getElementById('lang-dropdown').classList.toggle('open');
+    }
+
+    function selectLang(code) {
+      document.getElementById('lang-dropdown').classList.remove('open');
+      currentLang = code;
+
+      document.querySelectorAll('.lang-option').forEach(el => {
+        el.classList.toggle('active', el.dataset.code === code);
+      });
+
+      const label = LANGS.find(l => l.code === code);
+      document.getElementById('lang-btn-label').textContent = label ? label.flag + ' ' + label.label : '';
+
+      if (code === 'he') {
+        // חזרה לעברית — מחיקת cookie ורענון
+        document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+        document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=' + location.hostname;
+        location.reload();
+        return;
+      }
+
+      const select = document.querySelector('.goog-te-combo');
+      if (select) {
+        select.value = code;
+        select.dispatchEvent(new Event('change'));
+      }
+    }
+
+    document.addEventListener('click', function(e) {
+      if (!e.target.closest('.lang-switcher')) {
+        document.getElementById('lang-dropdown').classList.remove('open');
+      }
+    });
+
+    window.addEventListener('load', function() {
+      const wrap = document.getElementById('lang-switcher-wrap');
+      if (!wrap) return;
+      wrap.innerHTML = `
+        <div class="lang-switcher">
+          <button class="lang-btn" onclick="toggleLangDropdown()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/>
+              <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+            </svg>
+            <span id="lang-btn-label">🇮🇱 עברית</span>
+          </button>
+          <div class="lang-dropdown" id="lang-dropdown">
+            ${LANGS.map(l => `<div class="lang-option${l.code==='he'?' active':''}" data-code="${l.code}" onclick="selectLang('${l.code}')"><span class="lang-flag">${l.flag}</span>${l.label}</div>`).join('')}
+          </div>
+        </div>`;
+    });
   </script>
   <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-  <style>
-    #google_translate_element .goog-te-gadget-simple {
-      background: rgba(255,255,255,0.15) !important;
-      border: 1px solid rgba(255,255,255,0.3) !important;
-      border-radius: 8px !important;
-      padding: 4px 8px !important;
-      font-size: 13px !important;
-    }
-    #google_translate_element .goog-te-gadget-simple span,
-    #google_translate_element .goog-te-gadget-simple a {
-      color: white !important;
-      text-decoration: none !important;
-    }
-    .goog-te-banner-frame { display: none !important; }
-    body { top: 0 !important; }
-  </style>
   </body>
 </html>
