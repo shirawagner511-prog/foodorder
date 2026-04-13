@@ -1597,7 +1597,7 @@
 
         // Google Sheets — ראי הנחיות הגדרה בתחתית הקובץ
         googleSheetsWebhook:
-          "https://script.google.com/macros/s/AKfycbxRNNuumQ9hVs6ajG2KoUi5f1KwZwYKM3XsmGhq3FpOl0qPyOaR8RVxGHK7tumjVjU/exec", // ← הדביקי כאן את ה-URL אחרי ההגדרה
+          "https://script.google.com/macros/s/AKfycbxzZm7TUL39QrPslhZWQCnCwXtkfnTNmJgdugMFDEv68vegjqcnZ06R5qJMoYMzvQ/exec",
 
         // אמצעי תשלום
         payment: {
@@ -3042,17 +3042,32 @@
         const statusEl = document.getElementById('sheets-load-status');
         const url = CONFIG.googleSheetsWebhook;
         if (!url) { showToast('⚠️ אין URL של Sheets בהגדרות'); return; }
+        statusEl.style.color = 'var(--text-muted)';
         statusEl.textContent = '⏳ טוען הזמנות...';
         try {
-          const res = await fetch(url);
-          if (!res.ok) throw new Error('שגיאת שרת ' + res.status);
-          const rows = await res.json();
+          const rows = await new Promise((resolve, reject) => {
+            const cbName = '_sc_' + Date.now();
+            const script = document.createElement('script');
+            const timer = setTimeout(() => {
+              delete window[cbName];
+              document.head.removeChild(script);
+              reject(new Error('timeout'));
+            }, 10000);
+            window[cbName] = function(data) {
+              clearTimeout(timer);
+              delete window[cbName];
+              document.head.removeChild(script);
+              resolve(data);
+            };
+            script.src = url + '?callback=' + cbName + '&_=' + Date.now();
+            script.onerror = () => { clearTimeout(timer); reject(new Error('שגיאת טעינה')); };
+            document.head.appendChild(script);
+          });
           if (!Array.isArray(rows)) throw new Error('תגובה לא תקינה');
           if (rows.length === 0) {
             statusEl.textContent = 'אין הזמנות ב-Sheets';
             return;
           }
-          // המרת שורות Sheets לפורמט orders של האפליקציה
           orders = rows.map(r => ({
             id:            r.id || String(r.date),
             date:          r.date,
@@ -3065,7 +3080,6 @@
             paymentMethod: r.paymentMethod || '',
             note:          r.note || '',
             items: (r.itemsText || '').split('\n').filter(Boolean).map(line => {
-              // פורמט: "שם × qty יח' = ₪price"
               const m = line.match(/^(.+) × (\d+) יח' = ₪([\d.]+)/);
               if (m) return { name: m[1].trim(), qty: Number(m[2]), price: Number(m[3]) / Number(m[2]) };
               return { name: line, qty: 1, price: 0 };
@@ -3073,6 +3087,7 @@
           }));
           localStorage.setItem('sw_orders', JSON.stringify(orders));
           renderOrdersSummary();
+          renderOrdersTable();
           statusEl.style.color = 'var(--green)';
           statusEl.textContent = '✅ נטענו ' + orders.length + ' הזמנות מ-Sheets (' + new Date().toLocaleTimeString('he-IL') + ')';
         } catch(err) {
