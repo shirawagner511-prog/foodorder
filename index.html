@@ -1892,9 +1892,11 @@
             <div id="orders-table-container">אין הזמנות עדיין</div>
           </div>
           <div class="admin-btns" style="margin-top:16px">
+            <button class="export-btn" style="background:var(--olive);color:white;border-color:var(--olive)" onclick="loadOrdersFromSheets()">☁️ טען הזמנות מ-Sheets</button>
             <button class="export-btn" onclick="exportCSV()">⬇️ ייצוא CSV לאקסל</button>
             <button class="clear-orders-btn" onclick="clearOrders()">🗑️ נקה הזמנות</button>
           </div>
+          <div id="sheets-load-status" style="font-size:12px;color:var(--text-muted);margin-top:8px;text-align:center"></div>
         </div>
 
         <div class="admin-section">
@@ -2992,6 +2994,49 @@
         localStorage.setItem("sw_orders", "[]");
         renderOrdersSummary();
         renderOrdersTable();
+      }
+
+      async function loadOrdersFromSheets() {
+        const statusEl = document.getElementById('sheets-load-status');
+        const url = CONFIG.googleSheetsWebhook;
+        if (!url) { showToast('⚠️ אין URL של Sheets בהגדרות'); return; }
+        statusEl.textContent = '⏳ טוען הזמנות...';
+        try {
+          const res = await fetch(url);
+          if (!res.ok) throw new Error('שגיאת שרת ' + res.status);
+          const rows = await res.json();
+          if (!Array.isArray(rows)) throw new Error('תגובה לא תקינה');
+          if (rows.length === 0) {
+            statusEl.textContent = 'אין הזמנות ב-Sheets';
+            return;
+          }
+          // המרת שורות Sheets לפורמט orders של האפליקציה
+          orders = rows.map(r => ({
+            id:            r.id || String(r.date),
+            date:          r.date,
+            name:          r.name,
+            phone:         r.phone,
+            email:         r.email || '',
+            city:          r.city || '',
+            week:          r.week || '',
+            total:         Number(r.total) || 0,
+            paymentMethod: r.paymentMethod || '',
+            note:          r.note || '',
+            items: (r.itemsText || '').split('\n').filter(Boolean).map(line => {
+              // פורמט: "שם × qty יח' = ₪price"
+              const m = line.match(/^(.+) × (\d+) יח' = ₪([\d.]+)/);
+              if (m) return { name: m[1].trim(), qty: Number(m[2]), price: Number(m[3]) / Number(m[2]) };
+              return { name: line, qty: 1, price: 0 };
+            })
+          }));
+          localStorage.setItem('sw_orders', JSON.stringify(orders));
+          renderOrdersSummary();
+          statusEl.style.color = 'var(--green)';
+          statusEl.textContent = '✅ נטענו ' + orders.length + ' הזמנות מ-Sheets (' + new Date().toLocaleTimeString('he-IL') + ')';
+        } catch(err) {
+          statusEl.style.color = 'var(--red)';
+          statusEl.textContent = '❌ שגיאה: ' + err.message;
+        }
       }
 
       function exportCSV() {
