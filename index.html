@@ -1664,9 +1664,12 @@
               <div class="brand-sub" id="brand-sub"></div>
             </div>
           </div>
-          <button class="cart-btn" onclick="toggleCart()">
-            🛒 סל <span class="cart-count" id="cart-count">0</span>
-          </button>
+          <div style="display:flex;align-items:center;gap:10px">
+            <div id="google_translate_element"></div>
+            <button class="cart-btn" onclick="toggleCart()">
+              🛒 סל <span class="cart-count" id="cart-count">0</span>
+            </button>
+          </div>
         </div>
       </header>
 
@@ -3300,5 +3303,32 @@ function sendConfirmationEmail(data) {
 -->
   <!-- תלוש הדפסה — חייב להיות ישירות תחת body כדי שיופיע בהדפסה -->
   <div id="print-slip"></div>
+  <script type="text/javascript">
+    function googleTranslateElementInit() {
+      new google.translate.TranslateElement({
+        pageLanguage: 'he',
+        includedLanguages: 'en,ar,ru,fr,es,de',
+        layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+        autoDisplay: false
+      }, 'google_translate_element');
+    }
+  </script>
+  <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+  <style>
+    #google_translate_element .goog-te-gadget-simple {
+      background: rgba(255,255,255,0.15) !important;
+      border: 1px solid rgba(255,255,255,0.3) !important;
+      border-radius: 8px !important;
+      padding: 4px 8px !important;
+      font-size: 13px !important;
+    }
+    #google_translate_element .goog-te-gadget-simple span,
+    #google_translate_element .goog-te-gadget-simple a {
+      color: white !important;
+      text-decoration: none !important;
+    }
+    .goog-te-banner-frame { display: none !important; }
+    body { top: 0 !important; }
+  </style>
   </body>
 </html>
