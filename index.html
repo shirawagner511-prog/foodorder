@@ -375,7 +375,22 @@
         gap: 8px;
         align-items: center;
         margin-bottom: 6px;
+        border-radius: 8px;
+        transition: background 0.15s;
       }
+      .admin-cat-row.drag-over {
+        background: var(--accent-light);
+        outline: 2px dashed var(--accent);
+      }
+      .drag-handle {
+        cursor: grab;
+        color: var(--text-muted);
+        font-size: 18px;
+        padding: 0 4px;
+        user-select: none;
+        flex-shrink: 0;
+      }
+      .drag-handle:active { cursor: grabbing; }
       .dish-card {
         background: white;
         border-radius: 14px;
@@ -2736,16 +2751,46 @@
         }
       }
 
+      let _catDragIdx = null;
+
       function renderAdminCategories() {
         const el = document.getElementById("admin-categories-list");
         if (!el) return;
         el.innerHTML = adminCategories.map((cat, i) => `
-          <div class="admin-cat-row">
+          <div class="admin-cat-row" draggable="true"
+            data-ci="${i}"
+            ondragstart="catDragStart(event,${i})"
+            ondragover="catDragOver(event)"
+            ondragleave="catDragLeave(event)"
+            ondrop="catDrop(event,${i})">
+            <span class="drag-handle" title="גרור לשינוי סדר">⠿</span>
             <input class="admin-input" style="flex:1" value="${esc(cat)}"
               oninput="adminCategories[${i}]=this.value">
             <button onclick="adminCategories.splice(${i},1);renderAdminCategories();renderAdminDishes()"
               style="background:none;border:none;cursor:pointer;color:var(--red);font-size:20px;line-height:1">×</button>
           </div>`).join("");
+      }
+
+      function catDragStart(e, i) {
+        _catDragIdx = i;
+        e.dataTransfer.effectAllowed = 'move';
+      }
+      function catDragOver(e) {
+        e.preventDefault();
+        e.currentTarget.classList.add('drag-over');
+      }
+      function catDragLeave(e) {
+        e.currentTarget.classList.remove('drag-over');
+      }
+      function catDrop(e, targetIdx) {
+        e.preventDefault();
+        e.currentTarget.classList.remove('drag-over');
+        if (_catDragIdx === null || _catDragIdx === targetIdx) return;
+        const moved = adminCategories.splice(_catDragIdx, 1)[0];
+        adminCategories.splice(targetIdx, 0, moved);
+        _catDragIdx = null;
+        renderAdminCategories();
+        renderAdminDishes();
       }
 
       function addCategory() {
