@@ -2054,9 +2054,24 @@
         const t = document.getElementById("gh-token-input").value.trim();
         if (!t) return;
         localStorage.setItem("gh_token", t);
+        localStorage.setItem("gh_token_date", new Date().toLocaleDateString("he-IL"));
         document.getElementById("gh-token-input").value = "";
-        document.getElementById("gh-token-status").textContent = "✓ Token נשמר";
+        updateGhTokenStatus();
         showToast("✅ Token נשמר בהצלחה");
+      }
+
+      function updateGhTokenStatus() {
+        const statusEl = document.getElementById("gh-token-status");
+        if (!statusEl) return;
+        const token = localStorage.getItem("gh_token");
+        const date = localStorage.getItem("gh_token_date");
+        if (token) {
+          statusEl.style.color = "var(--green)";
+          statusEl.textContent = "✓ Token מוגדר" + (date ? " (נשמר ב-" + date + ")" : "");
+        } else {
+          statusEl.style.color = "var(--red)";
+          statusEl.textContent = "⚠️ Token חסר — ללא Token לא ניתן לעדכן את התפריט";
+        }
       }
 
       async function migrateLocalToGitHub() {
@@ -2747,8 +2762,7 @@
         renderAdminDishes();
         renderOrdersSummary();
         renderOrdersTable();
-        const statusEl = document.getElementById("gh-token-status");
-        if (statusEl) statusEl.textContent = localStorage.getItem("gh_token") ? "✓ Token מוגדר" : "";
+        updateGhTokenStatus();
       }
 
       let _cropperInstance = null;
