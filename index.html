@@ -1716,7 +1716,7 @@
 
         // Google Sheets — ראי הנחיות הגדרה בתחתית הקובץ
         googleSheetsWebhook:
-          "https://script.google.com/macros/s/AKfycbydm-neh2aBLhiLYjP0A2wANvy09saEk--EdwtOGnhTBKT_uz894v7IX2SdUVLx5eo/exec",
+          "https://script.google.com/macros/s/AKfycbz3tnBt1rAoor73dDCXySQpUVUc3NKwPth35gYqBdEbJnYWG_Yy3zsV956LoWFguuA/exec",
 
         // אמצעי תשלום
         payment: {
@@ -3357,18 +3357,15 @@
 
       function deleteOrder(id) {
         if (!confirm("למחוק הזמנה זו לצמיתות?")) return;
-        // מחיקה מ-localStorage
         orders = orders.filter((o) => String(o.id) !== String(id));
         localStorage.setItem("sw_orders", JSON.stringify(orders));
         renderOrdersSummary();
-        // מחיקה מ-Sheets
         if (CONFIG.googleSheetsWebhook) {
-          fetch(CONFIG.googleSheetsWebhook, {
-            method: "POST",
-            mode: "no-cors",
-            headers: { "Content-Type": "text/plain" },
-            body: JSON.stringify({ action: "delete", id: id }),
-          }).catch(() => {});
+          const cbName = '_del_' + Date.now();
+          const script = document.createElement('script');
+          window[cbName] = function() { delete window[cbName]; document.head.removeChild(script); };
+          script.src = CONFIG.googleSheetsWebhook + '?action=delete&id=' + encodeURIComponent(id) + '&callback=' + cbName;
+          document.head.appendChild(script);
         }
         showToast("✅ ההזמנה נמחקה");
       }
