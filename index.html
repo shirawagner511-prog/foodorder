@@ -8,8 +8,11 @@
       href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@300;400;500;700;800&family=Heebo:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="icon" href="Logo.jpeg">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cropperjs@1.6.2/dist/cropper.min.css">
+    <link rel="icon" href="Logo.jpeg" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/cropperjs@1.6.2/dist/cropper.min.css"
+    />
     <style>
       * {
         box-sizing: border-box;
@@ -91,7 +94,7 @@
         overflow: hidden;
         flex-shrink: 0;
         background: white;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
       }
       .brand-logo img {
         width: 100%;
@@ -310,7 +313,9 @@
         gap: 0;
         margin-bottom: 8px;
       }
-      .category-group { margin-bottom: 28px; }
+      .category-group {
+        margin-bottom: 28px;
+      }
       .category-header {
         font-size: 20px;
         font-weight: 700;
@@ -331,12 +336,14 @@
         display: none;
         position: fixed;
         inset: 0;
-        background: rgba(0,0,0,0.75);
+        background: rgba(0, 0, 0, 0.75);
         z-index: 2000;
         align-items: center;
         justify-content: center;
       }
-      .crop-modal.open { display: flex; }
+      .crop-modal.open {
+        display: flex;
+      }
       .crop-box {
         background: white;
         border-radius: 16px;
@@ -347,8 +354,15 @@
         flex-direction: column;
         gap: 14px;
       }
-      .crop-box img { max-height: 55vh; display: block; }
-      .crop-actions { display: flex; gap: 10px; justify-content: flex-end; }
+      .crop-box img {
+        max-height: 55vh;
+        display: block;
+      }
+      .crop-actions {
+        display: flex;
+        gap: 10px;
+        justify-content: flex-end;
+      }
       .crop-btn-confirm {
         background: var(--olive);
         color: white;
@@ -390,22 +404,28 @@
         user-select: none;
         flex-shrink: 0;
       }
-      .drag-handle:active { cursor: grabbing; }
+      .drag-handle:active {
+        cursor: grabbing;
+      }
       .dish-card {
         background: white;
         border-radius: 14px;
         overflow: hidden;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-        transition: transform 0.22s, box-shadow 0.22s;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+        transition:
+          transform 0.22s,
+          box-shadow 0.22s;
         display: flex;
         flex-direction: column;
       }
       .dish-card:hover {
         transform: translateY(-3px);
-        box-shadow: 0 8px 24px rgba(0,0,0,0.13);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.13);
       }
       .dish-card.has-items {
-        box-shadow: 0 0 0 2.5px var(--olive), 0 4px 16px rgba(92,107,58,0.15);
+        box-shadow:
+          0 0 0 2.5px var(--olive),
+          0 4px 16px rgba(92, 107, 58, 0.15);
       }
       .dish-img {
         width: 100%;
@@ -419,7 +439,7 @@
       }
       .dish-emoji {
         font-size: 58px;
-        filter: drop-shadow(0 2px 6px rgba(0,0,0,0.12));
+        filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.12));
       }
       .dish-img img {
         width: 100%;
@@ -439,7 +459,9 @@
         font-weight: 700;
         display: none;
       }
-      .dish-card.has-items .dish-qty-badge { display: block; }
+      .dish-card.has-items .dish-qty-badge {
+        display: block;
+      }
       .dish-body {
         padding: 12px 14px 14px;
         display: flex;
@@ -492,7 +514,9 @@
         transition: background 0.18s;
         white-space: nowrap;
       }
-      .add-to-cart-btn:hover { background: var(--olive-hover); }
+      .add-to-cart-btn:hover {
+        background: var(--olive-hover);
+      }
       .qty-inline {
         display: flex;
         align-items: center;
@@ -515,8 +539,14 @@
         font-family: inherit;
         line-height: 1;
       }
-      .qty-btn:hover { background: var(--olive); color: white; border-color: var(--olive); }
-      .qty-btn:active { transform: scale(0.9); }
+      .qty-btn:hover {
+        background: var(--olive);
+        color: white;
+        border-color: var(--olive);
+      }
+      .qty-btn:active {
+        transform: scale(0.9);
+      }
       .qty-num {
         min-width: 22px;
         text-align: center;
@@ -1063,28 +1093,85 @@
         align-items: center;
         gap: 7px;
       }
-      .print-btn:hover { background: var(--olive); color: white; }
+      .print-btn:hover {
+        background: var(--olive);
+        color: white;
+      }
       @media print {
-        body > *:not(#print-slip) { display: none !important; }
+        body > *:not(#print-slip) {
+          display: none !important;
+        }
         #print-slip {
           display: block !important;
-          position: fixed; top: 0; left: 0; width: 100%; padding: 30px;
-          font-family: Arial, sans-serif; direction: rtl;
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          padding: 30px;
+          font-family: Arial, sans-serif;
+          direction: rtl;
         }
         #print-slip .slip-header {
-          text-align: center; border-bottom: 2px solid #1d3461; padding-bottom: 14px; margin-bottom: 16px;
+          text-align: center;
+          border-bottom: 2px solid #1d3461;
+          padding-bottom: 14px;
+          margin-bottom: 16px;
         }
-        #print-slip .slip-logo { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; margin-bottom: 8px; }
-        #print-slip .slip-biz { font-size: 20px; font-weight: 700; color: #1d3461; }
-        #print-slip .slip-week { font-size: 13px; color: #555; margin-top: 4px; }
-        #print-slip .slip-customer { font-size: 14px; margin-bottom: 12px; line-height: 1.8; }
-        #print-slip table { width: 100%; border-collapse: collapse; font-size: 13px; }
-        #print-slip th { background: #1d3461; color: white; padding: 8px 10px; text-align: right; }
-        #print-slip td { padding: 7px 10px; border-bottom: 1px solid #ddd; }
-        #print-slip .slip-total { font-weight: 700; font-size: 15px; text-align: left; padding-top: 10px; }
-        #print-slip .slip-footer { margin-top: 20px; border-top: 1px dashed #ccc; padding-top: 12px; font-size: 12px; color: #888; text-align: center; }
+        #print-slip .slip-logo {
+          width: 60px;
+          height: 60px;
+          border-radius: 50%;
+          object-fit: cover;
+          margin-bottom: 8px;
+        }
+        #print-slip .slip-biz {
+          font-size: 20px;
+          font-weight: 700;
+          color: #1d3461;
+        }
+        #print-slip .slip-week {
+          font-size: 13px;
+          color: #555;
+          margin-top: 4px;
+        }
+        #print-slip .slip-customer {
+          font-size: 14px;
+          margin-bottom: 12px;
+          line-height: 1.8;
+        }
+        #print-slip table {
+          width: 100%;
+          border-collapse: collapse;
+          font-size: 13px;
+        }
+        #print-slip th {
+          background: #1d3461;
+          color: white;
+          padding: 8px 10px;
+          text-align: right;
+        }
+        #print-slip td {
+          padding: 7px 10px;
+          border-bottom: 1px solid #ddd;
+        }
+        #print-slip .slip-total {
+          font-weight: 700;
+          font-size: 15px;
+          text-align: left;
+          padding-top: 10px;
+        }
+        #print-slip .slip-footer {
+          margin-top: 20px;
+          border-top: 1px dashed #ccc;
+          padding-top: 12px;
+          font-size: 12px;
+          color: #888;
+          text-align: center;
+        }
       }
-      #print-slip { display: none; }
+      #print-slip {
+        display: none;
+      }
       .new-order-btn {
         background: var(--olive);
         color: white;
@@ -1313,8 +1400,12 @@
         color: var(--olive);
         border-bottom-color: var(--olive);
       }
-      .orders-tab-panel { display: none; }
-      .orders-tab-panel.active { display: block; }
+      .orders-tab-panel {
+        display: none;
+      }
+      .orders-tab-panel.active {
+        display: block;
+      }
       .order-card {
         background: white;
         border: 1px solid var(--border);
@@ -1357,7 +1448,11 @@
         padding-bottom: 10px;
         border-bottom: 1px solid var(--border);
       }
-      .order-card-info span { display: flex; align-items: center; gap: 4px; }
+      .order-card-info span {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
       .order-items-table {
         width: 100%;
         border-collapse: collapse;
@@ -1376,7 +1471,9 @@
         padding: 7px 10px;
         border-bottom: 1px solid var(--border);
       }
-      .order-items-table tr:last-child td { border-bottom: none; }
+      .order-items-table tr:last-child td {
+        border-bottom: none;
+      }
       .order-card-total {
         display: flex;
         justify-content: space-between;
@@ -1407,11 +1504,30 @@
         color: var(--text-muted);
         transition: all 0.15s;
       }
-      .order-print-btn:hover { background: var(--cream); color: var(--olive); border-color: var(--olive); }
-      .dish-summary-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 10px; }
-      .dish-summary-table th { background: var(--olive-dark); color: white; padding: 9px 12px; text-align: right; }
-      .dish-summary-table td { padding: 8px 12px; border-bottom: 1px solid var(--border); }
-      .dish-summary-table tr:nth-child(even) td { background: var(--cream); }
+      .order-print-btn:hover {
+        background: var(--cream);
+        color: var(--olive);
+        border-color: var(--olive);
+      }
+      .dish-summary-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+        margin-top: 10px;
+      }
+      .dish-summary-table th {
+        background: var(--olive-dark);
+        color: white;
+        padding: 9px 12px;
+        text-align: right;
+      }
+      .dish-summary-table td {
+        padding: 8px 12px;
+        border-bottom: 1px solid var(--border);
+      }
+      .dish-summary-table tr:nth-child(even) td {
+        background: var(--cream);
+      }
       .dish-qty-bar {
         display: inline-block;
         height: 10px;
@@ -1600,7 +1716,7 @@
 
         // Google Sheets — ראי הנחיות הגדרה בתחתית הקובץ
         googleSheetsWebhook:
-          "https://script.google.com/macros/s/AKfycbxzZm7TUL39QrPslhZWQCnCwXtkfnTNmJgdugMFDEv68vegjqcnZ06R5qJMoYMzvQ/exec",
+          "https://script.google.com/macros/s/AKfycbydm-neh2aBLhiLYjP0A2wANvy09saEk--EdwtOGnhTBKT_uz894v7IX2SdUVLx5eo/exec",
 
         // אמצעי תשלום
         payment: {
@@ -1644,11 +1760,15 @@
     <!-- CROP MODAL -->
     <div class="crop-modal" id="crop-modal">
       <div class="crop-box">
-        <div style="font-size:16px;font-weight:700">✂️ חיתוך תמונה</div>
-        <div style="overflow:hidden;max-height:55vh"><img id="crop-img" src="" alt="crop"></div>
+        <div style="font-size: 16px; font-weight: 700">✂️ חיתוך תמונה</div>
+        <div style="overflow: hidden; max-height: 55vh">
+          <img id="crop-img" src="" alt="crop" />
+        </div>
         <div class="crop-actions">
           <button class="crop-btn-cancel" onclick="cancelCrop()">ביטול</button>
-          <button class="crop-btn-confirm" onclick="confirmCrop()">חתוך ושמור ✓</button>
+          <button class="crop-btn-confirm" onclick="confirmCrop()">
+            חתוך ושמור ✓
+          </button>
         </div>
       </div>
     </div>
@@ -1658,13 +1778,13 @@
       <header class="header">
         <div class="header-inner">
           <div class="brand-wrap">
-            <div class="brand-logo"><img src="Logo.jpeg" alt="לוגו"></div>
+            <div class="brand-logo"><img src="Logo.jpeg" alt="לוגו" /></div>
             <div>
               <div class="brand" id="brand-name"></div>
               <div class="brand-sub" id="brand-sub"></div>
             </div>
           </div>
-          <div style="display:flex;align-items:center;gap:10px">
+          <div style="display: flex; align-items: center; gap: 10px">
             <div id="google_translate_element"></div>
             <div id="lang-switcher-wrap"></div>
             <button class="cart-btn" onclick="toggleCart()">
@@ -1709,7 +1829,9 @@
           <div class="success-title">ההזמנה אושרה! 🎉</div>
           <div class="success-msg" id="success-msg"></div>
           <div class="success-summary" id="success-summary"></div>
-          <button class="print-btn" onclick="printSlip()">🖨️ הדפסת סיכום הזמנה</button><br>
+          <button class="print-btn" onclick="printSlip()">
+            🖨️ הדפסת סיכום הזמנה</button
+          ><br />
           <button class="new-order-btn" onclick="resetApp()">הזמנה חדשה</button>
         </div>
         <!-- תלוש הדפסה מוסר מה-main ומועבר לתחתית body -->
@@ -1879,13 +2001,43 @@
               placeholder="יום שני 09:00"
             />
           </div>
-          <div class="admin-sub" style="margin-top:16px">📝 טקסט מידע (מתחת לכותרת)</div>
-          <div style="font-size:13px;color:var(--text-muted);margin-bottom:6px">כל שורה תוצג כנקודת רשימה. שורה ריקה = מחיקה.</div>
-          <textarea id="admin-hero-text" rows="7" style="width:100%;border:1.5px solid var(--border);border-radius:10px;padding:10px 12px;font-family:inherit;font-size:14px;resize:vertical;direction:rtl" placeholder="תפריט ליום שלישי 14.4&#10;הזמנות יתקבלו עד יום שני ב-9:00&#10;משלוחים נעשים ביום שלישי בין השעות 15:00-19:00"></textarea>
+          <div class="admin-sub" style="margin-top: 16px">
+            📝 טקסט מידע (מתחת לכותרת)
+          </div>
+          <div
+            style="
+              font-size: 13px;
+              color: var(--text-muted);
+              margin-bottom: 6px;
+            "
+          >
+            כל שורה תוצג כנקודת רשימה. שורה ריקה = מחיקה.
+          </div>
+          <textarea
+            id="admin-hero-text"
+            rows="7"
+            style="
+              width: 100%;
+              border: 1.5px solid var(--border);
+              border-radius: 10px;
+              padding: 10px 12px;
+              font-family: inherit;
+              font-size: 14px;
+              resize: vertical;
+              direction: rtl;
+            "
+            placeholder="תפריט ליום שלישי 14.4&#10;הזמנות יתקבלו עד יום שני ב-9:00&#10;משלוחים נעשים ביום שלישי בין השעות 15:00-19:00"
+          ></textarea>
 
-          <div class="admin-sub" style="margin-top:16px">🗂️ קטגוריות</div>
+          <div class="admin-sub" style="margin-top: 16px">🗂️ קטגוריות</div>
           <div id="admin-categories-list"></div>
-          <button class="add-dish-btn" onclick="addCategory()" style="margin-bottom:16px">+ הוסף קטגוריה</button>
+          <button
+            class="add-dish-btn"
+            onclick="addCategory()"
+            style="margin-bottom: 16px"
+          >
+            + הוסף קטגוריה
+          </button>
 
           <div class="admin-sub">🍽️ מנות</div>
           <div id="admin-dishes-list"></div>
@@ -1901,8 +2053,18 @@
           <div class="admin-sub">📊 ניהול הזמנות</div>
           <div id="orders-kpi-row"></div>
           <div class="orders-tabs">
-            <button class="orders-tab active" onclick="switchOrdersTab('dishes',this)">🍽️ סיכום מנות</button>
-            <button class="orders-tab" onclick="switchOrdersTab('customers',this)">👤 פירוט לקוחות</button>
+            <button
+              class="orders-tab active"
+              onclick="switchOrdersTab('dishes', this)"
+            >
+              🍽️ סיכום מנות
+            </button>
+            <button
+              class="orders-tab"
+              onclick="switchOrdersTab('customers', this)"
+            >
+              👤 פירוט לקוחות
+            </button>
           </div>
           <div class="orders-tab-panel active" id="orders-tab-dishes">
             <div id="orders-summary">אין הזמנות עדיין</div>
@@ -1910,35 +2072,116 @@
           <div class="orders-tab-panel" id="orders-tab-customers">
             <div id="orders-table-container">אין הזמנות עדיין</div>
           </div>
-          <div class="admin-btns" style="margin-top:16px">
-            <button class="export-btn" style="background:var(--olive);color:white;border-color:var(--olive)" onclick="loadOrdersFromSheets()">☁️ טען הזמנות מ-Sheets</button>
-            <button class="export-btn" onclick="exportCSV()">⬇️ ייצוא CSV לאקסל</button>
-            <button class="clear-orders-btn" onclick="clearOrders()">🗑️ נקה הזמנות</button>
+          <div class="admin-btns" style="margin-top: 16px">
+            <button
+              class="export-btn"
+              style="
+                background: var(--olive);
+                color: white;
+                border-color: var(--olive);
+              "
+              onclick="loadOrdersFromSheets()"
+            >
+              ☁️ טען הזמנות מ-Sheets
+            </button>
+            <button class="export-btn" onclick="exportCSV()">
+              ⬇️ ייצוא CSV לאקסל
+            </button>
+            <button class="clear-orders-btn" onclick="clearOrders()">
+              🗑️ נקה הזמנות
+            </button>
           </div>
-          <div id="sheets-load-status" style="font-size:12px;color:var(--text-muted);margin-top:8px;text-align:center"></div>
+          <div
+            id="sheets-load-status"
+            style="
+              font-size: 12px;
+              color: var(--text-muted);
+              margin-top: 8px;
+              text-align: center;
+            "
+          ></div>
         </div>
 
         <div class="admin-section">
           <div class="admin-sub">🔗 עדכון תפריט לכל המשתמשים</div>
-          <div style="font-size:13px;color:var(--text-muted);margin-bottom:10px;line-height:1.6">
-            כדי שהתפריט יתעדכן לכולם, נדרש GitHub Personal Access Token עם הרשאות <b>repo</b>.<br>
-            <a href="https://github.com/settings/tokens/new?scopes=repo&description=shabbat-menu" target="_blank" style="color:var(--olive)">לחץ כאן ליצירת Token →</a>
+          <div
+            style="
+              font-size: 13px;
+              color: var(--text-muted);
+              margin-bottom: 10px;
+              line-height: 1.6;
+            "
+          >
+            כדי שהתפריט יתעדכן לכולם, נדרש GitHub Personal Access Token עם
+            הרשאות <b>repo</b>.<br />
+            <a
+              href="https://github.com/settings/tokens/new?scopes=repo&description=shabbat-menu"
+              target="_blank"
+              style="color: var(--olive)"
+              >לחץ כאן ליצירת Token →</a
+            >
           </div>
-          <div style="display:flex;gap:8px;align-items:center">
-            <input type="password" id="gh-token-input" class="admin-input" style="flex:1;min-width:0" placeholder="ghp_xxxxxxxxxxxxxx">
-            <button onclick="saveGhToken()" class="export-btn" style="white-space:nowrap">שמור Token</button>
+          <div style="display: flex; gap: 8px; align-items: center">
+            <input
+              type="password"
+              id="gh-token-input"
+              class="admin-input"
+              style="flex: 1; min-width: 0"
+              placeholder="ghp_xxxxxxxxxxxxxx"
+            />
+            <button
+              onclick="saveGhToken()"
+              class="export-btn"
+              style="white-space: nowrap"
+            >
+              שמור Token
+            </button>
           </div>
-          <div id="gh-token-status" style="font-size:12px;color:var(--green);margin-top:6px"></div>
-          <div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border)">
-            <div style="font-size:13px;color:var(--text-muted);margin-bottom:8px">📦 יש לך תמונות שהועלו בדפדפן הזה? שמרי אותן לגיטהאב פעם אחת:</div>
-            <button onclick="migrateLocalToGitHub()" class="export-btn" style="background:var(--olive);color:white">⬆️ העלה תמונות שמורות לגיטהאב</button>
-            <div id="migrate-status" style="font-size:12px;color:var(--green);margin-top:6px"></div>
+          <div
+            id="gh-token-status"
+            style="font-size: 12px; color: var(--green); margin-top: 6px"
+          ></div>
+          <div
+            style="
+              margin-top: 14px;
+              padding-top: 12px;
+              border-top: 1px solid var(--border);
+            "
+          >
+            <div
+              style="
+                font-size: 13px;
+                color: var(--text-muted);
+                margin-bottom: 8px;
+              "
+            >
+              📦 יש לך תמונות שהועלו בדפדפן הזה? שמרי אותן לגיטהאב פעם אחת:
+            </div>
+            <button
+              onclick="migrateLocalToGitHub()"
+              class="export-btn"
+              style="background: var(--olive); color: white"
+            >
+              ⬆️ העלה תמונות שמורות לגיטהאב
+            </button>
+            <div
+              id="migrate-status"
+              style="font-size: 12px; color: var(--green); margin-top: 6px"
+            ></div>
           </div>
         </div>
       </div>
 
       <footer class="footer">
-        <div id="footer-deadline" style="font-size:14px;color:rgba(255,255,255,0.9);margin-bottom:6px;font-weight:500"></div>
+        <div
+          id="footer-deadline"
+          style="
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 6px;
+            font-weight: 500;
+          "
+        ></div>
         <div id="footer-text"></div>
       </footer>
     </div>
@@ -2012,7 +2255,7 @@
       async function loadMenuFromGitHub() {
         const urls = [
           "https://raw.githubusercontent.com/" + GH_REPO + "/main/" + GH_FILE,
-          "/menu.json"
+          "/menu.json",
         ];
         for (const url of urls) {
           try {
@@ -2021,7 +2264,8 @@
             const data = await res.json();
             if (data && Array.isArray(data.items) && data.items.length) {
               menu = data.items;
-              if (Array.isArray(data.categories) && data.categories.length) categories = data.categories;
+              if (Array.isArray(data.categories) && data.categories.length)
+                categories = data.categories;
               if (data.weekTitle) weekTitle = data.weekTitle;
               if (data.deadline) deadline = data.deadline;
               if (data.heroText !== undefined) heroText = data.heroText;
@@ -2042,20 +2286,37 @@
           showToast("⏳ מעדכן לכל המשתמשים...");
           const getRes = await fetch(
             "https://api.github.com/repos/" + GH_REPO + "/contents/" + GH_FILE,
-            { headers: { Authorization: "Bearer " + token, Accept: "application/vnd.github+json" } }
+            {
+              headers: {
+                Authorization: "Bearer " + token,
+                Accept: "application/vnd.github+json",
+              },
+            },
           );
           const existing = getRes.ok ? await getRes.json() : {};
-          const payload = { items: menu, categories, weekTitle, deadline, heroText };
-          const content = btoa(unescape(encodeURIComponent(JSON.stringify(payload, null, 2))));
+          const payload = {
+            items: menu,
+            categories,
+            weekTitle,
+            deadline,
+            heroText,
+          };
+          const content = btoa(
+            unescape(encodeURIComponent(JSON.stringify(payload, null, 2))),
+          );
           const body = { message: "update menu", content };
           if (existing.sha) body.sha = existing.sha;
           const putRes = await fetch(
             "https://api.github.com/repos/" + GH_REPO + "/contents/" + GH_FILE,
             {
               method: "PUT",
-              headers: { Authorization: "Bearer " + token, Accept: "application/vnd.github+json", "Content-Type": "application/json" },
-              body: JSON.stringify(body)
-            }
+              headers: {
+                Authorization: "Bearer " + token,
+                Accept: "application/vnd.github+json",
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(body),
+            },
           );
           if (putRes.ok) {
             showToast("✅ התפריט עודכן לכל המשתמשים!");
@@ -2075,7 +2336,10 @@
         const t = document.getElementById("gh-token-input").value.trim();
         if (!t) return;
         localStorage.setItem("gh_token", t);
-        localStorage.setItem("gh_token_date", new Date().toLocaleDateString("he-IL"));
+        localStorage.setItem(
+          "gh_token_date",
+          new Date().toLocaleDateString("he-IL"),
+        );
         document.getElementById("gh-token-input").value = "";
         updateGhTokenStatus();
         showToast("✅ Token נשמר בהצלחה");
@@ -2088,10 +2352,12 @@
         const date = localStorage.getItem("gh_token_date");
         if (token) {
           statusEl.style.color = "var(--green)";
-          statusEl.textContent = "✓ Token מוגדר" + (date ? " (נשמר ב-" + date + ")" : "");
+          statusEl.textContent =
+            "✓ Token מוגדר" + (date ? " (נשמר ב-" + date + ")" : "");
         } else {
           statusEl.style.color = "var(--red)";
-          statusEl.textContent = "⚠️ Token חסר — ללא Token לא ניתן לעדכן את התפריט";
+          statusEl.textContent =
+            "⚠️ Token חסר — ללא Token לא ניתן לעדכן את התפריט";
         }
       }
 
@@ -2151,11 +2417,15 @@
       function updateHeroText() {
         document.getElementById("hero-title").textContent = weekTitle;
         const deadlineEl = document.getElementById("footer-deadline");
-        if (deadlineEl) deadlineEl.textContent = deadline ? "⏰ הזמנות עד " + deadline : "";
+        if (deadlineEl)
+          deadlineEl.textContent = deadline ? "⏰ הזמנות עד " + deadline : "";
         const panel = document.getElementById("hero-info-panel");
         if (heroText && heroText.trim()) {
           const lines = heroText.split("\n").filter((l) => l.trim());
-          panel.innerHTML = "<ul>" + lines.map((l) => `<li>${esc(l.trim())}</li>`).join("") + "</ul>";
+          panel.innerHTML =
+            "<ul>" +
+            lines.map((l) => `<li>${esc(l.trim())}</li>`).join("") +
+            "</ul>";
           panel.style.display = "";
         } else {
           panel.style.display = "none";
@@ -2165,7 +2435,9 @@
       // ═══════════════════════════════
       //  MENU
       // ═══════════════════════════════
-      function getDishById(id) { return menu.find(d => d.id === id) || {}; }
+      function getDishById(id) {
+        return menu.find((d) => d.id === id) || {};
+      }
 
       function dishActionHTML(id) {
         const q = quantities[id] || 0;
@@ -2174,7 +2446,7 @@
           return `<button class="add-to-cart-btn" onclick="changeQty(${id},1)">+ הוסף</button>`;
         }
         return `<div class="qty-inline">
-          <button class="qty-btn" onclick="changeQty(${id},-1)" aria-label="פחות" title="${q <= min ? 'הסר מהסל' : 'פחות'}">−</button>
+          <button class="qty-btn" onclick="changeQty(${id},-1)" aria-label="פחות" title="${q <= min ? "הסר מהסל" : "פחות"}">−</button>
           <span class="qty-num" id="qty-${id}">${q}</span>
           <button class="qty-btn" onclick="changeQty(${id},1)" aria-label="יותר">+</button>
         </div>`;
@@ -2184,7 +2456,8 @@
         if (!quantities[dish.id]) quantities[dish.id] = 0;
         if (!dishNotes[dish.id]) dishNotes[dish.id] = "";
         const card = document.createElement("div");
-        card.className = "dish-card" + (quantities[dish.id] > 0 ? " has-items" : "");
+        card.className =
+          "dish-card" + (quantities[dish.id] > 0 ? " has-items" : "");
         card.id = "card-" + dish.id;
         const q = quantities[dish.id];
         card.innerHTML = `<div class="dish-img">
@@ -2355,7 +2628,11 @@
           if (!v) ok = false;
         });
         if (!ok) {
-          showToast(phone && !phoneValid ? "מספר טלפון לא תקין — יש להזין 10 ספרות (05XXXXXXXX)" : "נא למלא את כל שדות החובה");
+          showToast(
+            phone && !phoneValid
+              ? "מספר טלפון לא תקין — יש להזין 10 ספרות (05XXXXXXXX)"
+              : "נא למלא את כל שדות החובה",
+          );
           return;
         }
         if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
@@ -2516,7 +2793,9 @@
         if (id === "bit") {
           const phone = CONFIG.payment.bit.phone.replace(/\D/g, "");
           const bitLink = `https://bitpay.co.il/app/bit/pay?phone=${encodeURIComponent(phone)}&amount=${total}&name=${encodeURIComponent(CONFIG.payment.bit.name)}`;
-          const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+          const isMobile = /Android|iPhone|iPad|iPod/i.test(
+            navigator.userAgent,
+          );
           const bitAction = isMobile
             ? `<a href="${esc(bitLink)}" target="_blank" class="pay-open-btn bit-btn" onclick="markPaymentOpened()">פתח Bit לתשלום →</a>`
             : `<div style="background:#e8f4fd;border-radius:10px;padding:14px 18px;margin-bottom:14px;font-size:13.5px;color:#1a5f8a;line-height:1.7">
@@ -2534,7 +2813,7 @@
             <button class="copy-btn" onclick="copyText(${JSON.stringify(phone)})">📋 העתק מספר</button>
             ${bitAction}
           </div>
-          ${isMobile ? '<div style="margin-top:14px;font-size:12px;color:#888">לאחר ביצוע התשלום לחצי על הכפתור הירוק שיופיע למטה</div>' : ''}
+          ${isMobile ? '<div style="margin-top:14px;font-size:12px;color:#888">לאחר ביצוע התשלום לחצי על הכפתור הירוק שיופיע למטה</div>' : ""}
         </div>`;
         } else if (id === "paybox") {
           const phone = CONFIG.payment.paybox.phone.replace(/\D/g, "");
@@ -2571,7 +2850,10 @@
         paymentLinkOpened = true;
         const btn = document.getElementById("payment-done-btn");
         btn.style.display = "block";
-        setTimeout(() => btn.scrollIntoView({ behavior: "smooth", block: "nearest" }), 200);
+        setTimeout(
+          () => btn.scrollIntoView({ behavior: "smooth", block: "nearest" }),
+          200,
+        );
       }
 
       function backToForm() {
@@ -2621,7 +2903,10 @@
           .join("\n");
         const text = `✅ הזמנה חדשה!\n\n👤 ${order.name}\n📞 ${order.phone}\n📧 ${order.email}\n🏙️ ${order.city}\n\n${lines}\n\n💰 סה״כ: ₪${order.total}\n💳 שולם ב: ${PM_NAMES[order.paymentMethod] || order.paymentMethod}\n📅 ${order.date}${order.note ? "\n📝 הערה: " + order.note : ""}`;
         window.open(
-          "https://wa.me/" + CONFIG.ownerWhatsapp + "?text=" + encodeURIComponent(text),
+          "https://wa.me/" +
+            CONFIG.ownerWhatsapp +
+            "?text=" +
+            encodeURIComponent(text),
           "_blank",
         );
       }
@@ -2680,22 +2965,30 @@
       function printSlip(orderArg) {
         const order = orderArg || window._lastOrder;
         if (!order) return;
-        const PM_NAMES_P = { bit: 'Bit', paybox: 'PayBox', card: 'כרטיס אשראי', bank: 'העברה בנקאית' };
-        const rows = order.items.map(it =>
-          `<tr><td>${esc(it.name)}</td><td style="text-align:center">${it.qty}</td><td style="text-align:left">₪${it.price * it.qty}</td></tr>`
-        ).join('');
-        document.getElementById('print-slip').innerHTML = `
+        const PM_NAMES_P = {
+          bit: "Bit",
+          paybox: "PayBox",
+          card: "כרטיס אשראי",
+          bank: "העברה בנקאית",
+        };
+        const rows = order.items
+          .map(
+            (it) =>
+              `<tr><td>${esc(it.name)}</td><td style="text-align:center">${it.qty}</td><td style="text-align:left">₪${it.price * it.qty}</td></tr>`,
+          )
+          .join("");
+        document.getElementById("print-slip").innerHTML = `
           <div class="slip-header">
             <img src="Logo.jpeg" class="slip-logo" alt="לוגו">
-            <div class="slip-biz">${esc(CONFIG.businessName || 'שירה וגנר')}</div>
-            <div class="slip-week">${esc(order.week || '')}</div>
+            <div class="slip-biz">${esc(CONFIG.businessName || "שירה וגנר")}</div>
+            <div class="slip-week">${esc(order.week || "")}</div>
           </div>
           <div class="slip-customer">
             <strong>שם:</strong> ${esc(order.name)}<br>
             <strong>טלפון:</strong> ${esc(order.phone)}<br>
-            ${order.city ? `<strong>עיר:</strong> ${esc(order.city)}<br>` : ''}
-            ${order.note ? `<strong>הערה:</strong> ${esc(order.note)}<br>` : ''}
-            <strong>תשלום:</strong> ${esc(PM_NAMES_P[order.paymentMethod] || order.paymentMethod || '')}
+            ${order.city ? `<strong>עיר:</strong> ${esc(order.city)}<br>` : ""}
+            ${order.note ? `<strong>הערה:</strong> ${esc(order.note)}<br>` : ""}
+            <strong>תשלום:</strong> ${esc(PM_NAMES_P[order.paymentMethod] || order.paymentMethod || "")}
           </div>
           <table>
             <thead><tr><th>מנה</th><th>כמות</th><th>מחיר</th></tr></thead>
@@ -2760,7 +3053,9 @@
       function renderAdminCategories() {
         const el = document.getElementById("admin-categories-list");
         if (!el) return;
-        el.innerHTML = adminCategories.map((cat, i) => `
+        el.innerHTML = adminCategories
+          .map(
+            (cat, i) => `
           <div class="admin-cat-row" draggable="true"
             data-ci="${i}"
             ondragstart="catDragStart(event,${i})"
@@ -2772,23 +3067,25 @@
               oninput="adminCategories[${i}]=this.value">
             <button onclick="adminCategories.splice(${i},1);renderAdminCategories();renderAdminDishes()"
               style="background:none;border:none;cursor:pointer;color:var(--red);font-size:20px;line-height:1">×</button>
-          </div>`).join("");
+          </div>`,
+          )
+          .join("");
       }
 
       function catDragStart(e, i) {
         _catDragIdx = i;
-        e.dataTransfer.effectAllowed = 'move';
+        e.dataTransfer.effectAllowed = "move";
       }
       function catDragOver(e) {
         e.preventDefault();
-        e.currentTarget.classList.add('drag-over');
+        e.currentTarget.classList.add("drag-over");
       }
       function catDragLeave(e) {
-        e.currentTarget.classList.remove('drag-over');
+        e.currentTarget.classList.remove("drag-over");
       }
       function catDrop(e, targetIdx) {
         e.preventDefault();
-        e.currentTarget.classList.remove('drag-over');
+        e.currentTarget.classList.remove("drag-over");
         if (_catDragIdx === null || _catDragIdx === targetIdx) return;
         const moved = adminCategories.splice(_catDragIdx, 1)[0];
         adminCategories.splice(targetIdx, 0, moved);
@@ -2827,22 +3124,34 @@
           const imgEl = document.getElementById("crop-img");
           imgEl.src = e.target.result;
           document.getElementById("crop-modal").classList.add("open");
-          if (_cropperInstance) { _cropperInstance.destroy(); _cropperInstance = null; }
-          _cropperInstance = new Cropper(imgEl, { aspectRatio: 1, viewMode: 1 });
+          if (_cropperInstance) {
+            _cropperInstance.destroy();
+            _cropperInstance = null;
+          }
+          _cropperInstance = new Cropper(imgEl, {
+            aspectRatio: 1,
+            viewMode: 1,
+          });
         };
         reader.readAsDataURL(file);
       }
 
       function confirmCrop() {
         if (!_cropperInstance) return;
-        const canvas = _cropperInstance.getCroppedCanvas({ width: 1000, height: 1000 });
+        const canvas = _cropperInstance.getCroppedCanvas({
+          width: 1000,
+          height: 1000,
+        });
         const dataUrl = canvas.toDataURL("image/jpeg", 0.92);
         if (_cropCallback) _cropCallback(dataUrl);
         cancelCrop();
       }
 
       function cancelCrop() {
-        if (_cropperInstance) { _cropperInstance.destroy(); _cropperInstance = null; }
+        if (_cropperInstance) {
+          _cropperInstance.destroy();
+          _cropperInstance = null;
+        }
         document.getElementById("crop-modal").classList.remove("open");
         _cropCallback = null;
       }
@@ -2867,10 +3176,10 @@
             <span style="color:var(--olive);font-size:13px;text-decoration:underline">העלה תמונה</span>
             <input type="file" accept="image/*" style="display:none" onchange="(function(f,i){openCropper(f,function(d){adminDishes[i].img=d;renderAdminDishes();})})(this.files[0],${idx})">
           </label>
-          ${dish.img ? `<button style="font-size:12px;color:var(--red);background:none;border:none;cursor:pointer;padding:4px" onclick="adminDishes[${idx}].img='';renderAdminDishes()">הסר</button>` : ''}
+          ${dish.img ? `<button style="font-size:12px;color:var(--red);background:none;border:none;cursor:pointer;padding:4px" onclick="adminDishes[${idx}].img='';renderAdminDishes()">הסר</button>` : ""}
           <select style="font-size:13px;border:1px solid var(--border);border-radius:8px;padding:4px 8px;font-family:inherit;background:white" onchange="adminDishes[${idx}].category=this.value">
             <option value="">ללא קטגוריה</option>
-            ${adminCategories.map(c => `<option value="${esc(c)}" ${dish.category===c?"selected":""}>${esc(c)}</option>`).join("")}
+            ${adminCategories.map((c) => `<option value="${esc(c)}" ${dish.category === c ? "selected" : ""}>${esc(c)}</option>`).join("")}
           </select>
         </div>`;
           list.appendChild(w);
@@ -2896,12 +3205,15 @@
         deadline = document.getElementById("admin-deadline").value.trim();
         heroText = document.getElementById("admin-hero-text").value;
         // Read categories directly from DOM inputs (reliable even without oninput firing)
-        const catInputs = document.querySelectorAll("#admin-categories-list input[type='text'], #admin-categories-list input:not([type])");
-        adminCategories = Array.from(catInputs).map(inp => inp.value);
+        const catInputs = document.querySelectorAll(
+          "#admin-categories-list input[type='text'], #admin-categories-list input:not([type])",
+        );
+        adminCategories = Array.from(catInputs).map((inp) => inp.value);
         // Read dish name/desc inputs directly from DOM too
-        document.querySelectorAll("[data-dish-name]").forEach(inp => {
+        document.querySelectorAll("[data-dish-name]").forEach((inp) => {
           const idx = Number(inp.dataset.dishIdx);
-          if (!isNaN(idx) && adminDishes[idx]) adminDishes[idx][inp.dataset.dishName] = inp.value;
+          if (!isNaN(idx) && adminDishes[idx])
+            adminDishes[idx][inp.dataset.dishName] = inp.value;
         });
         menu = adminDishes.filter((d) => d.name.trim());
         categories = adminCategories.filter((c) => c.trim());
@@ -2914,10 +3226,14 @@
       }
 
       function switchOrdersTab(tab, btn) {
-        document.querySelectorAll('.orders-tab').forEach(b => b.classList.remove('active'));
-        document.querySelectorAll('.orders-tab-panel').forEach(p => p.classList.remove('active'));
-        btn.classList.add('active');
-        document.getElementById('orders-tab-' + tab).classList.add('active');
+        document
+          .querySelectorAll(".orders-tab")
+          .forEach((b) => b.classList.remove("active"));
+        document
+          .querySelectorAll(".orders-tab-panel")
+          .forEach((p) => p.classList.remove("active"));
+        btn.classList.add("active");
+        document.getElementById("orders-tab-" + tab).classList.add("active");
       }
 
       function renderOrdersSummary() {
@@ -2927,15 +3243,18 @@
         const custEl = document.getElementById("orders-table-container");
 
         if (!orders.length) {
-          if (kpiEl) kpiEl.innerHTML = '';
-          dishEl.innerHTML = '<p style="color:var(--text-muted);font-size:13px">אין הזמנות עדיין</p>';
-          custEl.innerHTML = '<p style="color:var(--text-muted);font-size:13px">אין הזמנות עדיין</p>';
+          if (kpiEl) kpiEl.innerHTML = "";
+          dishEl.innerHTML =
+            '<p style="color:var(--text-muted);font-size:13px">אין הזמנות עדיין</p>';
+          custEl.innerHTML =
+            '<p style="color:var(--text-muted);font-size:13px">אין הזמנות עדיין</p>';
           return;
         }
 
         // ── מספרים כלליים ──
         const counts = {}; // dish name → {qty, revenue}
-        let grand = 0, totalItems = 0;
+        let grand = 0,
+          totalItems = 0;
         orders.forEach((o) => {
           grand += o.total;
           o.items.forEach((it) => {
@@ -2947,16 +3266,18 @@
         });
 
         // KPI row
-        if (kpiEl) kpiEl.innerHTML = `<div class="kpi-row">
+        if (kpiEl)
+          kpiEl.innerHTML = `<div class="kpi-row">
           <div class="kpi-card"><div class="kpi-val" style="color:var(--olive-dark)">${orders.length}</div><div class="kpi-label">הזמנות</div></div>
           <div class="kpi-card"><div class="kpi-val" style="color:var(--green)">₪${grand}</div><div class="kpi-label">סה״כ הכנסות</div></div>
           <div class="kpi-card"><div class="kpi-val" style="color:var(--accent)">${totalItems}</div><div class="kpi-label">יחידות שהוזמנו</div></div>
         </div>`;
 
         // ── טבלת מנות ──
-        const maxQty = Math.max(...Object.values(counts).map(v => v.qty));
+        const maxQty = Math.max(...Object.values(counts).map((v) => v.qty));
         let dishHtml = '<table class="dish-summary-table">';
-        dishHtml += '<tr><th>מנה</th><th style="text-align:center">יחידות</th><th style="text-align:left">שווי כולל</th></tr>';
+        dishHtml +=
+          '<tr><th>מנה</th><th style="text-align:center">יחידות</th><th style="text-align:left">שווי כולל</th></tr>';
         Object.entries(counts)
           .sort((a, b) => b[1].qty - a[1].qty)
           .forEach(([name, v]) => {
@@ -2970,28 +3291,35 @@
               <td style="text-align:left;color:var(--green);font-weight:600">₪${v.rev}</td>
             </tr>`;
           });
-        dishHtml += '</table>';
+        dishHtml += "</table>";
         dishEl.innerHTML = dishHtml;
 
         // ── כרטיסי לקוח ──
-        let custHtml = '';
-        orders.slice().reverse().forEach((o) => {
-          const payLabel = PM_NAMES[o.paymentMethod] || o.paymentMethod || '';
-          let itemsRows = o.items.map(it => `
+        let custHtml = "";
+        orders
+          .slice()
+          .reverse()
+          .forEach((o) => {
+            const payLabel = PM_NAMES[o.paymentMethod] || o.paymentMethod || "";
+            let itemsRows = o.items
+              .map(
+                (it) => `
             <tr>
               <td>${esc(it.name)}</td>
               <td style="text-align:center">${it.qty}</td>
               <td style="text-align:left;color:var(--green)">₪${it.price * it.qty}</td>
-            </tr>`).join('');
+            </tr>`,
+              )
+              .join("");
 
-          custHtml += `<div class="order-card">
+            custHtml += `<div class="order-card">
             <div class="order-card-header">
               <div>
                 <div class="order-card-name">${esc(o.name)}</div>
                 <div class="order-card-meta">
                   <span>📞 <a href="tel:${esc(o.phone)}" style="color:white">${esc(o.phone)}</a></span>
-                  ${o.email ? `<span>✉️ ${esc(o.email)}</span>` : ''}
-                  ${o.city ? `<span>📍 ${esc(o.city)}</span>` : ''}
+                  ${o.email ? `<span>✉️ ${esc(o.email)}</span>` : ""}
+                  ${o.city ? `<span>📍 ${esc(o.city)}</span>` : ""}
                 </div>
               </div>
               <div style="text-align:left">
@@ -3000,7 +3328,7 @@
               </div>
             </div>
             <div class="order-card-body">
-              ${o.note ? `<div class="order-note-badge">📝 הערה: ${esc(o.note)}</div>` : ''}
+              ${o.note ? `<div class="order-note-badge">📝 הערה: ${esc(o.note)}</div>` : ""}
               <table class="order-items-table">
                 <thead><tr><th>מנה</th><th style="text-align:center">כמות</th><th style="text-align:left">מחיר</th></tr></thead>
                 <tbody>${itemsRows}</tbody>
@@ -3019,41 +3347,53 @@
               </div>
             </div>
           </div>`;
-        });
+          });
         custEl.innerHTML = custHtml;
       }
 
-      function renderOrdersTable() { renderOrdersSummary(); }
+      function renderOrdersTable() {
+        renderOrdersSummary();
+      }
 
       function deleteOrder(id) {
-        if (!confirm('למחוק הזמנה זו לצמיתות?')) return;
+        if (!confirm("למחוק הזמנה זו לצמיתות?")) return;
         // מחיקה מ-localStorage
-        orders = orders.filter(o => String(o.id) !== String(id));
-        localStorage.setItem('sw_orders', JSON.stringify(orders));
+        orders = orders.filter((o) => String(o.id) !== String(id));
+        localStorage.setItem("sw_orders", JSON.stringify(orders));
         renderOrdersSummary();
         // מחיקה מ-Sheets
         if (CONFIG.googleSheetsWebhook) {
           fetch(CONFIG.googleSheetsWebhook, {
-            method: 'POST',
-            mode: 'no-cors',
-            headers: { 'Content-Type': 'text/plain' },
-            body: JSON.stringify({ action: 'delete', id: id })
+            method: "POST",
+            mode: "no-cors",
+            headers: { "Content-Type": "text/plain" },
+            body: JSON.stringify({ action: "delete", id: id }),
           }).catch(() => {});
         }
-        showToast('✅ ההזמנה נמחקה');
+        showToast("✅ ההזמנה נמחקה");
       }
 
       function sendCustomerWhatsApp(order) {
         if (!order) return;
-        const PM_NAMES_WA = { bit:'Bit', paybox:'PayBox', card:'כרטיס אשראי', bank:'העברה בנקאית' };
-        const lines = order.items.map(i =>
-          `• ${i.name} × ${i.qty} — ₪${i.price * i.qty}`
-        ).join('\n');
-        const text = `✅ אישור הזמנה — שירה וגנר\n\nשלום ${order.name},\nהזמנתך אושרה! 🎉\n\n${lines}\n\n💰 סה״כ: ₪${order.total}\n💳 תשלום: ${PM_NAMES_WA[order.paymentMethod] || order.paymentMethod}${order.note ? '\n📝 הערה: ' + order.note : ''}\n\nתודה רבה! 🙏`;
+        const PM_NAMES_WA = {
+          bit: "Bit",
+          paybox: "PayBox",
+          card: "כרטיס אשראי",
+          bank: "העברה בנקאית",
+        };
+        const lines = order.items
+          .map((i) => `• ${i.name} × ${i.qty} — ₪${i.price * i.qty}`)
+          .join("\n");
+        const text = `✅ אישור הזמנה — שירה וגנר\n\nשלום ${order.name},\nהזמנתך אושרה! 🎉\n\n${lines}\n\n💰 סה״כ: ₪${order.total}\n💳 תשלום: ${PM_NAMES_WA[order.paymentMethod] || order.paymentMethod}${order.note ? "\n📝 הערה: " + order.note : ""}\n\nתודה רבה! 🙏`;
         // המרת טלפון ישראלי למספר בינלאומי
-        const digits = order.phone.replace(/\D/g, '');
-        const intl = digits.startsWith('972') ? digits : '972' + digits.replace(/^0/, '');
-        window.open('https://wa.me/' + intl + '?text=' + encodeURIComponent(text), '_blank');
+        const digits = order.phone.replace(/\D/g, "");
+        const intl = digits.startsWith("972")
+          ? digits
+          : "972" + digits.replace(/^0/, "");
+        window.open(
+          "https://wa.me/" + intl + "?text=" + encodeURIComponent(text),
+          "_blank",
+        );
       }
 
       function clearOrders() {
@@ -3065,60 +3405,79 @@
       }
 
       async function loadOrdersFromSheets() {
-        const statusEl = document.getElementById('sheets-load-status');
+        const statusEl = document.getElementById("sheets-load-status");
         const url = CONFIG.googleSheetsWebhook;
-        if (!url) { showToast('⚠️ אין URL של Sheets בהגדרות'); return; }
-        statusEl.style.color = 'var(--text-muted)';
-        statusEl.textContent = '⏳ טוען הזמנות...';
+        if (!url) {
+          showToast("⚠️ אין URL של Sheets בהגדרות");
+          return;
+        }
+        statusEl.style.color = "var(--text-muted)";
+        statusEl.textContent = "⏳ טוען הזמנות...";
         try {
           const rows = await new Promise((resolve, reject) => {
-            const cbName = '_sc_' + Date.now();
-            const script = document.createElement('script');
+            const cbName = "_sc_" + Date.now();
+            const script = document.createElement("script");
             const timer = setTimeout(() => {
               delete window[cbName];
               document.head.removeChild(script);
-              reject(new Error('timeout'));
+              reject(new Error("timeout"));
             }, 10000);
-            window[cbName] = function(data) {
+            window[cbName] = function (data) {
               clearTimeout(timer);
               delete window[cbName];
               document.head.removeChild(script);
               resolve(data);
             };
-            script.src = url + '?callback=' + cbName + '&_=' + Date.now();
-            script.onerror = () => { clearTimeout(timer); reject(new Error('שגיאת טעינה')); };
+            script.src = url + "?callback=" + cbName + "&_=" + Date.now();
+            script.onerror = () => {
+              clearTimeout(timer);
+              reject(new Error("שגיאת טעינה"));
+            };
             document.head.appendChild(script);
           });
-          if (!Array.isArray(rows)) throw new Error('תגובה לא תקינה');
+          if (!Array.isArray(rows)) throw new Error("תגובה לא תקינה");
           if (rows.length === 0) {
-            statusEl.textContent = 'אין הזמנות ב-Sheets';
+            statusEl.textContent = "אין הזמנות ב-Sheets";
             return;
           }
-          orders = rows.map(r => ({
-            id:            r.id || String(r.date),
-            date:          r.date,
-            name:          r.name,
-            phone:         r.phone,
-            email:         r.email || '',
-            city:          r.city || '',
-            week:          r.week || '',
-            total:         Number(r.total) || 0,
-            paymentMethod: r.paymentMethod || '',
-            note:          r.note || '',
-            items: (r.itemsText || '').split('\n').filter(Boolean).map(line => {
-              const m = line.match(/^(.+) × (\d+) יח' = ₪([\d.]+)/);
-              if (m) return { name: m[1].trim(), qty: Number(m[2]), price: Number(m[3]) / Number(m[2]) };
-              return { name: line, qty: 1, price: 0 };
-            })
+          orders = rows.map((r) => ({
+            id: r.id || String(r.date),
+            date: r.date,
+            name: r.name,
+            phone: r.phone,
+            email: r.email || "",
+            city: r.city || "",
+            week: r.week || "",
+            total: Number(r.total) || 0,
+            paymentMethod: r.paymentMethod || "",
+            note: r.note || "",
+            items: (r.itemsText || "")
+              .split("\n")
+              .filter(Boolean)
+              .map((line) => {
+                const m = line.match(/^(.+) × (\d+) יח' = ₪([\d.]+)/);
+                if (m)
+                  return {
+                    name: m[1].trim(),
+                    qty: Number(m[2]),
+                    price: Number(m[3]) / Number(m[2]),
+                  };
+                return { name: line, qty: 1, price: 0 };
+              }),
           }));
-          localStorage.setItem('sw_orders', JSON.stringify(orders));
+          localStorage.setItem("sw_orders", JSON.stringify(orders));
           renderOrdersSummary();
           renderOrdersTable();
-          statusEl.style.color = 'var(--green)';
-          statusEl.textContent = '✅ נטענו ' + orders.length + ' הזמנות מ-Sheets (' + new Date().toLocaleTimeString('he-IL') + ')';
-        } catch(err) {
-          statusEl.style.color = 'var(--red)';
-          statusEl.textContent = '❌ שגיאה: ' + err.message;
+          statusEl.style.color = "var(--green)";
+          statusEl.textContent =
+            "✅ נטענו " +
+            orders.length +
+            " הזמנות מ-Sheets (" +
+            new Date().toLocaleTimeString("he-IL") +
+            ")";
+        } catch (err) {
+          statusEl.style.color = "var(--red)";
+          statusEl.textContent = "❌ שגיאה: " + err.message;
         }
       }
 
@@ -3321,127 +3680,151 @@ function sendConfirmationEmail(data) {
 שלב 6: לחצי "פרוס" ואשרי הרשאות (כולל הרשאת Gmail לשליחת מיילים)
 שלב 7: העתיקי את ה-URL ל-CONFIG.googleSheetsWebhook
 -->
-  <!-- תלוש הדפסה — חייב להיות ישירות תחת body כדי שיופיע בהדפסה -->
-  <div id="print-slip"></div>
-  <style>
-    #google_translate_element { display: none; }
-    .goog-te-banner-frame { display: none !important; }
-    body { top: 0 !important; }
+    <!-- תלוש הדפסה — חייב להיות ישירות תחת body כדי שיופיע בהדפסה -->
+    <div id="print-slip"></div>
+    <style>
+      #google_translate_element {
+        display: none;
+      }
+      .goog-te-banner-frame {
+        display: none !important;
+      }
+      body {
+        top: 0 !important;
+      }
 
-    .lang-switcher {
-      position: relative;
-    }
-    .lang-btn {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      background: rgba(255,255,255,0.15);
-      border: 1px solid rgba(255,255,255,0.35);
-      border-radius: 20px;
-      padding: 6px 14px;
-      color: white;
-      font-family: "M PLUS Rounded 1c", sans-serif;
-      font-size: 14px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: background 0.2s;
-      white-space: nowrap;
-    }
-    .lang-btn:hover {
-      background: rgba(255,255,255,0.25);
-    }
-    .lang-btn svg {
-      width: 16px;
-      height: 16px;
-      opacity: 0.9;
-    }
-    .lang-dropdown {
-      display: none;
-      position: absolute;
-      top: calc(100% + 8px);
-      left: 0;
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.18);
-      overflow: hidden;
-      min-width: 150px;
-      z-index: 999;
-    }
-    .lang-dropdown.open { display: block; }
-    .lang-option {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 10px 16px;
-      font-family: "M PLUS Rounded 1c", sans-serif;
-      font-size: 14px;
-      color: #1a1f2e;
-      cursor: pointer;
-      transition: background 0.15s;
-    }
-    .lang-option:hover { background: #f0f3f8; }
-    .lang-option.active { background: #e8edf5; font-weight: 600; color: #1d3461; }
-    .lang-flag { font-size: 18px; }
-  </style>
+      .lang-switcher {
+        position: relative;
+      }
+      .lang-btn {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        background: rgba(255, 255, 255, 0.15);
+        border: 1px solid rgba(255, 255, 255, 0.35);
+        border-radius: 20px;
+        padding: 6px 14px;
+        color: white;
+        font-family: "M PLUS Rounded 1c", sans-serif;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background 0.2s;
+        white-space: nowrap;
+      }
+      .lang-btn:hover {
+        background: rgba(255, 255, 255, 0.25);
+      }
+      .lang-btn svg {
+        width: 16px;
+        height: 16px;
+        opacity: 0.9;
+      }
+      .lang-dropdown {
+        display: none;
+        position: absolute;
+        top: calc(100% + 8px);
+        left: 0;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+        overflow: hidden;
+        min-width: 150px;
+        z-index: 999;
+      }
+      .lang-dropdown.open {
+        display: block;
+      }
+      .lang-option {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 16px;
+        font-family: "M PLUS Rounded 1c", sans-serif;
+        font-size: 14px;
+        color: #1a1f2e;
+        cursor: pointer;
+        transition: background 0.15s;
+      }
+      .lang-option:hover {
+        background: #f0f3f8;
+      }
+      .lang-option.active {
+        background: #e8edf5;
+        font-weight: 600;
+        color: #1d3461;
+      }
+      .lang-flag {
+        font-size: 18px;
+      }
+    </style>
 
-  <script type="text/javascript">
-    function googleTranslateElementInit() {
-      new google.translate.TranslateElement({
-        pageLanguage: 'he',
-        includedLanguages: 'he,en,ar,ru',
-        autoDisplay: false
-      }, 'google_translate_element');
-    }
+    <script type="text/javascript">
+      function googleTranslateElementInit() {
+        new google.translate.TranslateElement(
+          {
+            pageLanguage: "he",
+            includedLanguages: "he,en,ar,ru",
+            autoDisplay: false,
+          },
+          "google_translate_element",
+        );
+      }
 
-    const LANGS = [
-      { code: 'he', label: 'עברית',  flag: '🇮🇱' },
-      { code: 'en', label: 'English', flag: '🇺🇸' },
-      { code: 'ar', label: 'عربية',  flag: '🇸🇦' },
-      { code: 'ru', label: 'Русский', flag: '🇷🇺' },
-    ];
+      const LANGS = [
+        { code: "he", label: "עברית", flag: "🇮🇱" },
+        { code: "en", label: "English", flag: "🇺🇸" },
+        { code: "ar", label: "عربية", flag: "🇸🇦" },
+        { code: "ru", label: "Русский", flag: "🇷🇺" },
+      ];
 
-    let currentLang = 'he';
+      let currentLang = "he";
 
-    function toggleLangDropdown() {
-      document.getElementById('lang-dropdown').classList.toggle('open');
-    }
+      function toggleLangDropdown() {
+        document.getElementById("lang-dropdown").classList.toggle("open");
+      }
 
-    function selectLang(code) {
-      document.getElementById('lang-dropdown').classList.remove('open');
-      currentLang = code;
+      function selectLang(code) {
+        document.getElementById("lang-dropdown").classList.remove("open");
+        currentLang = code;
 
-      document.querySelectorAll('.lang-option').forEach(el => {
-        el.classList.toggle('active', el.dataset.code === code);
+        document.querySelectorAll(".lang-option").forEach((el) => {
+          el.classList.toggle("active", el.dataset.code === code);
+        });
+
+        const label = LANGS.find((l) => l.code === code);
+        document.getElementById("lang-btn-label").textContent = label
+          ? label.flag + " " + label.label
+          : "";
+
+        if (code === "he") {
+          // חזרה לעברית — מחיקת cookie ורענון
+          document.cookie =
+            "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+          document.cookie =
+            "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=" +
+            location.hostname;
+          location.reload();
+          return;
+        }
+
+        const select = document.querySelector(".goog-te-combo");
+        if (select) {
+          select.value = code;
+          select.dispatchEvent(new Event("change"));
+        }
+      }
+
+      document.addEventListener("click", function (e) {
+        if (!e.target.closest(".lang-switcher")) {
+          document.getElementById("lang-dropdown").classList.remove("open");
+        }
       });
 
-      const label = LANGS.find(l => l.code === code);
-      document.getElementById('lang-btn-label').textContent = label ? label.flag + ' ' + label.label : '';
-
-      if (code === 'he') {
-        // חזרה לעברית — מחיקת cookie ורענון
-        document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-        document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=' + location.hostname;
-        location.reload();
-        return;
-      }
-
-      const select = document.querySelector('.goog-te-combo');
-      if (select) {
-        select.value = code;
-        select.dispatchEvent(new Event('change'));
-      }
-    }
-
-    document.addEventListener('click', function(e) {
-      if (!e.target.closest('.lang-switcher')) {
-        document.getElementById('lang-dropdown').classList.remove('open');
-      }
-    });
-
-    window.addEventListener('load', function() {
-      const wrap = document.getElementById('lang-switcher-wrap');
-      if (!wrap) return;
-      wrap.innerHTML = `
+      window.addEventListener("load", function () {
+        const wrap = document.getElementById("lang-switcher-wrap");
+        if (!wrap) return;
+        wrap.innerHTML = `
         <div class="lang-switcher">
           <button class="lang-btn" onclick="toggleLangDropdown()">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -3451,11 +3834,11 @@ function sendConfirmationEmail(data) {
             <span id="lang-btn-label">🇮🇱 עברית</span>
           </button>
           <div class="lang-dropdown" id="lang-dropdown">
-            ${LANGS.map(l => `<div class="lang-option${l.code==='he'?' active':''}" data-code="${l.code}" onclick="selectLang('${l.code}')"><span class="lang-flag">${l.flag}</span>${l.label}</div>`).join('')}
+            ${LANGS.map((l) => `<div class="lang-option${l.code === "he" ? " active" : ""}" data-code="${l.code}" onclick="selectLang('${l.code}')"><span class="lang-flag">${l.flag}</span>${l.label}</div>`).join("")}
           </div>
         </div>`;
-    });
-  </script>
-  <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+      });
+    </script>
+    <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
   </body>
 </html>
