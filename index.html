@@ -3014,6 +3014,7 @@
                 <div style="display:flex;gap:6px">
                   <button class="order-print-btn" style="background:#25D366;border-color:#25D366;color:white" onclick="sendCustomerWhatsApp(orders.find(x=>String(x.id)==='${esc(o.id)}'))">📱 וואטסאפ ללקוח</button>
                   <button class="order-print-btn" onclick="printSlip(orders.find(x=>String(x.id)==='${esc(o.id)}'))">🖨️ הדפס סיכום הזמנה</button>
+                  <button class="order-print-btn" style="background:var(--red);border-color:var(--red);color:white" onclick="deleteOrder('${esc(o.id)}')">🗑️ מחק</button>
                 </div>
               </div>
             </div>
@@ -3023,6 +3024,24 @@
       }
 
       function renderOrdersTable() { renderOrdersSummary(); }
+
+      function deleteOrder(id) {
+        if (!confirm('למחוק הזמנה זו לצמיתות?')) return;
+        // מחיקה מ-localStorage
+        orders = orders.filter(o => String(o.id) !== String(id));
+        localStorage.setItem('sw_orders', JSON.stringify(orders));
+        renderOrdersSummary();
+        // מחיקה מ-Sheets
+        if (CONFIG.googleSheetsWebhook) {
+          fetch(CONFIG.googleSheetsWebhook, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'text/plain' },
+            body: JSON.stringify({ action: 'delete', id: id })
+          }).catch(() => {});
+        }
+        showToast('✅ ההזמנה נמחקה');
+      }
 
       function sendCustomerWhatsApp(order) {
         if (!order) return;
