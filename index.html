@@ -57,7 +57,7 @@
         background: var(--cream);
         color: var(--text-main);
         font-size: 15px;
-        line-height: 1.5;
+        line-height: 1.6;
         -webkit-tap-highlight-color: transparent;
       }
 
@@ -105,7 +105,7 @@
       .brand {
         font-size: 21px;
         font-weight: 700;
-        letter-spacing: 0.02em;
+        letter-spacing: -0.02em;
         line-height: 1.2;
         font-family: "M PLUS Rounded 1c", sans-serif;
       }
@@ -186,8 +186,8 @@
         content: "";
         position: absolute;
         top: 14px;
-        right: 14px;
-        left: 14px;
+        inset-inline-start: 14px;
+        inset-inline-end: 14px;
         height: 2px;
         background: var(--border-strong);
         z-index: 0;
@@ -247,7 +247,7 @@
         font-size: 36px;
         font-weight: 600;
         margin-bottom: 0;
-        letter-spacing: 0.02em;
+        letter-spacing: -0.02em;
         line-height: 1.2;
         font-family: "M PLUS Rounded 1c", sans-serif;
       }
@@ -266,7 +266,7 @@
       }
       .hero-info-panel ul {
         list-style: disc;
-        padding-right: 20px;
+        padding-inline-end: 20px;
         margin: 0;
       }
       .hero-info-panel li {
@@ -291,7 +291,7 @@
         display: flex;
         align-items: center;
         gap: 8px;
-        letter-spacing: -0.01em;
+        letter-spacing: -0.02em;
       }
       .section-icon {
         width: 30px;
@@ -324,7 +324,7 @@
         margin-bottom: 12px;
         border-bottom: 2px solid var(--olive-light);
         font-family: "M PLUS Rounded 1c", sans-serif;
-        letter-spacing: 0.01em;
+        letter-spacing: -0.02em;
       }
       .menu-sub-grid {
         display: grid;
@@ -372,7 +372,11 @@
         font-size: 15px;
         cursor: pointer;
         font-family: inherit;
+        min-height: 44px;
+        transition: background 0.18s, transform 0.15s;
       }
+      .crop-btn-confirm:hover { background: var(--olive-hover); }
+      .crop-btn-confirm:active { transform: scale(0.97); }
       .crop-btn-cancel {
         background: var(--border);
         color: var(--text-main);
@@ -382,7 +386,11 @@
         font-size: 15px;
         cursor: pointer;
         font-family: inherit;
+        min-height: 44px;
+        transition: background 0.18s, transform 0.15s;
       }
+      .crop-btn-cancel:hover { background: var(--border-strong); }
+      .crop-btn-cancel:active { transform: scale(0.97); }
       /* ADMIN CATEGORIES */
       .admin-cat-row {
         display: flex;
@@ -472,7 +480,7 @@
         font-size: 16px;
         font-weight: 500;
         margin-bottom: 3px;
-        line-height: 1.3;
+        line-height: 1.6;
         font-family: "M PLUS Rounded 1c", sans-serif;
         display: -webkit-box;
         -webkit-line-clamp: 2;
@@ -500,6 +508,8 @@
         font-size: 17px;
         font-weight: 800;
         color: var(--olive-dark);
+        direction: ltr;
+        unicode-bidi: isolate;
       }
       .add-to-cart-btn {
         background: var(--olive);
@@ -635,6 +645,8 @@
         color: var(--olive);
         font-size: 15px;
         white-space: nowrap;
+        direction: ltr;
+        unicode-bidi: isolate;
       }
       .cart-total-row {
         display: flex;
