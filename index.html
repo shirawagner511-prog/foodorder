@@ -2104,6 +2104,32 @@
         }
       }
 
+      /* ───────── LOADING SKELETON ───────── */
+      @keyframes shimmer {
+        0% { background-position: -600px 0; }
+        100% { background-position: 600px 0; }
+      }
+      .skel-cat, .skel-card {
+        background: linear-gradient(90deg, var(--line) 25%, var(--bg-tint) 50%, var(--line) 75%);
+        background-size: 600px 100%;
+        animation: shimmer 1.4s infinite linear;
+        border-radius: var(--radius-sm);
+      }
+      .skel-cat {
+        height: 36px;
+        width: 180px;
+        margin-bottom: 22px;
+      }
+      .skel-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 22px;
+      }
+      .skel-card {
+        height: 260px;
+        border-radius: var(--radius-lg);
+      }
+
       /* ───────── CATEGORY NOTE ───────── */
       .category-note {
         margin-top: 18px;
