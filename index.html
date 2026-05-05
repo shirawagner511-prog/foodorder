@@ -2139,6 +2139,13 @@
               🕐 טען תפריט ישן
               <input type="file" accept=".json" style="display:none" onchange="loadArchiveFile(this)">
             </label>
+            <button
+              onclick="clearMenuForRebuild()"
+              title="מחק את כל המנות והקטגוריות כדי לבנות תפריט חדש מאפס"
+              style="background:var(--red);color:white;border:none;border-radius:10px;padding:10px 18px;font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px;min-height:44px;"
+            >
+              🗑️ נקה תפריט לבנייה חדשה
+            </button>
           </div>
         </div>
 
@@ -3329,6 +3336,22 @@
         };
         reader.readAsText(file, "utf-8");
         input.value = "";
+      }
+
+      async function clearMenuForRebuild() {
+        if (!confirm("⚠️ פעולה זו תמחק את כל המנות והקטגוריות ותפרסם תפריט ריק לכולם.\nהמשך?")) return;
+        menu = [];
+        categories = [];
+        adminDishes = [];
+        adminCategories = [];
+        quantities = {};
+        dishNotes = {};
+        renderMenu();
+        updateCart();
+        renderAdminDishes();
+        renderAdminCategories();
+        await pushMenuToGitHub();
+        showToast("🗑️ התפריט נוקה — בנה תפריט חדש ולחץ שמור");
       }
 
       async function saveMenu() {
