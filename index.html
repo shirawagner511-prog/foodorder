@@ -3686,6 +3686,7 @@
             if (!confirm("לטעון את הארכיון \"" + (data.weekTitle || file.name) + "\"?\nהתפריט הנוכחי לא יימחק עד שתלחצי שמור.")) return;
             menu = data.items;
             if (data.categories?.length) categories = data.categories;
+            if (data.categoryNotes && typeof data.categoryNotes === "object") categoryNotes = data.categoryNotes;
             if (data.weekTitle) weekTitle = data.weekTitle;
             if (data.deadline) deadline = data.deadline;
             if (data.heroText !== undefined) heroText = data.heroText;
