@@ -3544,6 +3544,8 @@
         if (_catDragIdx === null || _catDragIdx === targetIdx) return;
         const moved = adminCategories.splice(_catDragIdx, 1)[0];
         adminCategories.splice(targetIdx, 0, moved);
+        const movedNote = adminCategoryNotes.splice(_catDragIdx, 1)[0];
+        adminCategoryNotes.splice(targetIdx, 0, movedNote);
         _catDragIdx = null;
         renderAdminCategories();
         renderAdminDishes();
