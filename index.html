@@ -2510,6 +2510,14 @@
               🕐 טען תפריט ישן
               <input type="file" accept=".json" style="display:none" onchange="loadArchiveFile(this)">
             </label>
+            <button
+              onclick="clearMenuForRebuild()"
+              title="מחק את כל המנות והקטגוריות כדי לבנות תפריט חדש מאפס"
+              style="background:var(--red);color:white;border:none;border-radius:var(--radius-sm);padding:0 18px;height:44px;font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px;white-space:nowrap;transition:opacity .18s;"
+              onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'"
+            >
+              🗑️ נקה תפריט לבנייה חדשה
+            </button>
           </div>
         </div>
 
