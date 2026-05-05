@@ -3874,10 +3874,10 @@
 
       function exportCSV() {
         if (!orders.length) { showToast("אין הזמנות לייצוא"); return; }
-        const rows = [["תאריך", "שם", "טלפון", "אימייל", "עיר", "מנות", "סה\"כ", "תשלום", "הערה"]];
+        const rows = [["תאריך", "שם", "טלפון", "אימייל", "עיר", "שבוע", "מנות", "סה\"כ", "תשלום", "הערה"]];
         orders.forEach((o) => {
           const items = o.items.map((i) => `${i.name}×${i.qty}`).join("; ");
-          rows.push([o.date, o.name, o.phone, o.email, o.city, items, o.total, PM_NAMES[o.paymentMethod] || "", o.note || ""]);
+          rows.push([o.date, o.name, o.phone, o.email, o.city, o.week || "", items, o.total, PM_NAMES[o.paymentMethod] || "", o.note || ""]);
         });
         const csv = "\ufeff" + rows.map((r) => r.map((c) => `"${String(c).replace(/"/g, '""')}"`).join(",")).join("\n");
         const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
