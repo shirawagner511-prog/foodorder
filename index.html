@@ -3863,22 +3863,53 @@
         document.getElementById("orders-tab-" + tab).classList.add("active");
       }
 
+      let selectedWeekFilter = null; // null = current week
+
+      function renderWeekFilter() {
+        const el = document.getElementById("orders-week-filter");
+        if (!el) return;
+        const weeks = [...new Set(orders.map((o) => o.week || "").filter(Boolean))].sort().reverse();
+        if (weeks.length <= 1) { el.innerHTML = ""; return; }
+        // default: current weekTitle if present in orders, else most recent
+        if (selectedWeekFilter === null) {
+          selectedWeekFilter = weeks.includes(weekTitle) ? weekTitle : weeks[0];
+        }
+        el.innerHTML = `<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+          <span style="font-size:13px;color:var(--ink-soft);font-weight:600">סינון לפי שבוע:</span>
+          <select id="week-filter-select" onchange="selectedWeekFilter=this.value;renderOrdersSummary()"
+            style="border:1px solid var(--line-strong);border-radius:var(--radius-sm);padding:7px 12px;font-family:inherit;font-size:13px;background:white;color:var(--ink);cursor:pointer">
+            <option value="__all__" ${selectedWeekFilter === "__all__" ? "selected" : ""}>📋 כל השבועות (${orders.length})</option>
+            ${weeks.map(w => `<option value="${esc(w)}" ${selectedWeekFilter === w ? "selected" : ""}>${esc(w)} (${orders.filter(o=>o.week===w).length})</option>`).join("")}
+          </select>
+          ${selectedWeekFilter !== "__all__" && selectedWeekFilter !== weekTitle
+            ? `<span style="font-size:12px;color:var(--ink-mute)">💡 השבוע הנוכחי: <strong>${esc(weekTitle)}</strong></span>` : ""}
+        </div>`;
+      }
+
       function renderOrdersSummary() {
+        renderWeekFilter();
         const kpiEl = document.getElementById("orders-kpi-row");
         const dishEl = document.getElementById("orders-summary");
         const custEl = document.getElementById("orders-table-container");
 
-        if (!orders.length) {
+        const filtered = selectedWeekFilter && selectedWeekFilter !== "__all__"
+          ? orders.filter((o) => o.week === selectedWeekFilter)
+          : orders;
+
+        if (!filtered.length) {
           if (kpiEl) kpiEl.innerHTML = "";
-          dishEl.innerHTML = '<p style="color:var(--ink-mute);font-size:13px">אין הזמנות עדיין</p>';
-          custEl.innerHTML = '<p style="color:var(--ink-mute);font-size:13px">אין הזמנות עדיין</p>';
+          const msg = orders.length
+            ? `<p style="color:var(--ink-mute);font-size:13px">אין הזמנות לשבוע "${esc(selectedWeekFilter)}"</p>`
+            : '<p style="color:var(--ink-mute);font-size:13px">אין הזמנות עדיין</p>';
+          dishEl.innerHTML = msg;
+          custEl.innerHTML = msg;
           return;
         }
 
         const counts = {};
         let grand = 0,
           totalItems = 0;
-        orders.forEach((o) => {
+        filtered.forEach((o) => {
           grand += o.total;
           o.items.forEach((it) => {
             if (!counts[it.name]) counts[it.name] = { qty: 0, rev: 0 };
