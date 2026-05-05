@@ -2104,6 +2104,58 @@
         }
       }
 
+      /* ───────── CATEGORY NOTE ───────── */
+      .category-note {
+        margin-top: 18px;
+        padding: 14px 20px;
+        background: var(--gold-soft);
+        border-inline-start: 3px solid var(--gold);
+        border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+        font-size: 14px;
+        color: var(--ink-soft);
+        line-height: 1.65;
+        white-space: pre-line;
+      }
+      .admin-cat-block {
+        margin-bottom: 10px;
+      }
+      .admin-cat-note-input {
+        width: 100%;
+        border: 1px solid var(--line);
+        border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+        padding: 8px 12px;
+        font-size: 13px;
+        font-family: inherit;
+        color: var(--ink);
+        background: var(--surface-2);
+        resize: vertical;
+        outline: none;
+        transition: border-color 0.2s;
+        direction: rtl;
+        min-height: 52px;
+      }
+      .admin-cat-note-input:focus {
+        border-color: var(--primary);
+        background: white;
+      }
+      .admin-cat-note-input::placeholder { color: var(--ink-faint); }
+
+      /* ───────── IMG DROP ZONE ───────── */
+      .img-drop-zone {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex: 1;
+        border: 1.5px dashed var(--line-strong);
+        border-radius: var(--radius-sm);
+        padding: 6px 10px;
+        transition: border-color 0.15s, background 0.15s;
+      }
+      .img-drop-zone.drag-active {
+        border-color: var(--primary);
+        background: var(--primary-soft);
+      }
+
       /* ───────── LANG SWITCHER ───────── */
       #google_translate_element { display: none; }
       .goog-te-banner-frame { display: none !important; }
