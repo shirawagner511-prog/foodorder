@@ -516,16 +516,27 @@
         color: white;
         border: none;
         border-radius: 8px;
-        padding: 7px 13px;
+        padding: 0 14px;
+        height: 44px;
         font-size: 13px;
         font-weight: 600;
         cursor: pointer;
         font-family: inherit;
-        transition: background 0.18s;
+        transition: background 0.18s, transform 0.15s;
         white-space: nowrap;
+        display: flex;
+        align-items: center;
+        flex-shrink: 0;
       }
       .add-to-cart-btn:hover {
         background: var(--olive-hover);
+      }
+      .add-to-cart-btn:active {
+        transform: scale(0.96);
+      }
+      .add-to-cart-btn:focus-visible {
+        outline: none;
+        box-shadow: var(--focus-ring);
       }
       .qty-inline {
         display: flex;
@@ -533,13 +544,13 @@
         gap: 6px;
       }
       .qty-btn {
-        width: 30px;
-        height: 30px;
-        border-radius: 7px;
+        width: 44px;
+        height: 44px;
+        border-radius: 9px;
         border: 1.5px solid var(--border-strong);
         background: var(--cream);
         cursor: pointer;
-        font-size: 17px;
+        font-size: 19px;
         font-weight: 700;
         color: var(--olive-dark);
         display: flex;
@@ -548,6 +559,7 @@
         transition: all 0.15s;
         font-family: inherit;
         line-height: 1;
+        flex-shrink: 0;
       }
       .qty-btn:hover {
         background: var(--olive);
@@ -555,7 +567,12 @@
         border-color: var(--olive);
       }
       .qty-btn:active {
-        transform: scale(0.9);
+        transform: scale(0.93);
+      }
+      .qty-btn:focus-visible {
+        outline: none;
+        box-shadow: var(--focus-ring);
+        border-color: var(--olive);
       }
       .qty-num {
         min-width: 22px;
@@ -672,6 +689,10 @@
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 13px;
+      }
+      @media (max-width: 480px) {
+        .form-grid { grid-template-columns: 1fr; }
+        .form-group.full { grid-column: 1; }
       }
       .form-group {
         display: flex;
@@ -1697,6 +1718,57 @@
       }
 
       /* Respect reduced motion preference */
+      /* ARCHIVE BUTTONS */
+      .admin-action-row {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-top: 14px;
+        align-items: center;
+      }
+      .btn-archive {
+        background: var(--accent-light);
+        color: var(--accent);
+        border: 1.5px solid var(--accent);
+        border-radius: 10px;
+        padding: 0 16px;
+        height: 44px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        font-family: inherit;
+        transition: all 0.18s;
+        white-space: nowrap;
+      }
+      .btn-archive:hover {
+        background: var(--accent);
+        color: white;
+      }
+      .btn-archive:focus-visible {
+        outline: none;
+        box-shadow: var(--focus-ring);
+      }
+      .btn-archive-load {
+        background: #f0f4ff;
+        color: var(--olive-light);
+        border: 1.5px solid var(--olive-light);
+        border-radius: 10px;
+        padding: 0 16px;
+        height: 44px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        font-family: inherit;
+        transition: all 0.18s;
+        white-space: nowrap;
+        display: flex;
+        align-items: center;
+      }
+      .btn-archive-load:hover {
+        background: var(--olive-light);
+        color: white;
+      }
+
       @media (prefers-reduced-motion: reduce) {
         *,
         *::before,
@@ -2056,9 +2128,18 @@
           <button class="add-dish-btn" onclick="addAdminDish()">
             + הוסף מנה</button
           ><br />
-          <button class="save-menu-btn" onclick="saveMenu()">
-            💾 שמור ועדכן תפריט
-          </button>
+          <div class="admin-action-row">
+            <button class="save-menu-btn" onclick="saveMenu()">
+              💾 שמור ועדכן תפריט
+            </button>
+            <button class="btn-archive" onclick="archiveCurrentMenu()" title="הורד עותק של התפריט הנוכחי לפני שינוי">
+              📦 גבה תפריט נוכחי
+            </button>
+            <label class="btn-archive-load" title="טען תפריט ישן מגיבוי">
+              🕐 טען תפריט ישן
+              <input type="file" accept=".json" style="display:none" onchange="loadArchiveFile(this)">
+            </label>
+          </div>
         </div>
 
         <div class="admin-section">
@@ -3209,6 +3290,45 @@
           category: adminCategories[0] || "",
         });
         renderAdminDishes();
+      }
+
+      // ═══════════════════════════════
+      //  ARCHIVE
+      // ═══════════════════════════════
+      function archiveCurrentMenu() {
+        const payload = { items: menu, categories, weekTitle, deadline, heroText, archivedAt: new Date().toISOString() };
+        const json = JSON.stringify(payload, null, 2);
+        const blob = new Blob([json], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        const dateStr = new Date().toLocaleDateString("he-IL").replace(/\//g, "-");
+        a.href = url;
+        a.download = "menu-" + dateStr + ".json";
+        a.click();
+        URL.revokeObjectURL(url);
+        showToast("✅ גיבוי נשמר: menu-" + dateStr + ".json");
+      }
+
+      function loadArchiveFile(input) {
+        const file = input.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          try {
+            const data = JSON.parse(e.target.result);
+            if (!Array.isArray(data.items) || !data.items.length) { showToast("❌ קובץ לא תקין"); return; }
+            if (!confirm("לטעון את הארכיון \"" + (data.weekTitle || file.name) + "\"?\nהתפריט הנוכחי לא יימחק עד שתלחצי שמור.")) return;
+            menu = data.items;
+            if (data.categories?.length) categories = data.categories;
+            if (data.weekTitle) weekTitle = data.weekTitle;
+            if (data.deadline) deadline = data.deadline;
+            if (data.heroText !== undefined) heroText = data.heroText;
+            openAdmin();
+            showToast("✅ ארכיון נטען — ערכי ולחצי שמור לפרסם");
+          } catch { showToast("❌ שגיאה בקריאת הקובץ"); }
+        };
+        reader.readAsText(file, "utf-8");
+        input.value = "";
       }
 
       async function saveMenu() {
