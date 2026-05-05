@@ -2942,7 +2942,10 @@
       //  INIT
       // ═══════════════════════════════
       async function initApp() {
-        await loadMenuFromGitHub();
+        await loadMenuFromGitHub().catch(() => {
+          menu = DEFAULT_MENU;
+          categories = DEFAULT_CATEGORIES.slice();
+        });
         document.getElementById("brand-name").textContent = CONFIG.businessName;
         document.getElementById("brand-sub").textContent = CONFIG.businessSubtitle;
         document.getElementById("footer-text").textContent = CONFIG.footerText;
