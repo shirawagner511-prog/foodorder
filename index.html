@@ -3662,7 +3662,7 @@
       //  ARCHIVE
       // ═══════════════════════════════
       function archiveCurrentMenu() {
-        const payload = { items: menu, categories, weekTitle, deadline, heroText, archivedAt: new Date().toISOString() };
+        const payload = { items: menu, categories, categoryNotes, weekTitle, deadline, heroText, archivedAt: new Date().toISOString() };
         const json = JSON.stringify(payload, null, 2);
         const blob = new Blob([json], { type: "application/json" });
         const url = URL.createObjectURL(blob);
