@@ -3677,6 +3677,22 @@
         input.value = "";
       }
 
+      async function clearMenuForRebuild() {
+        if (!confirm("⚠️ פעולה זו תמחק את כל המנות והקטגוריות ותפרסם תפריט ריק לכולם.\nהמשך?")) return;
+        menu = [];
+        categories = [];
+        adminDishes = [];
+        adminCategories = [];
+        quantities = {};
+        dishNotes = {};
+        renderMenu();
+        updateCart();
+        renderAdminDishes();
+        renderAdminCategories();
+        await pushMenuToGitHub();
+        showToast("🗑️ התפריט נוקה — בנה תפריט חדש ולחץ שמור");
+      }
+
       async function saveMenu() {
         weekTitle = document.getElementById("admin-week-title").value.trim() || weekTitle;
         deadline = document.getElementById("admin-deadline").value.trim();
