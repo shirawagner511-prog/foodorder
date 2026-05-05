@@ -3727,7 +3727,12 @@
             adminDishes[idx][inp.dataset.dishName] = inp.value;
         });
         menu = adminDishes.filter((d) => d.name.trim());
-        categories = adminCategories.filter((c) => c.trim());
+        const newCats = adminCategories.filter((c, i) => c.trim());
+        categoryNotes = {};
+        adminCategories.forEach((c, i) => {
+          if (c.trim()) categoryNotes[c.trim()] = adminCategoryNotes[i] || "";
+        });
+        categories = newCats;
         updateHeroText();
         quantities = {};
         dishNotes = {};
