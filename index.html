@@ -3497,24 +3497,31 @@
       }
 
       let _catDragIdx = null;
+      let adminCategoryNotes = [];
 
       function renderAdminCategories() {
         const el = document.getElementById("admin-categories-list");
         if (!el) return;
+        while (adminCategoryNotes.length < adminCategories.length) adminCategoryNotes.push("");
         el.innerHTML = adminCategories
           .map(
             (cat, i) => `
-          <div class="admin-cat-row" draggable="true"
+          <div class="admin-cat-block" draggable="true"
             data-ci="${i}"
             ondragstart="catDragStart(event,${i})"
             ondragover="catDragOver(event)"
             ondragleave="catDragLeave(event)"
             ondrop="catDrop(event,${i})">
-            <span class="drag-handle" title="גרור לשינוי סדר">⠿</span>
-            <input class="admin-input" style="flex:1" value="${esc(cat)}"
-              oninput="adminCategories[${i}]=this.value">
-            <button onclick="adminCategories.splice(${i},1);renderAdminCategories();renderAdminDishes()"
-              style="background:none;border:none;cursor:pointer;color:var(--red);font-size:20px;line-height:1">×</button>
+            <div class="admin-cat-row">
+              <span class="drag-handle" title="גרור לשינוי סדר">⠿</span>
+              <input class="admin-input" style="flex:1" value="${esc(cat)}"
+                oninput="adminCategories[${i}]=this.value">
+              <button onclick="adminCategories.splice(${i},1);adminCategoryNotes.splice(${i},1);renderAdminCategories();renderAdminDishes()"
+                style="background:none;border:none;cursor:pointer;color:var(--red);font-size:20px;line-height:1">×</button>
+            </div>
+            <textarea class="admin-cat-note-input" rows="2"
+              placeholder="טקסט כללי מתחת לקטגוריה (אופציונלי)..."
+              oninput="adminCategoryNotes[${i}]=this.value">${esc(adminCategoryNotes[i] || "")}</textarea>
           </div>`,
           )
           .join("");
