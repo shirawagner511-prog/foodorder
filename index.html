@@ -3662,6 +3662,7 @@
       }
 
       function renderAdminPanel() {
+        selectedWeekFilter = null; // reset to current week on each open
         adminDishes = menu.map((d) => ({ ...d }));
         adminCategories = [...categories];
         adminCategoryNotes = categories.map((c) => categoryNotes[c] || "");
