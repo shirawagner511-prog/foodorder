@@ -3630,9 +3630,18 @@
           <input class="admin-input-full" type="number" placeholder="מחיר ₪" value="${dish.price}" oninput="adminDishes[${idx}].price=Number(this.value)" />
           <input class="admin-input-full" type="number" placeholder="מינ׳ כמות (ריק=1)" min="1" value="${dish.minQty || ""}" oninput="adminDishes[${idx}].minQty=this.value?Number(this.value):undefined" style="width:130px" />
           <input class="admin-input-full" type="number" placeholder="קפיצה (ריק=1)" min="1" value="${dish.stepQty || ""}" oninput="adminDishes[${idx}].stepQty=this.value?Number(this.value):undefined" style="width:120px" />
-          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;flex:1">
-            ${dish.img ? `<img src="${dish.img}" style="width:44px;height:44px;object-fit:cover;border-radius:8px;border:1px solid var(--line)">` : `<span style="font-size:28px">${dish.emoji || "🍽️"}</span>`}
-            <span style="color:var(--primary);font-size:13px;text-decoration:underline">העלה תמונה</span>
+          <label class="img-drop-zone" id="drop-${idx}"
+            ondragover="event.preventDefault();event.currentTarget.classList.add('drag-active')"
+            ondragleave="event.currentTarget.classList.remove('drag-active')"
+            ondrop="(function(e,i){e.preventDefault();e.currentTarget.classList.remove('drag-active');const f=e.dataTransfer.files[0];if(f&&f.type.startsWith('image/')){openCropper(f,function(d){adminDishes[i].img=d;renderAdminDishes();});}})(event,${idx})"
+            style="cursor:pointer">
+            ${dish.img
+              ? `<img src="${dish.img}" style="width:54px;height:54px;object-fit:cover;border-radius:8px;border:1px solid var(--line)">`
+              : `<span style="font-size:28px">${dish.emoji || "🍽️"}</span>`}
+            <div style="display:flex;flex-direction:column;gap:3px">
+              <span style="color:var(--primary);font-size:13px;text-decoration:underline">העלה תמונה</span>
+              <span style="color:var(--ink-mute);font-size:11px">או גרור לכאן</span>
+            </div>
             <input type="file" accept="image/*" style="display:none" onchange="(function(f,i){openCropper(f,function(d){adminDishes[i].img=d;renderAdminDishes();})})(this.files[0],${idx})">
           </label>
           ${dish.img ? `<button style="font-size:12px;color:var(--red);background:none;border:none;cursor:pointer;padding:4px" onclick="adminDishes[${idx}].img='';renderAdminDishes()">הסר</button>` : ""}
