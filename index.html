@@ -2965,6 +2965,12 @@
           subGrid.className = "menu-sub-grid";
           dishes.forEach((dish) => subGrid.appendChild(makeDishCard(dish)));
           group.appendChild(subGrid);
+          if (cat && categoryNotes[cat] && categoryNotes[cat].trim()) {
+            const note = document.createElement("div");
+            note.className = "category-note";
+            note.textContent = categoryNotes[cat].trim();
+            group.appendChild(note);
+          }
           grid.appendChild(group);
         });
       }
