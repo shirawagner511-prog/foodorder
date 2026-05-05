@@ -2926,6 +2926,8 @@
         if (window.emailjs && CONFIG.emailJsPublicKey !== "YOUR_PUBLIC_KEY")
           emailjs.init(CONFIG.emailJsPublicKey);
         updateHeroText();
+        const skel = document.getElementById("menu-skeleton");
+        if (skel) skel.remove();
         renderMenu();
         updateCart();
         setStep(1);
