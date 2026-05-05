@@ -3954,5 +3954,72 @@
       // ═══════════════════════════════
       initApp();
     </script>
+    <script type="text/javascript">
+      function googleTranslateElementInit() {
+        new google.translate.TranslateElement(
+          { pageLanguage: "he", includedLanguages: "he,en,ar,ru", autoDisplay: false },
+          "google_translate_element"
+        );
+      }
+
+      const LANGS = [
+        { code: "he", label: "עברית", flag: "🇮🇱" },
+        { code: "en", label: "English", flag: "🇺🇸" },
+        { code: "ar", label: "عربية", flag: "🇸🇦" },
+        { code: "ru", label: "Русский", flag: "🇷🇺" },
+      ];
+
+      let currentLang = "he";
+
+      function toggleLangDropdown() {
+        document.getElementById("lang-dropdown").classList.toggle("open");
+      }
+
+      function selectLang(code) {
+        document.getElementById("lang-dropdown").classList.remove("open");
+        currentLang = code;
+        document.querySelectorAll(".lang-option").forEach((el) => {
+          el.classList.toggle("active", el.dataset.code === code);
+        });
+        const label = LANGS.find((l) => l.code === code);
+        document.getElementById("lang-btn-label").textContent = label ? label.flag + " " + label.label : "";
+        if (code === "he") {
+          document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+          document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=" + location.hostname;
+          location.reload();
+          return;
+        }
+        const select = document.querySelector(".goog-te-combo");
+        if (select) {
+          select.value = code;
+          select.dispatchEvent(new Event("change"));
+        }
+      }
+
+      document.addEventListener("click", function (e) {
+        if (!e.target.closest(".lang-switcher")) {
+          const dd = document.getElementById("lang-dropdown");
+          if (dd) dd.classList.remove("open");
+        }
+      });
+
+      window.addEventListener("load", function () {
+        const wrap = document.getElementById("lang-switcher-wrap");
+        if (!wrap) return;
+        wrap.innerHTML = `<div class="lang-switcher">
+          <button class="lang-btn" onclick="toggleLangDropdown()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/>
+              <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+            </svg>
+            <span id="lang-btn-label">🇮🇱 עברית</span>
+          </button>
+          <div class="lang-dropdown" id="lang-dropdown">
+            ${LANGS.map((l) => `<div class="lang-option${l.code === "he" ? " active" : ""}" data-code="${l.code}" onclick="selectLang('${l.code}')"><span class="lang-flag">${l.flag}</span>${l.label}</div>`).join("")}
+          </div>
+        </div>`;
+      });
+    </script>
+    <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
   </body>
 </html>
