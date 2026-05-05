@@ -4114,6 +4114,7 @@
           localStorage.setItem("sw_orders", JSON.stringify(orders));
           statusEl.style.color = "var(--green)";
           statusEl.textContent = "✅ נטענו " + orders.length + " הזמנות";
+          selectedWeekFilter = null;
           renderOrdersSummary();
         } catch (e) {
           statusEl.style.color = "var(--red)";
