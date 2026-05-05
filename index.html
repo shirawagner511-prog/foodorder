@@ -2730,6 +2730,7 @@
               if (data.weekTitle) weekTitle = data.weekTitle;
               if (data.deadline) deadline = data.deadline;
               if (data.heroText !== undefined) heroText = data.heroText;
+              if (data.categoryNotes && typeof data.categoryNotes === "object") categoryNotes = data.categoryNotes;
               return true;
             }
           } catch (e) {}
