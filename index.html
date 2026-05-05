@@ -3701,8 +3701,10 @@
         if (!confirm("⚠️ פעולה זו תמחק את כל המנות והקטגוריות ותפרסם תפריט ריק לכולם.\nהמשך?")) return;
         menu = [];
         categories = [];
+        categoryNotes = {};
         adminDishes = [];
         adminCategories = [];
+        adminCategoryNotes = [];
         quantities = {};
         dishNotes = {};
         renderMenu();
