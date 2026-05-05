@@ -3561,6 +3561,7 @@
       function renderAdminPanel() {
         adminDishes = menu.map((d) => ({ ...d }));
         adminCategories = [...categories];
+        adminCategoryNotes = categories.map((c) => categoryNotes[c] || "");
         document.getElementById("admin-week-title").value = weekTitle;
         document.getElementById("admin-deadline").value = deadline;
         document.getElementById("admin-hero-text").value = heroText;
