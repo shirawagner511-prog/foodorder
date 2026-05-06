@@ -2646,9 +2646,9 @@
             <button
               class="export-btn"
               style="background: var(--primary); color: white; border-color: var(--primary);"
-              onclick="loadOrdersFromSheets()"
+              onclick="loadOrdersFromGitHub().then(()=>{renderOrdersSummary();showToast('✅ הזמנות עודכנו מ-GitHub')})"
             >
-              ☁️ טען הזמנות מ-Sheets
+              ☁️ רענן הזמנות מ-GitHub
             </button>
             <button class="export-btn" onclick="exportCSV()">
               ⬇️ ייצוא CSV לאקסל
