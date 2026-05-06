@@ -3483,23 +3483,13 @@
 
       function sendToGoogleSheets(order) {
         if (!CONFIG.googleSheetsWebhook) return;
-        const cbName = "_save_" + Date.now();
-        const script = document.createElement("script");
-        window[cbName] = function () {
-          delete window[cbName];
-          if (script.parentNode) script.parentNode.removeChild(script);
-        };
-        script.onerror = () => {
-          delete window[cbName];
-          if (script.parentNode) script.parentNode.removeChild(script);
-        };
-        script.src =
+        const url =
           CONFIG.googleSheetsWebhook +
           "?action=save&data=" +
           encodeURIComponent(JSON.stringify(order)) +
-          "&callback=" + cbName +
           "&_=" + Date.now();
-        document.head.appendChild(script);
+        // fetch with no-cors follows GAS redirects while keeping query params
+        fetch(url, { mode: "no-cors" }).catch(() => {});
       }
 
       // ═══════════════════════════════
