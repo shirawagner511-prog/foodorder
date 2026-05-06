@@ -4056,7 +4056,7 @@
         orders = orders.filter((o) => String(o.id) !== String(id));
         localStorage.setItem("sw_orders", JSON.stringify(orders));
         renderOrdersSummary();
-        await pushOrdersToGitHub(orders);
+        await deleteOrderFromFirebase(id);
         showToast("✅ ההזמנה נמחקה");
       }
 
