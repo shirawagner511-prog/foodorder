@@ -3190,16 +3190,15 @@
           if (!v) ok = false;
         });
         if (!ok) {
-          showToast(
-            phone && !phoneValid
-              ? "מספר טלפון לא תקין — יש להזין 10 ספרות (05XXXXXXXX)"
-              : "נא למלא את כל שדות החובה",
-          );
-          return;
-        }
-        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-          document.getElementById("f-email").classList.add("error");
-          showToast("אימייל לא תקין");
+          if (phone && !phoneValid) {
+            showToast("מספר טלפון לא תקין — יש להזין 10 ספרות (05XXXXXXXX)");
+          } else if (email && !emailValid) {
+            showToast("כתובת האימייל לא תקינה — יש להזין אימייל בפורמט name@example.com");
+          } else if (!email) {
+            showToast("נא להזין כתובת אימייל — נשלח אליה אישור הזמנה");
+          } else {
+            showToast("נא למלא את כל שדות החובה");
+          }
           return;
         }
 
