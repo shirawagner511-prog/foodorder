@@ -4058,18 +4058,12 @@
         renderOrdersSummary();
       }
 
-      function deleteOrder(id) {
+      async function deleteOrder(id) {
         if (!confirm("למחוק הזמנה זו לצמיתות?")) return;
         orders = orders.filter((o) => String(o.id) !== String(id));
         localStorage.setItem("sw_orders", JSON.stringify(orders));
         renderOrdersSummary();
-        if (CONFIG.googleSheetsWebhook) {
-          const cbName = '_del_' + Date.now();
-          const script = document.createElement('script');
-          window[cbName] = function() { delete window[cbName]; document.head.removeChild(script); };
-          script.src = CONFIG.googleSheetsWebhook + '?action=delete&id=' + encodeURIComponent(id) + '&callback=' + cbName;
-          document.head.appendChild(script);
-        }
+        await pushOrdersToGitHub(orders);
         showToast("✅ ההזמנה נמחקה");
       }
 
