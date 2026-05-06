@@ -3476,7 +3476,7 @@
         currentOrder.paid = true;
         orders.push(currentOrder);
         localStorage.setItem("sw_orders", JSON.stringify(orders));
-        pushOrdersToGitHub(orders);
+        pushOrdersToFirebase(currentOrder);
         sendToGoogleSheets(currentOrder);
         sendEmail(currentOrder);
         notifyOwnerWhatsApp(currentOrder);
