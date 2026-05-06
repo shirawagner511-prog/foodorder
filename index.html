@@ -4084,12 +4084,14 @@
         window.open("https://wa.me/" + intl + "?text=" + encodeURIComponent(text), "_blank");
       }
 
-      function clearOrders() {
+      async function clearOrders() {
         if (!confirm("למחוק את כל ההזמנות? פעולה זו אינה הפיכה.")) return;
         orders = [];
         localStorage.setItem("sw_orders", "[]");
         renderOrdersSummary();
         renderOrdersTable();
+        await pushOrdersToGitHub([]);
+        showToast("✅ כל ההזמנות נמחקו");
       }
 
       function exportCSV() {
