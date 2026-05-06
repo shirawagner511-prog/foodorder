@@ -2895,51 +2895,43 @@
         }
       }
 
-      async function pushOrdersToGitHub(ordersArr) {
-        const token = localStorage.getItem("gh_token");
-        if (!token) return false;
+      async function pushOrdersToFirebase(order) {
         try {
-          const getRes = await fetch(
-            "https://api.github.com/repos/" + GH_REPO + "/contents/" + GH_ORDERS_FILE,
-            { headers: { Authorization: "Bearer " + token, Accept: "application/vnd.github+json" } }
-          );
-          const existing = getRes.ok ? await getRes.json() : {};
-          const content = btoa(unescape(encodeURIComponent(JSON.stringify(ordersArr, null, 2))));
-          const body = { message: "update orders", content };
-          if (existing.sha) body.sha = existing.sha;
-          const putRes = await fetch(
-            "https://api.github.com/repos/" + GH_REPO + "/contents/" + GH_ORDERS_FILE,
-            {
-              method: "PUT",
-              headers: {
-                Authorization: "Bearer " + token,
-                Accept: "application/vnd.github+json",
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify(body),
-            }
-          );
-          return putRes.ok;
-        } catch (e) {
-          return false;
-        }
+          await fetch(FB_URL + "/orders/" + order.id + ".json", {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(order),
+          });
+        } catch (e) {}
       }
 
-      async function loadOrdersFromGitHub() {
+      async function deleteOrderFromFirebase(id) {
         try {
-          const res = await fetch(
-            "https://raw.githubusercontent.com/" + GH_REPO + "/main/" + GH_ORDERS_FILE + "?_=" + Date.now()
-          );
+          await fetch(FB_URL + "/orders/" + id + ".json", { method: "DELETE" });
+        } catch (e) {}
+      }
+
+      async function loadOrdersFromFirebase() {
+        try {
+          const res = await fetch(FB_URL + "/orders.json?_=" + Date.now());
           if (!res.ok) return false;
           const data = await res.json();
-          if (Array.isArray(data)) {
-            orders = data;
+          if (data && typeof data === "object") {
+            orders = Object.values(data).sort((a, b) => b.id - a.id);
             localStorage.setItem("sw_orders", JSON.stringify(orders));
+          } else {
+            orders = [];
           }
           return true;
         } catch (e) {
           return false;
         }
+      }
+
+      async function clearOrdersFromFirebase() {
+        try {
+          await fetch(FB_URL + "/orders.json", { method: "DELETE" });
+        } catch (e) {}
       }
 
       function saveGhToken() {
