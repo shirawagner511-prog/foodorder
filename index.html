@@ -2934,6 +2934,26 @@
         } catch (e) {}
       }
 
+      let _fbListener = null;
+      function startOrdersListener() {
+        if (_fbListener) return;
+        _fbListener = new EventSource(FB_URL + "/orders.json");
+        _fbListener.addEventListener("put", function (e) {
+          try {
+            const msg = JSON.parse(e.data);
+            if (!msg || !msg.data) { orders = []; }
+            else if (typeof msg.data === "object") {
+              orders = Object.values(msg.data).sort((a, b) => b.id - a.id);
+            }
+            localStorage.setItem("sw_orders", JSON.stringify(orders));
+            if (adminVisible) renderOrdersSummary();
+          } catch (_) {}
+        });
+      }
+      function stopOrdersListener() {
+        if (_fbListener) { _fbListener.close(); _fbListener = null; }
+      }
+
       function saveGhToken() {
         const t = document.getElementById("gh-token-input").value.trim();
         if (!t) return;
