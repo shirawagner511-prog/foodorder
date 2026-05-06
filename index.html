@@ -4083,7 +4083,7 @@
         localStorage.setItem("sw_orders", "[]");
         renderOrdersSummary();
         renderOrdersTable();
-        await pushOrdersToGitHub([]);
+        await clearOrdersFromFirebase();
         showToast("✅ כל ההזמנות נמחקו");
       }
 
