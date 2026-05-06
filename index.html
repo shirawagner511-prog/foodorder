@@ -3654,7 +3654,10 @@
           showToast("⏳ טוען הזמנות...");
           await loadOrdersFromFirebase();
           renderAdminPanel();
+          startOrdersListener();
           panel.scrollIntoView({ behavior: "smooth" });
+        } else {
+          stopOrdersListener();
         }
       }
 
@@ -3664,6 +3667,7 @@
         showToast("⏳ טוען הזמנות...");
         await loadOrdersFromFirebase();
         renderAdminPanel();
+        startOrdersListener();
       }
 
       let _catDragIdx = null;
