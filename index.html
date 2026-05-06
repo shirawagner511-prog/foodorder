@@ -3626,7 +3626,7 @@
       // ═══════════════════════════════
       //  ADMIN
       // ═══════════════════════════════
-      function toggleAdmin() {
+      async function toggleAdmin() {
         if (!adminVisible) {
           const pwd = prompt("🔐 סיסמת ניהול:");
           if (pwd !== CONFIG.adminPassword) {
@@ -3638,14 +3638,18 @@
         const panel = document.getElementById("admin-panel");
         panel.classList.toggle("visible", adminVisible);
         if (adminVisible) {
+          showToast("⏳ טוען הזמנות...");
+          await loadOrdersFromGitHub();
           renderAdminPanel();
           panel.scrollIntoView({ behavior: "smooth" });
         }
       }
 
-      function openAdmin() {
+      async function openAdmin() {
         adminVisible = true;
         document.getElementById("admin-panel").classList.add("visible");
+        showToast("⏳ טוען הזמנות...");
+        await loadOrdersFromGitHub();
         renderAdminPanel();
       }
 
