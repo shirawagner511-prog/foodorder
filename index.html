@@ -3632,7 +3632,7 @@
         panel.classList.toggle("visible", adminVisible);
         if (adminVisible) {
           showToast("⏳ טוען הזמנות...");
-          await loadOrdersFromGitHub();
+          await loadOrdersFromFirebase();
           renderAdminPanel();
           panel.scrollIntoView({ behavior: "smooth" });
         }
