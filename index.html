@@ -3904,17 +3904,22 @@
         weekTitle = document.getElementById("admin-week-title").value.trim() || weekTitle;
         deadline = document.getElementById("admin-deadline").value.trim();
         heroText = document.getElementById("admin-hero-text").value;
-        const catInputs = document.querySelectorAll(
-          "#admin-categories-list input[type='text'], #admin-categories-list input:not([type])",
-        );
-        adminCategories = Array.from(catInputs).map((inp) => inp.value);
+        const catBlocks = document.querySelectorAll("#admin-categories-list .admin-cat-block");
+        adminCategories = [];
+        adminCategoryNotes = [];
+        catBlocks.forEach((block) => {
+          const inp = block.querySelector("input");
+          const ta = block.querySelector("textarea");
+          adminCategories.push(inp ? inp.value : "");
+          adminCategoryNotes.push(ta ? ta.value : "");
+        });
         document.querySelectorAll("[data-dish-name]").forEach((inp) => {
           const idx = Number(inp.dataset.dishIdx);
           if (!isNaN(idx) && adminDishes[idx])
             adminDishes[idx][inp.dataset.dishName] = inp.value;
         });
         menu = adminDishes.filter((d) => d.name.trim());
-        const newCats = adminCategories.filter((c, i) => c.trim());
+        const newCats = adminCategories.filter((c) => c.trim());
         categoryNotes = {};
         adminCategories.forEach((c, i) => {
           if (c.trim()) categoryNotes[c.trim()] = adminCategoryNotes[i] || "";
