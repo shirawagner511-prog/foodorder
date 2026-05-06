@@ -3483,12 +3483,23 @@
 
       function sendToGoogleSheets(order) {
         if (!CONFIG.googleSheetsWebhook) return;
-        fetch(CONFIG.googleSheetsWebhook, {
-          method: "POST",
-          mode: "no-cors",
-          headers: { "Content-Type": "text/plain" },
-          body: JSON.stringify(order),
-        }).catch(() => {});
+        const cbName = "_save_" + Date.now();
+        const script = document.createElement("script");
+        window[cbName] = function () {
+          delete window[cbName];
+          if (script.parentNode) script.parentNode.removeChild(script);
+        };
+        script.onerror = () => {
+          delete window[cbName];
+          if (script.parentNode) script.parentNode.removeChild(script);
+        };
+        script.src =
+          CONFIG.googleSheetsWebhook +
+          "?action=save&data=" +
+          encodeURIComponent(JSON.stringify(order)) +
+          "&callback=" + cbName +
+          "&_=" + Date.now();
+        document.head.appendChild(script);
       }
 
       // ═══════════════════════════════
