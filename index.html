@@ -3642,7 +3642,7 @@
         adminVisible = true;
         document.getElementById("admin-panel").classList.add("visible");
         showToast("⏳ טוען הזמנות...");
-        await loadOrdersFromGitHub();
+        await loadOrdersFromFirebase();
         renderAdminPanel();
       }
 
