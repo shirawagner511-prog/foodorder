@@ -2894,6 +2894,53 @@
         }
       }
 
+      async function pushOrdersToGitHub(ordersArr) {
+        const token = localStorage.getItem("gh_token");
+        if (!token) return false;
+        try {
+          const getRes = await fetch(
+            "https://api.github.com/repos/" + GH_REPO + "/contents/" + GH_ORDERS_FILE,
+            { headers: { Authorization: "Bearer " + token, Accept: "application/vnd.github+json" } }
+          );
+          const existing = getRes.ok ? await getRes.json() : {};
+          const content = btoa(unescape(encodeURIComponent(JSON.stringify(ordersArr, null, 2))));
+          const body = { message: "update orders", content };
+          if (existing.sha) body.sha = existing.sha;
+          const putRes = await fetch(
+            "https://api.github.com/repos/" + GH_REPO + "/contents/" + GH_ORDERS_FILE,
+            {
+              method: "PUT",
+              headers: {
+                Authorization: "Bearer " + token,
+                Accept: "application/vnd.github+json",
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(body),
+            }
+          );
+          return putRes.ok;
+        } catch (e) {
+          return false;
+        }
+      }
+
+      async function loadOrdersFromGitHub() {
+        try {
+          const res = await fetch(
+            "https://raw.githubusercontent.com/" + GH_REPO + "/main/" + GH_ORDERS_FILE + "?_=" + Date.now()
+          );
+          if (!res.ok) return false;
+          const data = await res.json();
+          if (Array.isArray(data)) {
+            orders = data;
+            localStorage.setItem("sw_orders", JSON.stringify(orders));
+          }
+          return true;
+        } catch (e) {
+          return false;
+        }
+      }
+
       function saveGhToken() {
         const t = document.getElementById("gh-token-input").value.trim();
         if (!t) return;
