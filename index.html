@@ -2844,16 +2844,22 @@
         }
         try {
           showToast("⏳ מעדכן לכל המשתמשים...");
-          const getRes = await fetch(
-            "https://api.github.com/repos/" + GH_REPO + "/contents/" + GH_FILE,
-            {
-              headers: {
-                Authorization: "Bearer " + token,
-                Accept: "application/vnd.github+json",
-              },
-            },
-          );
-          const existing = getRes.ok ? await getRes.json() : {};
+
+          const ghHeaders = {
+            Authorization: "Bearer " + token,
+            Accept: "application/vnd.github+json",
+          };
+
+          async function fetchCurrentSha() {
+            const r = await fetch(
+              "https://api.github.com/repos/" + GH_REPO + "/contents/" + GH_FILE,
+              { headers: ghHeaders },
+            );
+            if (!r.ok) return null;
+            const data = await r.json();
+            return data.sha || null;
+          }
+
           const payload = {
             items: menu,
             categories,
@@ -2865,20 +2871,28 @@
           const content = btoa(
             unescape(encodeURIComponent(JSON.stringify(payload, null, 2))),
           );
-          const body = { message: "update menu", content };
-          if (existing.sha) body.sha = existing.sha;
-          const putRes = await fetch(
-            "https://api.github.com/repos/" + GH_REPO + "/contents/" + GH_FILE,
-            {
-              method: "PUT",
-              headers: {
-                Authorization: "Bearer " + token,
-                Accept: "application/vnd.github+json",
-                "Content-Type": "application/json",
+
+          async function doPut(sha) {
+            const body = { message: "update menu", content };
+            if (sha) body.sha = sha;
+            return fetch(
+              "https://api.github.com/repos/" + GH_REPO + "/contents/" + GH_FILE,
+              {
+                method: "PUT",
+                headers: { ...ghHeaders, "Content-Type": "application/json" },
+                body: JSON.stringify(body),
               },
-              body: JSON.stringify(body),
-            },
-          );
+            );
+          }
+
+          let sha = await fetchCurrentSha();
+          let putRes = await doPut(sha);
+
+          if (putRes.status === 409) {
+            sha = await fetchCurrentSha();
+            putRes = await doPut(sha);
+          }
+
           if (putRes.ok) {
             showToast("✅ התפריט עודכן לכל המשתמשים!");
             return true;
