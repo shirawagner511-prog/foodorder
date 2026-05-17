@@ -4155,6 +4155,185 @@
         URL.revokeObjectURL(url);
       }
 
+      function getFilteredForExport() {
+        return selectedWeekFilter && selectedWeekFilter !== "__all__"
+          ? orders.filter((o) => o.week === selectedWeekFilter)
+          : orders;
+      }
+
+      function exportExcel() {
+        const filtered = getFilteredForExport();
+        if (!filtered.length) { showToast("אין הזמנות לייצוא"); return; }
+
+        const wb = XLSX.utils.book_new();
+
+        // Sheet 1: dish summary
+        const counts = {};
+        filtered.forEach((o) => {
+          o.items.forEach((it) => {
+            if (!counts[it.name]) counts[it.name] = { qty: 0, rev: 0 };
+            counts[it.name].qty += it.qty;
+            counts[it.name].rev += it.price * it.qty;
+          });
+        });
+        const dishRows = [["מנה", "כמות יחידות", "שווי כולל (₪)"]];
+        Object.entries(counts)
+          .sort((a, b) => b[1].qty - a[1].qty)
+          .forEach(([name, v]) => dishRows.push([name, v.qty, v.rev]));
+        const wsDish = XLSX.utils.aoa_to_sheet(dishRows);
+        wsDish["!cols"] = [{ wch: 35 }, { wch: 18 }, { wch: 18 }];
+        wsDish["!autofilter"] = { ref: `A1:C${dishRows.length}` };
+        XLSX.utils.book_append_sheet(wb, wsDish, "סיכום מנות");
+
+        // Sheet 2: per-order details (one row per dish line)
+        const detailRows = [["שבוע", "תאריך", "שם לקוח", "טלפון", "אימייל", "עיר", "מנה", "כמות", "מחיר יחידה (₪)", "סה\"כ שורה (₪)", "סה\"כ הזמנה (₪)", "תשלום", "שולם", "הערה"]];
+        filtered.forEach((o) => {
+          const pay = PM_NAMES[o.paymentMethod] || o.paymentMethod || "";
+          const paid = o.paid ? "כן" : "לא";
+          o.items.forEach((it) => {
+            detailRows.push([
+              o.week || "", o.date, o.name, o.phone, o.email || "", o.city || "",
+              it.name, it.qty, it.price, it.price * it.qty,
+              o.total, pay, paid, o.note || ""
+            ]);
+          });
+        });
+        const wsDetail = XLSX.utils.aoa_to_sheet(detailRows);
+        wsDetail["!cols"] = [
+          { wch: 18 }, { wch: 20 }, { wch: 22 }, { wch: 14 }, { wch: 24 }, { wch: 14 },
+          { wch: 35 }, { wch: 8 }, { wch: 16 }, { wch: 16 }, { wch: 16 }, { wch: 14 }, { wch: 8 }, { wch: 25 }
+        ];
+        wsDetail["!autofilter"] = { ref: `A1:N${detailRows.length}` };
+        XLSX.utils.book_append_sheet(wb, wsDetail, "פירוט הזמנות");
+
+        const weekLabel = (selectedWeekFilter && selectedWeekFilter !== "__all__")
+          ? "-" + selectedWeekFilter.replace(/[\\/:*?"<>|]/g, "_")
+          : "";
+        const dateStr = new Date().toLocaleDateString("he-IL").replace(/\//g, "-");
+        XLSX.writeFile(wb, `הזמנות${weekLabel}-${dateStr}.xlsx`);
+      }
+
+      function exportPackagingPDF() {
+        const filtered = getFilteredForExport();
+        if (!filtered.length) { showToast("אין הזמנות לייצוא"); return; }
+
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
+
+        // aggregate dish counts with per-customer breakdown
+        const dishMap = {}; // { dishName: { qty, rev, customers: [{name, phone, qty}] } }
+        filtered.forEach((o) => {
+          o.items.forEach((it) => {
+            if (!dishMap[it.name]) dishMap[it.name] = { qty: 0, rev: 0, customers: [] };
+            dishMap[it.name].qty += it.qty;
+            dishMap[it.name].rev += it.price * it.qty;
+            dishMap[it.name].customers.push({ name: o.name, phone: o.phone, qty: it.qty });
+          });
+        });
+
+        const weekLabel = (selectedWeekFilter && selectedWeekFilter !== "__all__") ? selectedWeekFilter : "כל השבועות";
+        const dateStr = new Date().toLocaleDateString("he-IL");
+        const totalItems = Object.values(dishMap).reduce((s, v) => s + v.qty, 0);
+        const totalRev = filtered.reduce((s, o) => s + o.total, 0);
+
+        // --- Header ---
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(20);
+        doc.setTextColor(40, 40, 40);
+        doc.text("Shira Wagner | Menu Orders", 105, 18, { align: "center" });
+
+        doc.setFontSize(13);
+        doc.setFont("helvetica", "normal");
+        doc.setTextColor(100, 100, 100);
+        doc.text(`Week: ${weekLabel}   |   Date: ${dateStr}`, 105, 26, { align: "center" });
+
+        // KPI row
+        doc.setFillColor(245, 245, 240);
+        doc.roundedRect(14, 30, 182, 14, 3, 3, "F");
+        doc.setFontSize(10);
+        doc.setTextColor(60, 60, 60);
+        doc.text(`Orders: ${filtered.length}`, 22, 39);
+        doc.text(`Total Items: ${totalItems}`, 80, 39);
+        doc.text(`Revenue: ${totalRev} ILS`, 140, 39);
+
+        doc.setDrawColor(200, 180, 150);
+        doc.setLineWidth(0.5);
+        doc.line(14, 46, 196, 46);
+
+        // --- Dish Summary Table ---
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(12);
+        doc.setTextColor(40, 40, 40);
+        doc.text("Dish Summary — Packaging Checklist", 105, 53, { align: "center" });
+
+        const summaryRows = Object.entries(dishMap)
+          .sort((a, b) => b[1].qty - a[1].qty)
+          .map(([name, v]) => [name, v.qty, `${v.rev} ILS`, ""]);
+
+        doc.autoTable({
+          startY: 57,
+          head: [["Dish", "Units", "Revenue", "Packed ✓"]],
+          body: summaryRows,
+          theme: "striped",
+          headStyles: { fillColor: [80, 60, 40], textColor: 255, fontStyle: "bold", halign: "left" },
+          columnStyles: {
+            0: { cellWidth: 90, halign: "left" },
+            1: { cellWidth: 22, halign: "center" },
+            2: { cellWidth: 38, halign: "left" },
+            3: { cellWidth: 28, halign: "center" }
+          },
+          styles: { fontSize: 10, cellPadding: 3 },
+          alternateRowStyles: { fillColor: [252, 248, 243] },
+          margin: { left: 14, right: 14 }
+        });
+
+        // --- Per-Dish Customer Breakdown ---
+        doc.addPage();
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(14);
+        doc.setTextColor(40, 40, 40);
+        doc.text("Customer Breakdown per Dish", 105, 18, { align: "center" });
+        doc.setFontSize(10);
+        doc.setFont("helvetica", "normal");
+        doc.setTextColor(120, 120, 120);
+        doc.text(`Week: ${weekLabel}   |   ${dateStr}`, 105, 25, { align: "center" });
+
+        let curY = 31;
+        Object.entries(dishMap)
+          .sort((a, b) => b[1].qty - a[1].qty)
+          .forEach(([dishName, v]) => {
+            if (curY > 260) { doc.addPage(); curY = 18; }
+
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(11);
+            doc.setTextColor(80, 60, 40);
+            doc.text(`${dishName}  (${v.qty} units)`, 14, curY);
+            curY += 2;
+
+            doc.autoTable({
+              startY: curY,
+              head: [["Customer", "Phone", "Qty"]],
+              body: v.customers.map((c) => [c.name, c.phone, c.qty]),
+              theme: "plain",
+              headStyles: { fillColor: [230, 220, 205], textColor: [60, 40, 20], fontStyle: "bold", fontSize: 9 },
+              bodyStyles: { fontSize: 9 },
+              columnStyles: {
+                0: { cellWidth: 80 },
+                1: { cellWidth: 55 },
+                2: { cellWidth: 22, halign: "center" }
+              },
+              styles: { cellPadding: 2 },
+              margin: { left: 14, right: 14 }
+            });
+            curY = doc.lastAutoTable.finalY + 8;
+          });
+
+        const weekFile = (selectedWeekFilter && selectedWeekFilter !== "__all__")
+          ? "-" + selectedWeekFilter.replace(/[\\/:*?"<>|]/g, "_")
+          : "";
+        doc.save(`packaging${weekFile}-${new Date().toLocaleDateString("he-IL").replace(/\//g, "-")}.pdf`);
+      }
+
       async function loadOrdersFromSheets() {
         const statusEl = document.getElementById("sheets-load-status");
         const url = CONFIG.googleSheetsWebhook;
