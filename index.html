@@ -4217,11 +4217,7 @@
         const filtered = getFilteredForExport();
         if (!filtered.length) { showToast("אין הזמנות לייצוא"); return; }
 
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
-
-        // aggregate dish counts with per-customer breakdown
-        const dishMap = {}; // { dishName: { qty, rev, customers: [{name, phone, qty}] } }
+        const dishMap = {};
         filtered.forEach((o) => {
           o.items.forEach((it) => {
             if (!dishMap[it.name]) dishMap[it.name] = { qty: 0, rev: 0, customers: [] };
@@ -4235,103 +4231,96 @@
         const dateStr = new Date().toLocaleDateString("he-IL");
         const totalItems = Object.values(dishMap).reduce((s, v) => s + v.qty, 0);
         const totalRev = filtered.reduce((s, o) => s + o.total, 0);
+        const sorted = Object.entries(dishMap).sort((a, b) => b[1].qty - a[1].qty);
 
-        // --- Header ---
-        doc.setFont("helvetica", "bold");
-        doc.setFontSize(20);
-        doc.setTextColor(40, 40, 40);
-        doc.text("Shira Wagner | Menu Orders", 105, 18, { align: "center" });
+        const summaryRows = sorted.map(([name, v]) => `
+          <tr>
+            <td>${esc(name)}</td>
+            <td class="center">${v.qty}</td>
+            <td class="center">₪${v.rev}</td>
+            <td class="center">☐</td>
+          </tr>`).join("");
 
-        doc.setFontSize(13);
-        doc.setFont("helvetica", "normal");
-        doc.setTextColor(100, 100, 100);
-        doc.text(`Week: ${weekLabel}   |   Date: ${dateStr}`, 105, 26, { align: "center" });
+        const breakdownSections = sorted.map(([dishName, v]) => {
+          const custRows = v.customers.map(c => `
+            <tr>
+              <td>${esc(c.name)}</td>
+              <td>${esc(c.phone)}</td>
+              <td class="center">${c.qty}</td>
+            </tr>`).join("");
+          return `
+            <div class="dish-section">
+              <div class="dish-title">${esc(dishName)} <span class="dish-total">(${v.qty} יח')</span></div>
+              <table>
+                <thead><tr><th>שם לקוח</th><th>טלפון</th><th class="center">כמות</th></tr></thead>
+                <tbody>${custRows}</tbody>
+              </table>
+            </div>`;
+        }).join("");
 
-        // KPI row
-        doc.setFillColor(245, 245, 240);
-        doc.roundedRect(14, 30, 182, 14, 3, 3, "F");
-        doc.setFontSize(10);
-        doc.setTextColor(60, 60, 60);
-        doc.text(`Orders: ${filtered.length}`, 22, 39);
-        doc.text(`Total Items: ${totalItems}`, 80, 39);
-        doc.text(`Revenue: ${totalRev} ILS`, 140, 39);
+        const html = `<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>PDF אריזת מנות</title>
+<link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Assistant', sans-serif; color: #2a2a2a; background: #fff; font-size: 13px; direction: rtl; }
+  .page { padding: 18mm 14mm; }
+  .header { text-align: center; margin-bottom: 14px; border-bottom: 2px solid #c8a97e; padding-bottom: 12px; }
+  .header h1 { font-size: 22px; font-weight: 800; color: #3a2a1a; }
+  .header .sub { font-size: 13px; color: #888; margin-top: 4px; }
+  .kpi { display: flex; gap: 12px; margin-bottom: 18px; }
+  .kpi-box { flex: 1; background: #faf6f1; border: 1px solid #e8ddd0; border-radius: 8px; padding: 10px; text-align: center; }
+  .kpi-box .val { font-size: 20px; font-weight: 800; color: #3a2a1a; }
+  .kpi-box .lbl { font-size: 11px; color: #888; margin-top: 2px; }
+  h2 { font-size: 15px; font-weight: 700; color: #3a2a1a; margin: 18px 0 8px; border-right: 4px solid #c8a97e; padding-right: 8px; }
+  table { width: 100%; border-collapse: collapse; margin-bottom: 4px; }
+  th { background: #4a3a2a; color: #fff; padding: 7px 10px; font-weight: 700; font-size: 12px; text-align: right; }
+  td { padding: 6px 10px; border-bottom: 1px solid #ece6dd; font-size: 12px; }
+  tr:nth-child(even) td { background: #faf6f1; }
+  .center { text-align: center; }
+  .dish-section { margin-bottom: 18px; break-inside: avoid; }
+  .dish-title { font-size: 14px; font-weight: 700; color: #5a3e28; margin-bottom: 6px; }
+  .dish-total { font-weight: 400; color: #999; font-size: 12px; }
+  .page-break { page-break-before: always; padding-top: 12mm; }
+  @media print {
+    body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .no-print { display: none; }
+  }
+  .print-btn { display: block; margin: 16px auto; padding: 10px 32px; background: #4a3a2a; color: white; border: none; border-radius: 8px; font-family: inherit; font-size: 15px; font-weight: 700; cursor: pointer; }
+</style>
+</head>
+<body>
+<div class="no-print" style="text-align:center;padding:12px;background:#faf6f1;border-bottom:1px solid #ddd">
+  <button class="print-btn" onclick="window.print()">🖨️ הדפס / שמור PDF</button>
+</div>
+<div class="page">
+  <div class="header">
+    <h1>שירה וגנר | אריזת מנות</h1>
+    <div class="sub">שבוע: ${esc(weekLabel)} &nbsp;|&nbsp; ${esc(dateStr)}</div>
+  </div>
+  <div class="kpi">
+    <div class="kpi-box"><div class="val">${filtered.length}</div><div class="lbl">הזמנות</div></div>
+    <div class="kpi-box"><div class="val">${totalItems}</div><div class="lbl">יחידות סה"כ</div></div>
+    <div class="kpi-box"><div class="val">₪${totalRev}</div><div class="lbl">הכנסות</div></div>
+  </div>
+  <h2>✅ רשימת אריזה — סיכום מנות</h2>
+  <table>
+    <thead><tr><th>מנה</th><th class="center">יחידות</th><th class="center">שווי</th><th class="center">✓ ארוז</th></tr></thead>
+    <tbody>${summaryRows}</tbody>
+  </table>
+  <div class="page-break">
+    <h2>👤 פירוט לקוחות לפי מנה</h2>
+    ${breakdownSections}
+  </div>
+</div>
+</body></html>`;
 
-        doc.setDrawColor(200, 180, 150);
-        doc.setLineWidth(0.5);
-        doc.line(14, 46, 196, 46);
-
-        // --- Dish Summary Table ---
-        doc.setFont("helvetica", "bold");
-        doc.setFontSize(12);
-        doc.setTextColor(40, 40, 40);
-        doc.text("Dish Summary — Packaging Checklist", 105, 53, { align: "center" });
-
-        const summaryRows = Object.entries(dishMap)
-          .sort((a, b) => b[1].qty - a[1].qty)
-          .map(([name, v]) => [name, v.qty, `${v.rev} ILS`, ""]);
-
-        doc.autoTable({
-          startY: 57,
-          head: [["Dish", "Units", "Revenue", "Packed ✓"]],
-          body: summaryRows,
-          theme: "striped",
-          headStyles: { fillColor: [80, 60, 40], textColor: 255, fontStyle: "bold", halign: "left" },
-          columnStyles: {
-            0: { cellWidth: 90, halign: "left" },
-            1: { cellWidth: 22, halign: "center" },
-            2: { cellWidth: 38, halign: "left" },
-            3: { cellWidth: 28, halign: "center" }
-          },
-          styles: { fontSize: 10, cellPadding: 3 },
-          alternateRowStyles: { fillColor: [252, 248, 243] },
-          margin: { left: 14, right: 14 }
-        });
-
-        // --- Per-Dish Customer Breakdown ---
-        doc.addPage();
-        doc.setFont("helvetica", "bold");
-        doc.setFontSize(14);
-        doc.setTextColor(40, 40, 40);
-        doc.text("Customer Breakdown per Dish", 105, 18, { align: "center" });
-        doc.setFontSize(10);
-        doc.setFont("helvetica", "normal");
-        doc.setTextColor(120, 120, 120);
-        doc.text(`Week: ${weekLabel}   |   ${dateStr}`, 105, 25, { align: "center" });
-
-        let curY = 31;
-        Object.entries(dishMap)
-          .sort((a, b) => b[1].qty - a[1].qty)
-          .forEach(([dishName, v]) => {
-            if (curY > 260) { doc.addPage(); curY = 18; }
-
-            doc.setFont("helvetica", "bold");
-            doc.setFontSize(11);
-            doc.setTextColor(80, 60, 40);
-            doc.text(`${dishName}  (${v.qty} units)`, 14, curY);
-            curY += 2;
-
-            doc.autoTable({
-              startY: curY,
-              head: [["Customer", "Phone", "Qty"]],
-              body: v.customers.map((c) => [c.name, c.phone, c.qty]),
-              theme: "plain",
-              headStyles: { fillColor: [230, 220, 205], textColor: [60, 40, 20], fontStyle: "bold", fontSize: 9 },
-              bodyStyles: { fontSize: 9 },
-              columnStyles: {
-                0: { cellWidth: 80 },
-                1: { cellWidth: 55 },
-                2: { cellWidth: 22, halign: "center" }
-              },
-              styles: { cellPadding: 2 },
-              margin: { left: 14, right: 14 }
-            });
-            curY = doc.lastAutoTable.finalY + 8;
-          });
-
-        const weekFile = (selectedWeekFilter && selectedWeekFilter !== "__all__")
-          ? "-" + selectedWeekFilter.replace(/[\\/:*?"<>|]/g, "_")
-          : "";
-        doc.save(`packaging${weekFile}-${new Date().toLocaleDateString("he-IL").replace(/\//g, "-")}.pdf`);
+        const w = window.open("", "_blank");
+        w.document.write(html);
+        w.document.close();
       }
 
       async function loadOrdersFromSheets() {
